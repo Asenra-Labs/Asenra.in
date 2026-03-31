@@ -55,7 +55,7 @@ export default function ServicesPage() {
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-black text-white selection:bg-white/20 font-sans p-6 md:p-12 lg:px-24 py-20 pb-40 overflow-hidden relative">
+    <div ref={containerRef} className="min-h-screen bg-black text-white selection:bg-white/20 font-sans p-4 md:p-12 lg:px-24 py-12 md:py-20 pb-40 overflow-x-hidden relative">
       
       {/* Background intentionally cleared to debug visibility issue */}
       <div className="fixed inset-0 z-[-1] bg-black" />
@@ -72,19 +72,19 @@ export default function ServicesPage() {
         </div>
 
         {/* Hero Text */}
-        <div className="max-w-4xl mb-24">
-          <h1 className="header-element text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
+        <div className="max-w-4xl mb-16 md:mb-24 px-2 md:px-0">
+          <h1 className="header-element text-4xl md:text-8xl font-black tracking-tighter mb-6 md:mb-8 leading-[0.9]">
             Engineered <br />
-            <span className="bg-gradient-to-r from-zinc-200 via-white to-zinc-500 bg-clip-text text-transparent">for Growth.</span>
+            <span className="bg-linear-to-r from-zinc-200 via-white to-zinc-500 bg-clip-text text-transparent">for Growth.</span>
           </h1>
-          <p className="header-element text-zinc-400 text-xl md:text-2xl font-medium max-w-2xl leading-relaxed">
+          <p className="header-element text-zinc-400 text-lg md:text-2xl font-medium max-w-2xl leading-relaxed">
             We don&apos;t just build software. <br className="hidden md:block" />
             We build the architecture for your business to dominate its market.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 relative z-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 relative z-50">
           {services.map((service, idx) => (
             <div 
               key={idx}
@@ -104,7 +104,7 @@ export default function ServicesPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-6">
+                  <h3 className="text-2xl md:text-4xl font-bold tracking-tight text-white mb-4 md:mb-6">
                     {service.title}
                   </h3>
                   
@@ -125,13 +125,13 @@ export default function ServicesPage() {
         </div>
 
         {/* Massive Footer CTA */}
-        <div className="mt-40 relative z-50">
-          <div className="relative z-10 text-center border-t border-zinc-900 pt-40">
-            <h2 className="header-element text-5xl md:text-8xl font-black tracking-tighter text-white mb-10 leading-[0.8]">
+        <div className="mt-24 md:mt-40 relative z-50 px-4 md:px-0">
+          <div className="relative z-10 text-center border-t border-zinc-900 pt-24 md:pt-40">
+            <h2 className="header-element text-4xl md:text-8xl font-black tracking-tighter text-white mb-8 md:mb-10 leading-[0.8]">
               Ready for the <br />
               <span className="text-zinc-800 text-stroke-thin">next level?</span>
             </h2>
-            <a href="tel:+918956634577" className="header-element inline-block px-12 py-6 rounded-2xl bg-white text-black text-xl font-black uppercase tracking-tighter hover:scale-105 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all duration-500 active:scale-95">
+            <a href="tel:+918956634577" className="header-element inline-block px-8 md:px-12 py-4 md:py-6 rounded-2xl bg-white text-black text-lg md:text-xl font-black uppercase tracking-tighter hover:scale-105 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all duration-500 active:scale-95">
               Launch Now
             </a>
           </div>

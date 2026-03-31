@@ -245,11 +245,11 @@ export function CinematicHero({
     const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
-      gsap.set(".text-track", { autoAlpha: 0, y: 60, scale: 0.85, filter: "blur(20px)", rotationX: -20 });
+      gsap.set(".text-track", { autoAlpha: 0, y: 40, scale: 0.9, filter: "blur(10px)", rotationX: -10 });
       gsap.set(".text-days", { autoAlpha: 1, clipPath: "inset(0 100% 0 0)" });
-      gsap.set(".main-card", { y: window.innerHeight + 200, autoAlpha: 1 });
+      gsap.set(".main-card", { y: window.innerHeight + 100, autoAlpha: 1 });
       gsap.set([".card-left-text", ".card-right-text", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0 });
-      gsap.set(".cta-wrapper", { autoAlpha: 0, scale: 0.8, filter: "blur(30px)" });
+      gsap.set(".cta-wrapper", { autoAlpha: 0, scale: 0.9, filter: "blur(20px)" });
 
       const introTl = gsap.timeline({ delay: 0.3 });
       introTl
@@ -260,7 +260,7 @@ export function CinematicHero({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=7000",
+          end: isMobile ? "+=3500" : "+=7000",
           pin: true,
           scrub: 1,
           anticipatePin: 1,
@@ -268,14 +268,14 @@ export function CinematicHero({
       });
 
       scrollTl
-        .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
+        .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.1, ease: "power2.inOut", duration: 2 }, 0)
         .to(".main-card", { y: 0, ease: "power3.inOut", duration: 2 }, 0)
-        .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "power3.inOut", duration: 1.5 })
+        .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "power3.inOut", duration: 1.2 })
         .fromTo(".mockup-scroll-wrapper",
-          { y: 300, z: -500, rotationX: 50, rotationY: -30, autoAlpha: 0, scale: 0.6 },
-          { y: 0, z: 0, rotationX: 0, rotationY: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 2.5 }, "-=0.8"
+          { y: isMobile ? 150 : 300, z: -500, rotationX: 40, rotationY: -20, autoAlpha: 0, scale: 0.7 },
+          { y: 0, z: 0, rotationX: 0, rotationY: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 2.2 }, "-=0.6"
         )
-        .fromTo(".phone-widget", { y: 40, autoAlpha: 0, scale: 0.95 }, { y: 0, autoAlpha: 1, scale: 1, stagger: 0.15, ease: "back.out(1.2)", duration: 1.5 }, "-=1.5")
+        .fromTo(".phone-widget", { y: 20, autoAlpha: 0, scale: 0.95 }, { y: 0, autoAlpha: 1, scale: 1, stagger: 0.1, ease: "back.out(1.2)", duration: 1.2 }, "-=1.2")
         .to(".progress-ring", { strokeDashoffset: 60, duration: 2, ease: "power3.inOut" }, "-=1.2")
         .to(".counter-val", { innerHTML: metricValue, snap: { innerHTML: 1 }, duration: 2, ease: "expo.out" }, "-=2.0")
         .fromTo(".floating-badge", { y: 100, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.5, stagger: 0.2 }, "-=2.0")
@@ -316,11 +316,11 @@ export function CinematicHero({
       <div className="bg-grid-theme absolute inset-0 z-0 pointer-events-none opacity-50" aria-hidden="true" />
 
       {/* BACKGROUND LAYER: Hero Texts */}
-      <div className="hero-text-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-screen px-4 will-change-transform transform-style-3d">
-        <h1 className="text-track gsap-reveal text-3d-matte text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tight mb-2">
+      <div className="hero-text-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-screen px-6 will-change-transform transform-style-3d">
+        <h1 className="text-track gsap-reveal text-3d-matte text-4xl md:text-7xl lg:text-[6rem] font-bold tracking-tight mb-2">
           {tagline1}
         </h1>
-        <h1 className="text-days gsap-reveal text-silver-matte text-5xl md:text-7xl lg:text-[6rem] font-extrabold tracking-tighter">
+        <h1 className="text-days gsap-reveal text-silver-matte text-4xl md:text-7xl lg:text-[6rem] font-extrabold tracking-tighter">
           {tagline2}
         </h1>
       </div>
@@ -374,7 +374,7 @@ export function CinematicHero({
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] bg-neutral-800/40 blur-[80px] rounded-full pointer-events-none" />
                   
                   {/* The logo container with massive size boost, high contrast multi-layered shadows */}
-                  <div className="relative z-10 w-full max-w-[150%] lg:max-w-[200%] transform scale-[1.3] lg:scale-[1.8] lg:origin-right lg:-ml-12 drop-shadow-[0_2px_4px_rgba(0,0,0,1)] drop-shadow-[0_15px_30px_rgba(255,255,255,0.15)] contrast-125">
+                  <div className="relative z-10 w-full max-w-[120%] lg:max-w-[200%] transform scale-[0.95] md:scale-[1.3] lg:scale-[1.8] lg:origin-right lg:-ml-12 drop-shadow-[0_15px_30px_rgba(255,255,255,0.15)] contrast-125">
                     
                     {/* Invisible image solely to drive the container height dynamically based on pure aspect ratio */}
                     <img src={brandTextLogo} alt={brandName || "Brand Full Logo"} className="w-full h-auto object-contain opacity-0 select-none pointer-events-none" />
@@ -508,8 +508,8 @@ export function CinematicHero({
               <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-0 lg:mb-5 tracking-tight">
                 {cardHeading}
               </h3>
-              {/* HIDDEN ON MOBILE (added hidden md:block) */}
-              <p className="hidden md:block text-neutral-300/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed mx-auto lg:mx-0 max-w-sm lg:max-w-none">
+              {/* SHOW ON MOBILE but smaller (text-xs md:text-base) */}
+              <p className="text-neutral-300/70 text-xs md:text-base lg:text-lg font-normal leading-relaxed mx-auto lg:mx-0 max-w-sm lg:max-w-none px-4 md:px-0 mt-2 md:mt-0">
                 {cardDescription}
               </p>
             </div>
