@@ -1,20 +1,36 @@
-🚀 ASENRA Pvt Ltd - Tech Solutions for SMB Growth
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Kolhapur-based agency delivering premium websites, apps, WhatsApp bots, AI agents, and automations to small businesses across India.
+## Getting Started
 
-**Services:**
+First, run the development server:
 
-- Pro React Websites with WhatsApp Integration
-- n8n-Powered WhatsApp Bots & Automations
-- Custom OpenAI AI Agents (Sales/Support)
-- React Native Mobile Apps
-- Ongoing Maintenance & SEO
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-**Serving:** Tiffins, Kiranas, Salons, Restaurants—driving walk-ins, orders, and revenue.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-**Impact:** 50+ Clients Served | Live at asenra.in
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Open source contributions welcome! Check internships: https://asenra.in/intern
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-#ASENRA #TechAgency #SMBTech #IndiaStartups
-#karan patil
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
