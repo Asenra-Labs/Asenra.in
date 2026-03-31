@@ -1,4 +1,5 @@
 import { CinematicHero } from "@/components/ui/cinematic-landing-hero";
+import { PricingSection } from "@/components/sections/PricingSection";
 
 export default function Home() {
   return (
@@ -16,6 +17,8 @@ export default function Home() {
         ctaHeading="Get Your Free Audit"
         ctaDescription="Book a call. Launch in 7 days."
       />
+      
+      <PricingSection />
     </main>
   );
 }
