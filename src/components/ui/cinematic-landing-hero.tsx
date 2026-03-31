@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
@@ -11,13 +12,18 @@ if (typeof window !== "undefined") {
 }
 
 const INJECTED_STYLES = `
-  .gsap-reveal { visibility: hidden; }
+  .gsap-reveal { 
+    visibility: hidden; 
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
 
   /* Environment Overlays */
   .film-grain {
       position: absolute; inset: 0; width: 100%; height: 100%;
       pointer-events: none; z-index: 50; opacity: 0.05; mix-blend-mode: overlay;
       background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+      will-change: transform;
   }
 
   .bg-grid-theme {
@@ -27,6 +33,8 @@ const INJECTED_STYLES = `
           linear-gradient(to bottom, color-mix(in srgb, var(--color-foreground) 5%, transparent) 1px, transparent 1px);
       mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
       -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+      will-change: transform, opacity;
+      backface-visibility: hidden;
   }
 
   /* -------------------------------------------------------------------
@@ -39,6 +47,7 @@ const INJECTED_STYLES = `
       text-shadow: 
           0 10px 30px color-mix(in srgb, var(--color-foreground) 20%, transparent), 
           0 2px 4px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+      will-change: transform, opacity;
   }
 
   .text-silver-matte {
@@ -50,6 +59,7 @@ const INJECTED_STYLES = `
       filter: 
           drop-shadow(0px 10px 20px color-mix(in srgb, var(--color-foreground) 15%, transparent)) 
           drop-shadow(0px 2px 4px color-mix(in srgb, var(--color-foreground) 10%, transparent));
+      will-change: transform, opacity;
   }
 
   /* INSIDE THE CARD: Hardcoded Silver/White for the dark background, deep rich shadows */
@@ -62,6 +72,7 @@ const INJECTED_STYLES = `
       filter: 
           drop-shadow(0px 12px 24px rgba(0,0,0,0.8)) 
           drop-shadow(0px 4px 8px rgba(0,0,0,0.6));
+      will-change: transform;
   }
 
   /* Deep Physical Card with Dynamic Mouse Lighting */
@@ -74,12 +85,15 @@ const INJECTED_STYLES = `
           inset 0 -2px 4px rgba(0, 0, 0, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.04);
       position: relative;
+      will-change: transform, width, height, border-radius;
+      backface-visibility: hidden;
   }
 
   .card-sheen {
       position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 50;
       background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06) 0%, transparent 40%);
       mix-blend-mode: screen; transition: opacity 0.3s ease;
+      will-change: background;
   }
 
   /* Realistic iPhone Mockup Hardware */
@@ -91,6 +105,8 @@ const INJECTED_STYLES = `
           0 40px 80px -15px rgba(0,0,0,0.9),
           0 15px 25px -5px rgba(0,0,0,0.7);
       transform-style: preserve-3d;
+      will-change: transform;
+      backface-visibility: hidden;
   }
 
   .hardware-btn {
@@ -104,6 +120,7 @@ const INJECTED_STYLES = `
   
   .screen-glare {
       background: linear-gradient(110deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 45%);
+      will-change: transform;
   }
 
   .widget-depth {
@@ -113,6 +130,7 @@ const INJECTED_STYLES = `
           inset 0 1px 1px rgba(255,255,255,0.05),
           inset 0 -1px 1px rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.03);
+      will-change: transform, opacity;
   }
 
   .floating-ui-badge {
@@ -124,11 +142,14 @@ const INJECTED_STYLES = `
           0 25px 50px -12px rgba(0, 0, 0, 0.8),
           inset 0 1px 1px rgba(255,255,255,0.2),
           inset 0 -1px 1px rgba(0,0,0,0.5);
+      will-change: transform, opacity;
+      backface-visibility: hidden;
   }
 
   /* Physical Tactile Buttons */
   .btn-modern-light, .btn-modern-dark {
       transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform, box-shadow;
   }
   .btn-modern-light {
       background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
@@ -166,6 +187,7 @@ const INJECTED_STYLES = `
       stroke-dasharray: 402;
       stroke-dashoffset: 402;
       stroke-linecap: round;
+      will-change: stroke-dashoffset;
   }
 `;
 
@@ -202,91 +224,117 @@ export function CinematicHero({
   const containerRef = useRef<HTMLDivElement>(null);
   const mainCardRef = useRef<HTMLDivElement>(null);
   const mockupRef = useRef<HTMLDivElement>(null);
-  const requestRef = useRef<number>(0);
 
-  // 1. High-Performance Mouse Interaction Logic (Using requestAnimationFrame)
+  // 1. High-Performance Mouse Interaction Logic (Using gsap.quickTo)
   useEffect(() => {
+    if (!mainCardRef.current || !mockupRef.current) return;
+
+    const mainCard = mainCardRef.current;
+    const mockup = mockupRef.current;
+
+    // Use quickTo for much faster updates without the overhead of creating new GSAP instances every frame
+    const xTo = gsap.quickTo(mockup, "rotationY", { duration: 1.2, ease: "power3.out" });
+    const yTo = gsap.quickTo(mockup, "rotationX", { duration: 1.2, ease: "power3.out" });
+
     const handleMouseMove = (e: MouseEvent) => {
-      if (window.scrollY > window.innerHeight * 2) return;
+      // Throttle mouse moves out of view
+      if (window.scrollY > window.innerHeight * 1.5) return;
 
-      cancelAnimationFrame(requestRef.current);
+      const rect = mainCard.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
       
-      requestRef.current = requestAnimationFrame(() => {
-        if (mainCardRef.current && mockupRef.current) {
-          const rect = mainCardRef.current.getBoundingClientRect();
-          const mouseX = e.clientX - rect.left;
-          const mouseY = e.clientY - rect.top;
-          
-          mainCardRef.current.style.setProperty("--mouse-x", `${mouseX}px`);
-          mainCardRef.current.style.setProperty("--mouse-y", `${mouseY}px`);
+      mainCard.style.setProperty("--mouse-x", `${mouseX}px`);
+      mainCard.style.setProperty("--mouse-y", `${mouseY}px`);
 
-          const xVal = (e.clientX / window.innerWidth - 0.5) * 2;
-          const yVal = (e.clientY / window.innerHeight - 0.5) * 2;
+      const xVal = (e.clientX / window.innerWidth - 0.5) * 2;
+      const yVal = (e.clientY / window.innerHeight - 0.5) * 2;
 
-          gsap.to(mockupRef.current, {
-            rotationY: xVal * 12,
-            rotationX: -yVal * 12,
-            ease: "power3.out",
-            duration: 1.2,
-          });
-        }
-      });
+      // Update rotation using quickTo to bypass animation setup latency
+      xTo(xVal * 12);
+      yTo(-yVal * 12);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(requestRef.current);
     };
-  },[]);
+  }, []);
 
   // 2. Complex Cinematic Scroll Timeline
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
-      gsap.set(".text-track", { autoAlpha: 0, y: 60, scale: 0.85, filter: "blur(20px)", rotationX: -20 });
-      gsap.set(".text-days", { autoAlpha: 1, clipPath: "inset(0 100% 0 0)" });
-      gsap.set(".main-card", { y: window.innerHeight + 200, autoAlpha: 1 });
-      gsap.set([".card-left-text", ".card-right-text", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0 });
-      gsap.set(".cta-wrapper", { autoAlpha: 0, scale: 0.8, filter: "blur(30px)" });
+      // Set initial values and ensure GPU acceleration via translateZ(0)
+      gsap.set(".text-track", { autoAlpha: 0, y: 60, scale: 0.85, filter: "blur(20px)", rotationX: -20, force3D: true });
+      gsap.set(".text-days", { autoAlpha: 1, clipPath: "inset(0 100% 0 0)", force3D: true });
+      gsap.set(".main-card", { y: "110vh", autoAlpha: 1, force3D: true });
+      gsap.set([".card-left-text", ".card-right-text", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0, force3D: true });
+      gsap.set(".cta-wrapper", { autoAlpha: 0, scale: 0.8, filter: "blur(30px)", force3D: true });
+      gsap.set(".scroll-indicator", { autoAlpha: 0, y: 20 });
 
       const introTl = gsap.timeline({ delay: 0.3 });
       introTl
         .to(".text-track", { duration: 1.8, autoAlpha: 1, y: 0, scale: 1, filter: "blur(0px)", rotationX: 0, ease: "expo.out" })
-        .to(".text-days", { duration: 1.4, clipPath: "inset(0 0% 0 0)", ease: "power4.inOut" }, "-=1.0");
+        .to(".text-days", { duration: 1.4, clipPath: "inset(0 0% 0 0)", ease: "power4.inOut" }, "-=1.0")
+        .to(".scroll-indicator", { duration: 1.2, autoAlpha: 1, y: 0, ease: "power3.out" }, "-=0.2");
+
+      // Simple looping animation for the scroll bead
+      gsap.to(".scroll-bead", {
+        y: 24,
+        opacity: 0,
+        duration: 1.5,
+        repeat: -1,
+        ease: "power2.inOut"
+      });
 
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=7000",
+          end: isMobile ? "+=1800" : "+=5000", // Further reduced for better mobile DX
           pin: true,
-          scrub: 1,
+          scrub: isMobile ? 0.6 : 1.2, // Snappier on mobile
           anticipatePin: 1,
         },
       });
 
       scrollTl
-        .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
+        .to([".hero-text-wrapper", ".bg-grid-theme"], { 
+            scale: isMobile ? 1.02 : 1.1, 
+            filter: isMobile ? "none" : "blur(15px)", // Disable heavy blur on mobile
+            opacity: 0.15, 
+            ease: "power2.inOut", 
+            duration: 2 
+        }, 0)
         .to(".main-card", { y: 0, ease: "power3.inOut", duration: 2 }, 0)
+        .to(".scroll-indicator", { autoAlpha: 0, pointerEvents: "none", duration: 0.5 }, 0)
         .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "power3.inOut", duration: 1.5 })
         .fromTo(".mockup-scroll-wrapper",
-          { y: 300, z: -500, rotationX: 50, rotationY: -30, autoAlpha: 0, scale: 0.6 },
+          { y: isMobile ? 200 : 300, z: -500, rotationX: 50, rotationY: -30, autoAlpha: 0, scale: isMobile ? 0.8 : 0.6 },
           { y: 0, z: 0, rotationX: 0, rotationY: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 2.5 }, "-=0.8"
         )
-        .fromTo(".phone-widget", { y: 40, autoAlpha: 0, scale: 0.95 }, { y: 0, autoAlpha: 1, scale: 1, stagger: 0.15, ease: "back.out(1.2)", duration: 1.5 }, "-=1.5")
+        .fromTo(".phone-widget", 
+          { y: 40, autoAlpha: 0, scale: 0.95 }, 
+          { y: 0, autoAlpha: 1, scale: 1, stagger: 0.1, ease: "back.out(1.2)", duration: 1.2 }, "-=1.5"
+        )
         .to(".progress-ring", { strokeDashoffset: 60, duration: 2, ease: "power3.inOut" }, "-=1.2")
         .to(".counter-val", { innerHTML: metricValue, snap: { innerHTML: 1 }, duration: 2, ease: "expo.out" }, "-=2.0")
-        .fromTo(".floating-badge", { y: 100, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.5, stagger: 0.2 }, "-=2.0")
-        .fromTo(".card-left-text", { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.5 }, "-=1.5")
-        .fromTo(".card-right-text", { x: 50, autoAlpha: 0, scale: 0.8 }, { x: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 1.5 }, "<")
-        .to({}, { duration: 2.5 })
+        .fromTo(".floating-badge", 
+          { y: isMobile ? 40 : 80, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, 
+          { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.2, stagger: 0.15 }, "-=2.0"
+        )
+        .fromTo(".card-left-text", { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.2 }, "-=1.5")
+        .fromTo(".card-right-text", 
+          { x: isMobile ? 0 : 50, y: isMobile ? 20 : 0, autoAlpha: 0, scale: isMobile ? 1.1 : 0.8 }, 
+          { x: 0, y: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 1.2 }, "<")
+        .to({}, { duration: 2 })
         .set(".hero-text-wrapper", { autoAlpha: 0 })
         .set(".cta-wrapper", { autoAlpha: 1 }) 
-        .to({}, { duration: 1.5 })
+        .to({}, { duration: 1.2 })
         .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text", ".card-right-text"], {
-          scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1.2, stagger: 0.05,
+          scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1, stagger: 0.05,
         })
         // Responsive card pullback sizing
         .to(".main-card", { 
@@ -297,12 +345,12 @@ export function CinematicHero({
           duration: 1.8 
         }, "pullback") 
         .to(".cta-wrapper", { scale: 1, filter: "blur(0px)", ease: "expo.inOut", duration: 1.8 }, "pullback")
-        .to(".main-card", { y: -window.innerHeight - 300, ease: "power3.in", duration: 1.5 });
+        .to(".main-card", { y: -window.innerHeight - 500, ease: "power3.in", duration: 1.5 });
 
     }, containerRef);
 
     return () => ctx.revert();
-  },[metricValue]); 
+  }, [metricValue]); 
 
   return (
     <div
@@ -361,7 +409,7 @@ export function CinematicHero({
             {/* LOGO */}
             {brandLogo && (
               <div className="absolute top-8 left-4 lg:left-12 z-50">
-                <img src={brandLogo} alt="Logo" className="w-auto h-8 md:h-12 object-contain" />
+                <Image src={brandLogo} alt="Logo" width={160} height={48} className="w-auto h-8 md:h-12 object-contain" priority />
               </div>
             )}
 
@@ -371,13 +419,15 @@ export function CinematicHero({
               {brandTextLogo ? (
                 <div className="relative flex justify-center lg:justify-end lg:-translate-x-12 lg:-translate-y-6">
                   {/* Subtle ambient backlight instead of bright wash, increases text contrast */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] bg-neutral-800/40 blur-[80px] rounded-full pointer-events-none" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] bg-neutral-800/40 blur-[40px] lg:blur-[80px] rounded-full pointer-events-none" />
                   
                   {/* The logo container with massive size boost, high contrast multi-layered shadows */}
-                  <div className="relative z-10 w-full max-w-[150%] lg:max-w-[200%] transform scale-[1.3] lg:scale-[1.8] lg:origin-right lg:-ml-12 drop-shadow-[0_2px_4px_rgba(0,0,0,1)] drop-shadow-[0_15px_30px_rgba(255,255,255,0.15)] contrast-125">
+                  <div className="relative z-10 w-full max-w-[120%] lg:max-w-[200%] transform scale-[0.85] lg:scale-[1.8] lg:origin-right lg:-ml-12 drop-shadow-[0_2px_4px_rgba(0,0,0,1)] lg:drop-shadow-[0_15px_30px_rgba(255,255,255,0.15)] contrast-125">
                     
-                    {/* Invisible image solely to drive the container height dynamically based on pure aspect ratio */}
-                    <img src={brandTextLogo} alt={brandName || "Brand Full Logo"} className="w-full h-auto object-contain opacity-0 select-none pointer-events-none" />
+                    {/* Next.js Image for optimized loading while maintaining aspect ratio support */}
+                    <div className="relative w-full aspect-4/1">
+                       <Image src={brandTextLogo} alt={brandName || "Brand Full Logo"} fill className="object-contain opacity-0 select-none pointer-events-none" priority />
+                    </div>
                     
                     {/* High-visibility crisp gradient overhead — No mix blend mode so colours stay hard and vibrant */}
                     <div 
@@ -479,24 +529,24 @@ export function CinematicHero({
                   </div>
                 </div>
 
-                {/* Floating Glass Badges */}
-                <div className="floating-badge absolute flex top-6 lg:top-12 left-[-15px] lg:left-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-neutral-400/20 to-neutral-700/10 flex items-center justify-center border border-neutral-400/30 shadow-inner">
-                    <span className="text-base lg:text-xl drop-shadow-lg" aria-hidden="true">🔥</span>
+                {/* Floating Glass Badges - Positioned carefully for mobile */}
+                <div className="floating-badge absolute flex top-2 lg:top-12 left-[-10px] lg:left-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-2.5 lg:p-4 items-center gap-2.5 lg:gap-4 z-30">
+                  <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-neutral-400/20 to-neutral-700/10 flex items-center justify-center border border-neutral-400/30 shadow-inner">
+                    <span className="text-sm lg:text-xl drop-shadow-lg" aria-hidden="true">🔥</span>
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">Active Sites</p>
-                    <p className="text-neutral-400 text-[10px] lg:text-xs font-medium">Over 50+ deployed</p>
+                    <p className="text-white text-[10px] lg:text-sm font-bold tracking-tight">Active Sites</p>
+                    <p className="text-neutral-400 text-[8px] lg:text-xs font-medium">Over 50+ deployed</p>
                   </div>
                 </div>
 
-                <div className="floating-badge absolute flex bottom-12 lg:bottom-20 right-[-15px] lg:right-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-zinc-400/20 to-zinc-700/10 flex items-center justify-center border border-zinc-400/30 shadow-inner">
-                    <span className="text-base lg:text-lg drop-shadow-lg" aria-hidden="true">🤖</span>
+                <div className="floating-badge absolute flex bottom-2 lg:bottom-20 right-[-10px] lg:right-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-2.5 lg:p-4 items-center gap-2.5 lg:gap-4 z-30">
+                  <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-linear-to-b from-zinc-400/20 to-zinc-700/10 flex items-center justify-center border border-zinc-400/30 shadow-inner">
+                    <span className="text-sm lg:text-lg drop-shadow-lg" aria-hidden="true">🤖</span>
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">AI Integrated</p>
-                    <p className="text-neutral-400 text-[10px] lg:text-xs font-medium">Smart automation</p>
+                    <p className="text-white text-[10px] lg:text-sm font-bold tracking-tight">AI Integrated</p>
+                    <p className="text-neutral-400 text-[8px] lg:text-xs font-medium">Smart automation</p>
                   </div>
                 </div>
 
@@ -515,6 +565,16 @@ export function CinematicHero({
             </div>
 
           </div>
+        </div>
+      </div>
+      
+      {/* SCROLL INDICATOR: Minimalist premium aesthetic */}
+      <div className="scroll-indicator absolute bottom-24 sm:bottom-12 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-3 pointer-events-none">
+        <span className="text-[10px] uppercase tracking-[0.4em] text-neutral-500 font-bold ml-[0.4em]">
+          Scroll to Discover
+        </span>
+        <div className="relative w-px h-12 bg-neutral-800 overflow-hidden">
+           <div className="scroll-bead absolute top-0 left-0 w-full h-4 bg-linear-to-b from-blue-500 to-transparent" />
         </div>
       </div>
     </div>
