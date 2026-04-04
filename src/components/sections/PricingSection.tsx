@@ -229,10 +229,15 @@ export function PricingSection() {
                     ))}
                   </ul>
 
-                  <button className="w-full btn-modern-dark py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 group/btn">
+                  <a 
+                    href={`https://wa.me/918956634577?text=${encodeURIComponent(`I want the ${pkg.name} plan.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full btn-modern-dark py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 group/btn cursor-pointer no-underline"
+                  >
                     Select Plan
                     <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                  </button>
+                  </a>
                 </div>
               </div>
             );
@@ -278,10 +283,15 @@ export function PricingSection() {
               </p>
             </div>
             <div className="h-10 w-px bg-white/10 hidden sm:block" />
-            <button className="w-full sm:w-auto px-8 py-4 btn-modern-light rounded-xl font-black text-sm tracking-tight flex items-center gap-2">
+            <a 
+              href={`https://wa.me/918956634577?text=${encodeURIComponent("I want to add the Maintenance & Growth Retainer to my workflow.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-8 py-4 btn-modern-light rounded-xl font-black text-sm tracking-tight flex items-center gap-2 group/btn cursor-pointer no-underline"
+            >
               Add to Workflow
-              <TrendingUp className="w-4 h-4" />
-            </button>
+              <TrendingUp className="w-4 h-4 transition-transform group-hover/btn:translate-y-[-2px] group-hover/btn:translate-x-[2px]" />
+            </a>
           </div>
         </div>
       </div>

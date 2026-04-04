@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Mail, Zap, ArrowRight, UserPlus, Phone } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { YouFormModal } from "@/components/ui/YouFormModal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -13,6 +14,7 @@ export function ContactSection() {
   const containerRef = useRef<HTMLElement>(null);
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
+  const [isHiringOpen, setIsHiringOpen] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -113,14 +115,12 @@ export function ContactSection() {
                 <h4 className="text-white font-bold text-lg leading-tight mb-1">Join the Asenra Codebase?</h4>
                 <p className="text-neutral-500 text-xs">We&apos;re always looking for elite engineers and designers.</p>
               </div>
-              <a 
-                href="https://app.youform.com/forms/tzv3h9tr" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-full sm:w-auto px-6 py-3 btn-modern-dark text-xs font-bold whitespace-nowrap flex items-center justify-center gap-2"
+              <button 
+                onClick={() => setIsHiringOpen(true)}
+                className="w-full sm:w-auto px-6 py-3 btn-modern-dark text-xs font-bold whitespace-nowrap flex items-center justify-center gap-2 cursor-pointer"
               >
                 Apply Now <ArrowRight className="w-3 h-3" />
-              </a>
+              </button>
             </div>
           </div>
 
@@ -187,6 +187,13 @@ export function ContactSection() {
 
         </div>
       </div>
+
+       {/* Hiring Form Modal */}
+       <YouFormModal 
+         isOpen={isHiringOpen} 
+         onClose={() => setIsHiringOpen(false)} 
+         formId="tzv3h9tr" 
+       />
     </section>
   );
 }

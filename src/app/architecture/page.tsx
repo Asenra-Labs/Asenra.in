@@ -1,10 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Cpu, Server, Layers, Zap, Hexagon, Code2, Monitor, Database, PhoneCall } from "lucide-react";
+import { YouFormModal } from "@/components/ui/YouFormModal";
 
 export default function ArchitecturePage() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const stackItems = [
     { title: "Frontend Engine", icon: Monitor, items: ["Next.js 15", "GSAP 3", "Tailwind 4", "Framer Motion"] },
     { title: "Intelligence Layer", icon: Cpu, items: ["OpenAI / Anthropic", "Custom RAG Pipelines", "n8n Automation", "LangChain"] },
@@ -102,9 +104,9 @@ export default function ArchitecturePage() {
 
         {/* Floating Call to Action */}
         <div className="group relative">
-          <Link 
-            href="mailto:care@asenra.in?subject=Architecture Assessment Request" 
-            className="block p-12 rounded-[50px] bg-white text-black relative z-20 shadow-[0_40px_100px_rgba(255,255,255,0.1)] mb-12 hover:scale-[1.01] transition-all active:scale-95 cursor-pointer"
+          <button 
+            onClick={() => setIsFormOpen(true)}
+            className="w-full text-left p-12 rounded-[50px] bg-white text-black relative z-20 shadow-[0_40px_100px_rgba(255,255,255,0.1)] mb-12 hover:scale-[1.01] transition-all active:scale-95 cursor-pointer border-none"
           >
               <div className="grid md:grid-cols-2 gap-12 items-center">
                  <div>
@@ -118,7 +120,7 @@ export default function ArchitecturePage() {
                     </span>
                  </div>
               </div>
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -128,6 +130,13 @@ export default function ArchitecturePage() {
            Engineered.
          </span>
        </div>
+       
+       {/* Consultation Form Modal */}
+       <YouFormModal 
+         isOpen={isFormOpen} 
+         onClose={() => setIsFormOpen(false)} 
+         formId="vt3flmg8" 
+       />
     </main>
   );
 }

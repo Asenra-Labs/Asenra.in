@@ -1,10 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft, Zap, Code, Layout, Cpu, Send, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { YouFormModal } from "@/components/ui/YouFormModal";
 
 export default function HiringPage() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const roles = [
     {
       title: "Frontend Engineer",
@@ -104,15 +106,13 @@ export default function HiringPage() {
               </div>
               
               <div className="flex flex-col gap-4">
-                <a 
-                  href="https://app.youform.com/forms/tzv3h9tr" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="w-full py-5 btn-modern-light rounded-2xl font-black italic tracking-widest uppercase text-center flex items-center justify-center gap-4 hover:scale-105 active:scale-95 transition-all"
+                <button 
+                  onClick={() => setIsFormOpen(true)}
+                  className="w-full py-5 btn-modern-light rounded-2xl font-black italic tracking-widest uppercase text-center flex items-center justify-center gap-4 hover:scale-105 active:scale-95 transition-all cursor-pointer"
                 >
                   Apply via YouForm
                   <ArrowLeft className="w-5 h-5 rotate-180" />
-                </a>
+                </button>
                 <p className="text-center text-[10px] text-neutral-600 uppercase tracking-widest">
                   Response time: Less than 48 hours
                 </p>
@@ -121,6 +121,13 @@ export default function HiringPage() {
           </div>
         </section>
       </div>
+
+       {/* Application Form Modal */}
+       <YouFormModal 
+         isOpen={isFormOpen} 
+         onClose={() => setIsFormOpen(false)} 
+         formId="tzv3h9tr" 
+       />
     </main>
   );
 }

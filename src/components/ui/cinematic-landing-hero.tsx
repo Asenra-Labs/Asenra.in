@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { YouFormModal } from "./YouFormModal";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -42,6 +43,8 @@ export function CinematicHero({
   className, 
   ...props 
 }: CinematicHeroProps) {
+  
+  const [isFormOpen, setIsFormOpen] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const mainCardRef = useRef<HTMLDivElement>(null);
@@ -215,11 +218,15 @@ export function CinematicHero({
           {ctaDescription}
         </p>
         <div className="flex flex-col sm:flex-row gap-6">
-          <a href="tel:+918956634577" aria-label="Book a call" className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2">
+          <button 
+            onClick={() => setIsFormOpen(true)}
+            aria-label="Book a call" 
+            className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 cursor-pointer transition-all hover:scale-105 active:scale-95"
+          >
             <div className="text-center">
               <div className="text-xl font-bold leading-none tracking-tight">Book a Call</div>
             </div>
-          </a>
+          </button>
           <Link href="/services" aria-label="Explore Services" className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-background">
             <div className="text-center">
               <div className="text-xl font-bold leading-none tracking-tight">Explore Services</div>
@@ -426,6 +433,13 @@ export function CinematicHero({
            <div className="scroll-bead absolute top-0 left-0 w-full h-4 bg-linear-to-b from-white to-transparent" />
         </div>
       </div>
+      
+      {/* Consultation Form Modal */}
+      <YouFormModal 
+        isOpen={isFormOpen} 
+        onClose={() => setIsFormOpen(false)} 
+        formId="vt3flmg8" 
+      />
     </div>
   );
 }

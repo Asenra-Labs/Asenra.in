@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { YouFormModal } from "@/components/ui/YouFormModal";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -48,6 +49,7 @@ const services = [
 ];
 
 export default function ServicesPage() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -88,7 +90,8 @@ export default function ServicesPage() {
           {services.map((service, idx) => (
             <div 
               key={idx}
-              className="service-card group relative p-1 leading-none rounded-[2rem] overflow-hidden bg-zinc-700 hover:bg-zinc-600 transition-all duration-300 z-[100]"
+              onClick={() => setIsFormOpen(true)}
+              className="service-card group relative p-1 leading-none rounded-[2rem] overflow-hidden bg-zinc-700 hover:bg-zinc-600 transition-all duration-300 z-[100] cursor-pointer"
             >
               <div className="relative h-full w-full bg-[#1e1e1e] rounded-[1.9rem] p-8 md:p-12 overflow-hidden flex flex-col justify-between shadow-2xl">
                 {/* Clean internal background */}
@@ -131,9 +134,12 @@ export default function ServicesPage() {
               Ready for the <br />
               <span className="text-zinc-800 text-stroke-thin">next level?</span>
             </h2>
-            <a href="tel:+918956634577" className="header-element inline-block px-12 py-6 rounded-2xl bg-white text-black text-xl font-black uppercase tracking-tighter hover:scale-105 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all duration-500 active:scale-95">
+            <button 
+              onClick={() => setIsFormOpen(true)}
+              className="header-element inline-block px-12 py-6 rounded-2xl bg-white text-black text-xl font-black uppercase tracking-tighter hover:scale-105 hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all duration-500 active:scale-95 cursor-pointer"
+            >
               Launch Now
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -144,6 +150,13 @@ export default function ServicesPage() {
           color: transparent;
         }
       `}</style>
+      
+      {/* Consultation Form Modal */}
+      <YouFormModal 
+        isOpen={isFormOpen} 
+        onClose={() => setIsFormOpen(false)} 
+        formId="vt3flmg8" 
+      />
     </div>
   );
 }
