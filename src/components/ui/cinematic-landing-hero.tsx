@@ -257,7 +257,7 @@ export function CinematicHero({
                     <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-white animate-ping" />
                   </div>
                   <span className="text-[10px] font-black italic uppercase tracking-[0.2em] text-white/90 group-hover:text-white transition-colors">
-                    We are Hiring
+                    Join as intern
                   </span>
                </Link>
             </div>
