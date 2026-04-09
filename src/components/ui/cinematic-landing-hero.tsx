@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Zap, Bot } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -204,9 +205,9 @@ export function CinematicHero({
         <h1 className="text-track gsap-reveal text-3d-matte text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tight mb-2">
           {tagline1}
         </h1>
-        <h1 className="text-days gsap-reveal text-silver-matte text-5xl md:text-7xl lg:text-[6rem] font-extrabold tracking-tighter">
+        <span className="text-days gsap-reveal text-silver-matte text-5xl md:text-7xl lg:text-[6rem] font-extrabold tracking-tighter block">
           {tagline2}
-        </h1>
+        </span>
       </div>
 
       {/* BACKGROUND LAYER 2: Tactile CTA Buttons */}
@@ -265,7 +266,7 @@ export function CinematicHero({
             {/* LOGO */}
             {brandLogo && (
               <div className="absolute top-8 left-6 lg:left-12 z-50">
-                <Image src={brandLogo} alt="Logo" width={160} height={48} className="w-auto h-8 md:h-12 object-contain" priority />
+                <Image src={brandLogo} alt={`${brandName} - Tech Intelligence Logo`} width={160} height={48} className="w-auto h-8 md:h-12 object-contain" priority />
               </div>
             )}
 
@@ -388,7 +389,7 @@ export function CinematicHero({
                 {/* Floating Glass Badges - Positioned carefully for mobile */}
                 <div className="floating-badge absolute flex top-2 lg:top-12 left-[-10px] lg:left-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-2.5 lg:p-4 items-center gap-2.5 lg:gap-4 z-30">
                   <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-neutral-400/20 to-neutral-700/10 flex items-center justify-center border border-neutral-400/30 shadow-inner">
-                    <span className="text-sm lg:text-xl drop-shadow-lg" aria-hidden="true">🔥</span>
+                    <Zap className="w-4 h-4 lg:w-5 lg:h-5 text-neutral-300 drop-shadow-lg" />
                   </div>
                   <div>
                     <p className="text-white text-[10px] lg:text-sm font-bold tracking-tight">Active Sites</p>
@@ -398,7 +399,7 @@ export function CinematicHero({
 
                 <div className="floating-badge absolute flex bottom-2 lg:bottom-20 right-[-10px] lg:right-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-2.5 lg:p-4 items-center gap-2.5 lg:gap-4 z-30">
                   <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-linear-to-b from-zinc-400/20 to-zinc-700/10 flex items-center justify-center border border-zinc-400/30 shadow-inner">
-                    <span className="text-sm lg:text-lg drop-shadow-lg" aria-hidden="true">🤖</span>
+                    <Bot className="w-4 h-4 lg:w-5 lg:h-5 text-zinc-300 drop-shadow-lg" />
                   </div>
                   <div>
                     <p className="text-white text-[10px] lg:text-sm font-bold tracking-tight">AI Integrated</p>

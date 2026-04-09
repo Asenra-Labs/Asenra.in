@@ -1,8 +1,13 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Services | Asenra",
-  description: "Explore our specialized services including high-performance websites, AI-driven automations, and custom software for local businesses.",
+  title: "Asenra Services | Bespoke Digital Architecture & AI Agents",
+  description: "From cinematic web experiences to autonomous AI agents and custom enterprise software. We build the technical engines that double your business revenue.",
+  openGraph: {
+    title: "Asenra | Digital Services & AI Engineering",
+    description: "High-performance systems for elite businesses. Explore our architecture focus.",
+    images: ["/logo.png"],
+  },
 };
 
 export default function ServicesLayout({
