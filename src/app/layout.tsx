@@ -6,12 +6,20 @@ import PremiumFooter from "@/components/ui/premium-footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Asenra | Digital Architecture for Small Businesses",
-  description: "Bespoke websites, autonomous AI agents, and custom software engineered for Indian businesses. Based in Kolhapur, serving the world.",
+  title: "Asenra | High-Performance Digital Architecture & AI Agents",
+  description: "Bespoke websites, autonomous AI agents, and custom software engineered for high-growth Indian businesses. Based in Kolhapur, architecture for the global market.",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",
     apple: "/logo.png",
+  },
+  keywords: ["AI Agents", "Next.js Development", "Web Design Kolhapur", "Autonomous Bots", "Custom Software", "Asenra"],
+  authors: [{ name: "Asenra Team" }],
+  openGraph: {
+    title: "Asenra | Digital Engineering for Small Businesses",
+    description: "Cinematic digital real estate and autonomous AI employees. Engineered for performance.",
+    images: ["/logo.png"],
+    type: "website",
   }
 };
 

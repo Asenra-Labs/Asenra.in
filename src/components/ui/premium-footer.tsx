@@ -29,19 +29,11 @@ export default function PremiumFooter() {
       ]
     },
     {
-      title: "Navigation",
-      links: [
-        { label: "Deployment", href: "/" },
-        { label: "Client Access", href: "/" },
-        { label: "Terminals", href: "/" },
-      ]
-    },
-    {
       title: "Connect",
       links: [
-        { label: "Our X", href: "https://x.com", icon: Globe },
-        { label: "LinkedIn", href: "https://linkedin.com", icon: Globe },
-        { label: "Community", href: "https://github.com", icon: MessageSquare },
+        { label: "LinkedIn", href: "https://www.linkedin.com/company/asenra/", icon: Globe },
+        { label: "Instagram", href: "https://www.instagram.com/asenra.in/", icon: Globe },
+        { label: "GitHub", href: "https://github.com/Asenra-Org", icon: Globe },
       ]
     }
   ];
