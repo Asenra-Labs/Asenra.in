@@ -31,44 +31,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body className={`${inter.className} min-h-screen bg-black font-sans antialiased text-zinc-50 overflow-x-hidden`}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": "Organization",
-                  "@id": "https://asenra.in/#organization",
-                  "name": "Asenra",
-                  "url": "https://asenra.in",
-                  "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://asenra.in/logo.png"
-                  },
-                  "description": "High-performance digital architecture and autonomous AI agents for high-growth businesses.",
-                  "sameAs": [
-                    "https://linkedin.com/company/asenra",
-                    "https://twitter.com/asenra_in"
-                  ]
-                },
-                {
-                  "@type": "ProfessionalService",
-                  "name": "Asenra",
-                  "image": "https://asenra.in/logo.png",
-                  "@id": "https://asenra.in",
-                  "url": "https://asenra.in",
-                  "priceRange": "₹₹₹",
-                  "address": {
-                    "@type": "PostalAddress",
-                    "addressCountry": "IN"
-                  },
-                  "description": "Bespoke websites, autonomous AI agents, and custom software engineered for the global market."
-                }
-              ]
-            })
-          }}
-        />
         {children}
         <PremiumFooter />
       </body>
