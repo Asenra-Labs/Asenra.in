@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, Code, Layout, Cpu, CheckCircle2, FlaskConical } from "lucide-react";
+import { ArrowLeft, Code, Layout, Cpu, CheckCircle2, FlaskConical, Shield } from "lucide-react";
 import Link from "next/link";
 import { YouFormModal } from "@/components/ui/YouFormModal";
 
@@ -51,10 +51,16 @@ export default function HiringPage() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10 pt-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors mb-12 group">
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Terminal
-        </Link>
+        <div className="flex items-center justify-between mb-12">
+          <Link href="/" className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors group">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Terminal
+          </Link>
+          <Link href="/hiring/verify" className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all rounded-lg group text-xs uppercase tracking-widest font-black">
+            <Shield className="w-4 h-4" />
+            Verify Documents
+          </Link>
+        </div>
 
         <section className="max-w-4xl">
           <div className="space-y-4 mb-20">
@@ -62,7 +68,7 @@ export default function HiringPage() {
               Recruitment Protocol
             </h1>
             <h2 className="text-5xl sm:text-7xl font-black tracking-tighter leading-[0.9]">
-              JOIN AS <span className="text-silver-matte">INTERN.</span>
+              JOIN <span className="text-silver-matte">ASENRA.</span>
             </h2>
             <p className="text-xl text-neutral-400 max-w-3xl leading-relaxed mt-6">
               ASENRA is an advanced engineering entity focused on high-impact proprietary solutions. 
@@ -115,14 +121,13 @@ export default function HiringPage() {
                 
                 <div className="flex flex-col gap-4">
                   <button 
-                    onClick={() => setIsFormOpen(true)}
-                    className="w-full py-5 btn-modern-light rounded-2xl font-black italic tracking-widest uppercase text-center flex items-center justify-center gap-4 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    disabled
+                    className="w-full py-5 bg-white/5 border border-white/10 text-white/50 rounded-2xl font-black italic tracking-widest uppercase text-center flex items-center justify-center gap-4 cursor-not-allowed"
                   >
-                    Start Your Journey
-                    <ArrowLeft className="w-5 h-5 rotate-180" />
+                    Not Hiring
                   </button>
-                  <p className="text-center text-[10px] text-neutral-600 uppercase tracking-widest">
-                    Batch Enrollment: Open Now
+                  <p className="text-center text-[10px] text-red-500/80 uppercase tracking-widest font-black">
+                    Applications Closed
                   </p>
                 </div>
               </div>

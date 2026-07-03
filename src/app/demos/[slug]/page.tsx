@@ -6,7 +6,8 @@ import {
   SalonTemplate, 
   ServicesTemplate, 
   GeneralTemplate,
-  ArchitectureTemplate
+  ArchitectureTemplate,
+  BoutiqueTemplate
 } from "@/components/demo/Templates";
 
 interface PageProps {
@@ -43,6 +44,17 @@ export default async function Page({ params }: PageProps) {
     industry.includes("builder")
   ) {
     return <ArchitectureTemplate lead={lead} />;
+  }
+
+  // Route fashion, clothing, apparel, boutique to BoutiqueTemplate
+  if (
+    category === "boutique" ||
+    industry.includes("boutique") ||
+    industry.includes("fashion") ||
+    industry.includes("clothing") ||
+    industry.includes("apparel")
+  ) {
+    return <BoutiqueTemplate lead={lead} />;
   }
 
   switch (category) {

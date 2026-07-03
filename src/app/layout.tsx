@@ -74,8 +74,7 @@ export default function RootLayout({
                   "areaServed": "India",
                   "sameAs": [
                     "https://www.linkedin.com/company/asenra/",
-                    "https://www.instagram.com/asenra.in/",
-                    "https://github.com/Asenra-Org"
+                    "https://www.instagram.com/asenra.in/"
                   ]
                 },
                 {

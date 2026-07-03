@@ -40,8 +40,7 @@ export default function PremiumFooter() {
       title: "Connect",
       links: [
         { label: "LinkedIn", href: "https://www.linkedin.com/company/asenra/", icon: Globe },
-        { label: "Instagram", href: "https://www.instagram.com/asenra.in/", icon: Globe },
-        { label: "GitHub", href: "https://github.com/Asenra-Org", icon: Globe },
+        { label: "Instagram", href: "https://www.instagram.com/asenra.in/", icon: Globe }
       ]
     }
   ];
