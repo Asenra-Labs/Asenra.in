@@ -146,11 +146,10 @@ export function CinematicHero({
             { y: 40, autoAlpha: 0, scale: 0.95 }, 
             { y: 0, autoAlpha: 1, scale: 1, stagger: 0.1, ease: "back.out(1.2)", duration: 1.2 }, "-=1.5"
           )
-          .to(".progress-ring", { strokeDashoffset: 60, duration: 2, ease: "power3.inOut" }, "-=1.2")
-          .to(".counter-val", { innerHTML: metricValue, snap: { innerHTML: 1 }, duration: 2, ease: "expo.out" }, "-=2.0")
-          .fromTo(".floating-badge", 
-            { y: 40, autoAlpha: 0, scale: 0.7, rotationZ: 0 }, 
-            { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.2, stagger: 0.15 }, "-=2.0"
+          .to(".chart-path", { strokeDashoffset: 0, duration: 2, ease: "power3.inOut" }, "-=1.2")
+          .fromTo(".log-item", 
+            { x: -20, autoAlpha: 0 }, 
+            { x: 0, autoAlpha: 1, stagger: 0.2, ease: "power3.out", duration: 1 }, "-=1.5"
           )
           .fromTo(".card-left-text", { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.2 }, "-=1.5")
           .fromTo(".card-right-text", 
@@ -160,7 +159,7 @@ export function CinematicHero({
           .set(".hero-text-wrapper", { autoAlpha: 0 })
           .set(".cta-wrapper", { autoAlpha: 1 }) 
           .to({}, { duration: 1.2 })
-          .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text", ".card-right-text"], {
+          .to([".mockup-scroll-wrapper", ".card-left-text", ".card-right-text"], {
             scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1, stagger: 0.05,
           })
           .to(".main-card", { 
@@ -189,11 +188,10 @@ export function CinematicHero({
             { y: 40, autoAlpha: 0, scale: 0.95 }, 
             { y: 0, autoAlpha: 1, scale: 1, stagger: 0.1, ease: "back.out(1.2)", duration: 1.2 }, "-=1.5"
           )
-          .to(".progress-ring", { strokeDashoffset: 60, duration: 2, ease: "power3.inOut" }, "-=1.2")
-          .to(".counter-val", { innerHTML: metricValue, snap: { innerHTML: 1 }, duration: 2, ease: "expo.out" }, "-=2.0")
-          .fromTo(".floating-badge", 
-            { y: 80, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, 
-            { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.2, stagger: 0.15 }, "-=2.0"
+          .to(".chart-path", { strokeDashoffset: 0, duration: 2, ease: "power3.inOut" }, "-=1.2")
+          .fromTo(".log-item", 
+            { x: -20, autoAlpha: 0 }, 
+            { x: 0, autoAlpha: 1, stagger: 0.2, ease: "power3.out", duration: 1 }, "-=1.5"
           )
           .fromTo(".card-left-text", { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.2 }, "-=1.5")
           .fromTo(".card-right-text", 
@@ -203,7 +201,7 @@ export function CinematicHero({
           .set(".hero-text-wrapper", { autoAlpha: 0 })
           .set(".cta-wrapper", { autoAlpha: 1 }) 
           .to({}, { duration: 1.2 })
-          .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text", ".card-right-text"], {
+          .to([".mockup-scroll-wrapper", ".card-left-text", ".card-right-text"], {
             scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1, stagger: 0.05,
           })
           .to(".main-card", { 
@@ -378,74 +376,85 @@ export function CinematicHero({
                     </div>
 
                     {/* App Interface */}
-                    <div className="relative w-full h-full pt-12 px-5 pb-8 flex flex-col">
-                      <div className="phone-widget flex justify-between items-center mb-8">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold mb-1">ASENRA</span>
-                          <span className="text-xl font-bold tracking-tight text-white drop-shadow-md">Clients</span>
+                    <div className="relative w-full h-full pt-10 px-4 pb-6 flex flex-col font-sans">
+                      {/* Top Bar */}
+                      <div className="phone-widget flex justify-between items-center mb-5 pb-3 border-b border-white/10">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shadow-inner">
+                             <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e] animate-pulse" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[9px] text-neutral-400 uppercase tracking-widest font-semibold">System Status</span>
+                            <span className="text-xs font-medium text-white tracking-wide">Production ENV</span>
+                          </div>
                         </div>
-                        <div className="w-9 h-9 rounded-full bg-white/5 text-neutral-200 flex items-center justify-center font-bold text-sm border border-white/10 shadow-lg shadow-black/50">AP</div>
-                      </div>
-
-                      <div className="phone-widget relative w-44 h-44 mx-auto flex items-center justify-center mb-8 drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)]">
-                        <svg className="absolute inset-0 w-full h-full" aria-hidden="true">
-                          <circle cx="88" cy="88" r="64" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="12" />
-                          <circle className="progress-ring" cx="88" cy="88" r="64" fill="none" stroke="#3B82F6" strokeWidth="12" />
-                        </svg>
-                        <div className="text-center z-10 flex flex-col items-center">
-                          <span className="counter-val text-4xl font-extrabold tracking-tighter text-white">0</span>
-                          <span className="text-[8px] text-neutral-400 uppercase tracking-[0.1em] font-bold mt-0.5">{metricLabel}</span>
+                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 text-neutral-300 shadow-lg shadow-black/50">
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                         </div>
                       </div>
 
-                      <div className="space-y-3">
-                        <div className="phone-widget widget-depth rounded-2xl p-3 flex items-center">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neutral-500/20 to-neutral-600/10 flex items-center justify-center mr-3 border border-neutral-400/20 shadow-inner">
-                            <svg className="w-4 h-4 text-neutral-300 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                      {/* Bento Stats */}
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <div className="phone-widget rounded-2xl bg-[#0a0f1c] border border-white/10 p-3.5 flex flex-col justify-between h-24 relative overflow-hidden shadow-lg shadow-black/40">
+                          <div className="absolute top-0 right-0 p-2.5 opacity-20">
+                            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                           </div>
-                          <div className="flex-1">
-                            <div className="h-2 w-20 bg-blue-500 rounded-full mb-2 shadow-inner" />
-                            <div className="h-1.5 w-12 bg-neutral-600 rounded-full shadow-inner" />
+                          <span className="text-[9px] font-medium text-neutral-400 uppercase tracking-wider">Edge Latency</span>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-2xl font-bold text-white tracking-tighter">12</span>
+                            <span className="text-[10px] text-neutral-500 font-mono">ms</span>
                           </div>
                         </div>
-                        <div className="phone-widget widget-depth rounded-2xl p-3 flex items-center">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-500/20 to-zinc-600/10 flex items-center justify-center mr-3 border border-zinc-400/20 shadow-inner">
-                            <svg className="w-4 h-4 text-zinc-300 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                          </div>
-                          <div className="flex-1">
-                            <div className="h-2 w-24 bg-blue-500 rounded-full mb-2 shadow-inner" />
-                            <div className="h-1.5 w-24 bg-neutral-600 rounded-full shadow-inner" />
+                        <div className="phone-widget rounded-2xl bg-[#0a0f1c] border border-white/10 p-3.5 flex flex-col justify-between h-24 relative overflow-hidden shadow-lg shadow-black/40">
+                           <div className="absolute -bottom-2 -right-2 opacity-40 blur-[1px]">
+                             <svg width="60" height="40" viewBox="0 0 60 40" className="text-blue-500">
+                               <path className="chart-path" strokeDasharray="100" strokeDashoffset="100" d="M0 30 Q 15 10 30 25 T 60 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                             </svg>
+                           </div>
+                          <span className="text-[9px] font-medium text-neutral-400 uppercase tracking-wider">Uptime</span>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-2xl font-bold text-white tracking-tighter">99.9</span>
+                            <span className="text-[10px] text-neutral-500 font-mono">%</span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[120px] h-[4px] bg-white/20 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
+                      {/* Traffic Graph */}
+                      <div className="phone-widget rounded-2xl bg-[#0a0f1c] border border-white/10 p-4 mb-4 shadow-lg shadow-black/40">
+                        <div className="flex justify-between items-end mb-4">
+                           <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Live Traffic</span>
+                           <span className="text-[9px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded font-mono font-semibold tracking-wide">+24%</span>
+                        </div>
+                        <div className="flex items-end justify-between h-14 gap-1.5">
+                          {[30, 45, 25, 60, 40, 75, 50, 85, 55, 90, 65, 100].map((h, i) => (
+                            <div key={i} className="w-full bg-white/5 rounded-sm relative group overflow-hidden h-full">
+                               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-600/80 to-blue-400/80 rounded-sm" style={{ height: `${h}%` }}>
+                                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-blue-300" />
+                               </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Minimal Logs */}
+                      <div className="phone-widget rounded-xl bg-black/40 border border-white/5 p-3 flex-1 flex flex-col justify-end gap-2.5 font-mono text-[9px] overflow-hidden shadow-inner relative">
+                         <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#050914] to-transparent z-10" />
+                         <div className="log-item flex gap-2 text-neutral-500 leading-tight">
+                           <span>08:42:11</span>
+                           <span className="text-neutral-400">Deploying edge functions...</span>
+                         </div>
+                         <div className="log-item flex gap-2 text-neutral-500 leading-tight">
+                           <span>08:42:12</span>
+                           <span className="text-blue-400">Cache invalidated [global]</span>
+                         </div>
+                         <div className="log-item flex gap-2 text-neutral-500 leading-tight">
+                           <span>08:42:14</span>
+                           <span className="text-green-400">Build successfully completed</span>
+                         </div>
+                      </div>
+
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[100px] h-[3px] bg-white/30 rounded-full" />
                     </div>
-                  </div>
-                </div>
-
-                {/* Floating Glass Badges - Positioned carefully for mobile */}
-                <div className="floating-badge absolute flex top-2 lg:top-12 left-[-10px] lg:left-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-2.5 lg:p-4 items-center gap-2.5 lg:gap-4 z-30">
-                  <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-neutral-400/20 to-neutral-700/10 flex items-center justify-center border border-neutral-400/30 shadow-inner">
-                    <Zap className="w-4 h-4 lg:w-5 lg:h-5 text-neutral-300 drop-shadow-lg" />
-                  </div>
-                  <div>
-                    <p className="text-white text-[10px] lg:text-sm font-bold tracking-tight">Active Sites</p>
-                    <p className="text-neutral-400 text-[8px] lg:text-xs font-medium">Over 50+ deployed</p>
-                  </div>
-                </div>
-
-                <div className="floating-badge absolute flex bottom-2 lg:bottom-20 right-[-10px] lg:right-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-2.5 lg:p-4 items-center gap-2.5 lg:gap-4 z-30">
-                  <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-linear-to-b from-zinc-400/20 to-zinc-700/10 flex items-center justify-center border border-zinc-400/30 shadow-inner">
-                    <Bot className="w-4 h-4 lg:w-5 lg:h-5 text-zinc-300 drop-shadow-lg" />
-                  </div>
-                  <div>
-                    <p className="text-white text-[10px] lg:text-sm font-bold tracking-tight">AI Integrated</p>
-                    <p className="text-neutral-400 text-[8px] lg:text-xs font-medium">Smart automation</p>
                   </div>
                 </div>
 
