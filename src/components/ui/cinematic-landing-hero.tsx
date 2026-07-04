@@ -376,84 +376,68 @@ export function CinematicHero({
                     </div>
 
                     {/* App Interface */}
-                    <div className="relative w-full h-full pt-10 px-4 pb-6 flex flex-col font-sans">
-                      {/* Top Bar */}
-                      <div className="phone-widget flex justify-between items-center mb-5 pb-3 border-b border-white/10">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shadow-inner">
-                             <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e] animate-pulse" />
+                    <div className="relative w-full h-full pt-12 px-5 pb-8 flex flex-col">
+                      <div className="phone-widget flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold">ASENRA</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff] animate-pulse" />
                           </div>
+                          <span className="text-lg font-bold tracking-tight text-white drop-shadow-md">COMMAND CENTER</span>
+                        </div>
+                        <div className="w-9 h-9 rounded-full bg-white/5 text-neutral-200 flex items-center justify-center font-bold text-sm border border-white/10 shadow-lg shadow-black/50">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        </div>
+                      </div>
+
+                      <div className="phone-widget relative w-full h-32 mx-auto flex items-end justify-center mb-8 drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] px-2">
+                        <svg className="w-full h-full overflow-visible" viewBox="0 0 200 100" preserveAspectRatio="none">
+                          <defs>
+                            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.1)" />
+                              <stop offset="50%" stopColor="rgba(200, 200, 200, 1)" />
+                              <stop offset="100%" stopColor="rgba(255, 255, 255, 1)" />
+                            </linearGradient>
+                            <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.15)" />
+                              <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
+                            </linearGradient>
+                          </defs>
+                          <path d="M0,80 Q20,20 40,60 T80,40 T120,70 T160,20 T200,50 L200,100 L0,100 Z" fill="url(#fillGrad)" className="opacity-50" />
+                          <path className="chart-path" strokeDasharray="300" strokeDashoffset="300" d="M0,80 Q20,20 40,60 T80,40 T120,70 T160,20 T200,50" fill="none" stroke="url(#lineGrad)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                          
+                          {/* Grid lines */}
+                          <line x1="0" y1="25" x2="200" y2="25" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                          <line x1="0" y1="50" x2="200" y2="50" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                          <line x1="0" y1="75" x2="200" y2="75" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                        </svg>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="phone-widget log-item widget-depth rounded-xl p-3 border border-white/5 bg-white/5 flex items-center justify-between">
                           <div className="flex flex-col">
-                            <span className="text-[9px] text-neutral-400 uppercase tracking-widest font-semibold">System Status</span>
-                            <span className="text-xs font-medium text-white tracking-wide">Production ENV</span>
+                            <span className="text-[10px] text-neutral-500 font-mono mb-1">08:42:12 UTC</span>
+                            <span className="text-xs text-neutral-200 font-medium tracking-wide">Production Build</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 px-2 py-1 bg-white/10 border border-white/20 rounded text-[9px] font-bold text-neutral-300 tracking-wider">
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                            SUCCESS
                           </div>
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 text-neutral-300 shadow-lg shadow-black/50">
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                        </div>
-                      </div>
 
-                      {/* Bento Stats */}
-                      <div className="grid grid-cols-2 gap-3 mb-4">
-                        <div className="phone-widget rounded-2xl bg-[#0a0f1c] border border-white/10 p-3.5 flex flex-col justify-between h-24 relative overflow-hidden shadow-lg shadow-black/40">
-                          <div className="absolute top-0 right-0 p-2.5 opacity-20">
-                            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        <div className="phone-widget log-item widget-depth rounded-xl p-3 border border-white/5 bg-white/5 flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] text-neutral-500 font-mono mb-1">08:42:15 UTC</span>
+                            <span className="text-xs text-neutral-200 font-medium tracking-wide">Edge Caching</span>
                           </div>
-                          <span className="text-[9px] font-medium text-neutral-400 uppercase tracking-wider">Edge Latency</span>
-                          <div className="flex items-baseline gap-1">
-                            <span className="text-2xl font-bold text-white tracking-tighter">12</span>
-                            <span className="text-[10px] text-neutral-500 font-mono">ms</span>
-                          </div>
-                        </div>
-                        <div className="phone-widget rounded-2xl bg-[#0a0f1c] border border-white/10 p-3.5 flex flex-col justify-between h-24 relative overflow-hidden shadow-lg shadow-black/40">
-                           <div className="absolute -bottom-2 -right-2 opacity-40 blur-[1px]">
-                             <svg width="60" height="40" viewBox="0 0 60 40" className="text-blue-500">
-                               <path className="chart-path" strokeDasharray="100" strokeDashoffset="100" d="M0 30 Q 15 10 30 25 T 60 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                             </svg>
-                           </div>
-                          <span className="text-[9px] font-medium text-neutral-400 uppercase tracking-wider">Uptime</span>
-                          <div className="flex items-baseline gap-1">
-                            <span className="text-2xl font-bold text-white tracking-tighter">99.9</span>
-                            <span className="text-[10px] text-neutral-500 font-mono">%</span>
+                          <div className="flex items-center gap-1.5 px-2 py-1 bg-white/10 border border-white/20 rounded text-[9px] font-bold text-neutral-300 tracking-wider">
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            OPTIMIZED
                           </div>
                         </div>
                       </div>
 
-                      {/* Traffic Graph */}
-                      <div className="phone-widget rounded-2xl bg-[#0a0f1c] border border-white/10 p-4 mb-4 shadow-lg shadow-black/40">
-                        <div className="flex justify-between items-end mb-4">
-                           <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Live Traffic</span>
-                           <span className="text-[9px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded font-mono font-semibold tracking-wide">+24%</span>
-                        </div>
-                        <div className="flex items-end justify-between h-14 gap-1.5">
-                          {[30, 45, 25, 60, 40, 75, 50, 85, 55, 90, 65, 100].map((h, i) => (
-                            <div key={i} className="w-full bg-white/5 rounded-sm relative group overflow-hidden h-full">
-                               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-600/80 to-blue-400/80 rounded-sm" style={{ height: `${h}%` }}>
-                                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-blue-300" />
-                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Minimal Logs */}
-                      <div className="phone-widget rounded-xl bg-black/40 border border-white/5 p-3 flex-1 flex flex-col justify-end gap-2.5 font-mono text-[9px] overflow-hidden shadow-inner relative">
-                         <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#050914] to-transparent z-10" />
-                         <div className="log-item flex gap-2 text-neutral-500 leading-tight">
-                           <span>08:42:11</span>
-                           <span className="text-neutral-400">Deploying edge functions...</span>
-                         </div>
-                         <div className="log-item flex gap-2 text-neutral-500 leading-tight">
-                           <span>08:42:12</span>
-                           <span className="text-blue-400">Cache invalidated [global]</span>
-                         </div>
-                         <div className="log-item flex gap-2 text-neutral-500 leading-tight">
-                           <span>08:42:14</span>
-                           <span className="text-green-400">Build successfully completed</span>
-                         </div>
-                      </div>
-
-                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[100px] h-[3px] bg-white/30 rounded-full" />
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[120px] h-[4px] bg-white/20 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
                     </div>
                   </div>
                 </div>

@@ -63,7 +63,7 @@ export function ProductsSection() {
       id="products"
     >
       {/* Cosmic Background Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-red-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-white/[0.015] rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-zinc-500/[0.02] rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -85,11 +85,11 @@ export function ProductsSection() {
         <div 
           ref={contentRef}
           onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
-          className="premium-depth-card group relative p-5 min-[375px]:p-6 sm:p-8 md:p-12 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border border-white/5 bg-linear-to-br from-neutral-900/40 to-black hover:border-red-500/20 transition-colors duration-500 shadow-2xl"
+          className="premium-depth-card group relative p-5 min-[375px]:p-6 sm:p-8 md:p-12 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border border-white/10 bg-linear-to-br from-neutral-900/40 to-black hover:border-white/20 backdrop-blur-2xl transition-colors duration-500 shadow-2xl"
         >
           <div className="card-sheen" />
           {/* Internal ambient glowing blur */}
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br from-red-500/[0.03] to-zinc-500/[0.03] blur-[80px] -mr-32 -mt-32 pointer-events-none group-hover:scale-110 transition-transform duration-700" />
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br from-white/[0.03] to-zinc-500/[0.03] blur-[80px] -mr-32 -mt-32 pointer-events-none group-hover:scale-110 transition-transform duration-700" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Content Column */}
@@ -97,7 +97,7 @@ export function ProductsSection() {
               <h4 className="text-2xl min-[360px]:text-3xl sm:text-5xl font-black text-white tracking-tighter uppercase mb-4 leading-none">
                 Astroneo.space
               </h4>
-              <p className="text-[10px] font-bold text-red-400/80 uppercase tracking-widest mb-6 italic">
+              <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-6">
                 Advanced Interactive 3D Stellar Engine
               </p>
               
@@ -105,9 +105,9 @@ export function ProductsSection() {
                 Our first proprietary launch. Astroneo lets you explore any star in the night sky. Search over 8,800+ stars, interact with real-time 3D WebGL models, and discover complete astronomical data (distance, luminosity, coordinates, and spectral classes).
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10 border-t border-white/5 pt-8">
-                <div className="flex items-start gap-3.5">
-                  <div className="p-2 bg-red-500/5 border border-red-500/10 rounded-xl text-red-400 shrink-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10 border-t border-white/10 pt-8">
+                <div className="flex items-start gap-3.5 group/feature">
+                  <div className="p-2 bg-white/5 border border-white/10 rounded-xl text-white shrink-0 group-hover/feature:bg-white/10 transition-colors duration-300">
                     <Orbit className="w-5 h-5" />
                   </div>
                   <div>
@@ -116,8 +116,8 @@ export function ProductsSection() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3.5">
-                  <div className="p-2 bg-red-500/5 border border-red-500/10 rounded-xl text-red-400 shrink-0">
+                <div className="flex items-start gap-3.5 group/feature">
+                  <div className="p-2 bg-white/5 border border-white/10 rounded-xl text-white shrink-0 group-hover/feature:bg-white/10 transition-colors duration-300">
                     <Cpu className="w-5 h-5" />
                   </div>
                   <div>
@@ -142,9 +142,9 @@ export function ProductsSection() {
 
             {/* Right Showcase Column (Real Product Interface) */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end w-full">
-              <div className="relative w-full max-w-[450px] aspect-4/3 rounded-2xl md:rounded-[2rem] border border-white/10 bg-neutral-950/80 overflow-hidden group/panel shadow-2xl shadow-black/90 transition-all duration-500 hover:border-red-500/20">
-                {/* Subtle Red Ambient Backlight on Hover */}
-                <div className="absolute inset-0 bg-radial-gradient from-red-500/5 to-transparent opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              <div className="relative w-full max-w-[450px] aspect-4/3 rounded-2xl md:rounded-[2rem] border border-white/10 bg-neutral-950/80 overflow-hidden group/panel shadow-2xl shadow-black/90 transition-all duration-500 hover:border-white/20">
+                {/* Subtle White Ambient Backlight on Hover */}
+                <div className="absolute inset-0 bg-radial-gradient from-white/5 to-transparent opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 
                 <Image 
                   src="/astroneo.png" 

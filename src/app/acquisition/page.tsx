@@ -609,12 +609,12 @@ export default function AcquisitionPage() {
                       <div>
                         <span className="text-[10px] font-black uppercase tracking-wider text-zinc-500 block mb-1">Performance Index</span>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-2xl font-black text-rose-500">{audit.originalSpeed}%</span>
+                          <span className="text-2xl font-black text-zinc-500">{audit.originalSpeed}%</span>
                           <span className="text-zinc-600 text-xs font-medium">vs</span>
-                          <span className="text-2xl font-black text-emerald-400">99%</span>
+                          <span className="text-2xl font-black text-white">99%</span>
                         </div>
                       </div>
-                      <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
                         <Zap className="w-5 h-5" />
                       </div>
                     </div>
@@ -623,12 +623,12 @@ export default function AcquisitionPage() {
                       <div>
                         <span className="text-[10px] font-black uppercase tracking-wider text-zinc-500 block mb-1">Conversion (CRO)</span>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-2xl font-black text-rose-500">{audit.originalCro}</span>
+                          <span className="text-2xl font-black text-zinc-500">{audit.originalCro}</span>
                           <span className="text-zinc-600 text-xs font-medium">vs</span>
-                          <span className="text-2xl font-black text-emerald-400">3.8%+</span>
+                          <span className="text-2xl font-black text-white">3.8%+</span>
                         </div>
                       </div>
-                      <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
                         <TrendingUp className="w-5 h-5" />
                       </div>
                     </div>
@@ -636,14 +636,14 @@ export default function AcquisitionPage() {
 
                   {/* Critical Bottlenecks identified */}
                   <div className="space-y-3">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-rose-400 flex items-center gap-1.5">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-1.5">
                       <ShieldAlert className="w-3.5 h-3.5" />
                       <span>Critical Gaps Identified</span>
                     </span>
                     <ul className="space-y-3">
                       {audit.gaps.map((gap, index) => (
                         <li key={index} className="flex gap-3 text-xs text-zinc-300 items-start">
-                          <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                          <AlertCircle className="w-4 h-4 text-zinc-500 shrink-0 mt-0.5" />
                           <span>{gap}</span>
                         </li>
                       ))}
@@ -652,14 +652,14 @@ export default function AcquisitionPage() {
 
                   {/* Asenra Infrastructure Fixes */}
                   <div className="space-y-3 pt-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400 flex items-center gap-1.5">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Asenra Architect Recommendations</span>
                     </span>
                     <ul className="space-y-3">
                       {audit.features.map((feature, index) => (
                         <li key={index} className="flex gap-3 text-xs text-zinc-300 items-start">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}
