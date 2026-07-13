@@ -1,56 +1,17 @@
-"use client";
-
-import React, { useState } from "react";
-import { verifyIntern, InternData } from "./actions";
-import { Search, Loader2, CheckCircle2, FileText, Briefcase, Calendar, Shield, ExternalLink, GraduationCap, ArrowLeft } from "lucide-react";
+import { verifyIntern } from "../actions";
+import { CheckCircle2, FileText, Briefcase, Calendar, Shield, ExternalLink, GraduationCap, ArrowLeft, XCircle } from "lucide-react";
 import Link from "next/link";
 
-export default function VerifyPage() {
-  const [internId, setInternId] = useState("AES-");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [data, setData] = useState<InternData | null>(null);
+interface PageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let val = e.target.value.toUpperCase();
-    
-    if (!val.startsWith('AES-')) {
-      val = 'AES-';
-    }
-    
-    const suffix = val.substring(4);
-    const cleanSuffix = suffix.replace(/-/g, '');
-    
-    const part1 = cleanSuffix.substring(0, 3).replace(/[^A-Z]/g, '');
-    const part2 = cleanSuffix.substring(part1.length, part1.length + 4).replace(/[^0-9]/g, '');
-    const part3 = cleanSuffix.substring(part1.length + part2.length, part1.length + part2.length + 3).replace(/[^0-9]/g, '');
-    
-    let formatted = 'AES-';
-    if (part1.length > 0) formatted += part1;
-    if (part1.length === 3 && (part2.length > 0 || cleanSuffix.length > 3)) formatted += '-' + part2;
-    if (part2.length === 4 && (part3.length > 0 || cleanSuffix.length > 7)) formatted += '-' + part3;
-    
-    setInternId(formatted);
-  };
-
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!internId.trim()) return;
-
-    setLoading(true);
-    setError("");
-    setData(null);
-
-    const result = await verifyIntern(internId);
-
-    if (result.success && result.data) {
-      setData(result.data);
-    } else {
-      setError(result.error || "Verification failed");
-    }
-
-    setLoading(false);
-  };
+export default async function VerifiedInternPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const internId = resolvedParams.id.toUpperCase();
+  const result = await verifyIntern(internId);
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pb-24">
@@ -61,9 +22,9 @@ export default function VerifyPage() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10 pt-12">
-        <Link href="/hiring" className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors mb-12 group">
+        <Link href="/hiring/verify" className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors mb-12 group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Careers
+          Back to Verification
         </Link>
 
         <section className="max-w-3xl mx-auto">
@@ -72,47 +33,27 @@ export default function VerifyPage() {
               Identity Protocol
             </h1>
             <h2 className="text-5xl sm:text-6xl font-black tracking-tighter uppercase italic">
-              Verify <span className="text-silver-matte">Credentials.</span>
+              Record <span className="text-silver-matte">Lookup.</span>
             </h2>
-            <p className="text-lg text-neutral-400 max-w-xl mx-auto leading-relaxed mt-6">
-              Enter the unique Asenra Identification Number to access verified candidate records and official documentation.
-            </p>
-          </div>
-
-          <div className="premium-depth-card p-2 rounded-[30px] relative overflow-hidden bg-white/2 mb-10 shadow-2xl">
-            <div className="card-sheen" />
-            <form onSubmit={handleVerify} className="relative flex items-center z-10">
-              <div className="absolute left-6 text-neutral-500">
-                <Search className="w-5 h-5" />
-              </div>
-              <input
-                type="text"
-                placeholder="AES-INT-2026-001"
-                value={internId}
-                onChange={handleInputChange}
-                className="w-full bg-transparent border-0 pl-16 pr-32 h-16 text-lg focus:outline-none focus:ring-0 text-white placeholder:text-neutral-600 font-medium tracking-wide"
-              />
-              <div className="absolute right-2 top-2 bottom-2">
-                <button
-                  type="submit"
-                  disabled={loading || !internId.trim()}
-                  className="h-full px-8 bg-white text-black hover:scale-105 active:scale-95 rounded-2xl font-black italic uppercase tracking-widest text-xs flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
-                >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Verify"}
-                </button>
-              </div>
-            </form>
           </div>
 
           <div className="relative min-h-[400px]">
-            {error && (
-              <div className="absolute w-full bg-red-950/20 border border-red-500/20 text-red-400 p-6 rounded-[24px] text-center flex items-center justify-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
-                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                <span className="font-medium tracking-wide">{error}</span>
+            {!result.success || !result.data ? (
+              <div className="absolute w-full bg-red-950/20 border border-red-500/20 text-red-400 p-10 rounded-[40px] text-center flex flex-col items-center justify-center gap-6 animate-in fade-in slide-in-from-top-4 duration-300 shadow-2xl">
+                <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <XCircle className="w-8 h-8 text-red-500" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-widest mb-2">Verification Failed</h3>
+                  <p className="font-medium tracking-wide text-red-400/80">
+                    {result.error || `No record found for ID: ${internId}`}
+                  </p>
+                </div>
+                <Link href="/hiring/verify" className="mt-4 px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-bold uppercase tracking-widest text-xs transition-colors">
+                  Try Again
+                </Link>
               </div>
-            )}
-
-            {data && (
+            ) : (
               <div className="premium-depth-card rounded-[40px] overflow-hidden bg-white/2 animate-in fade-in slide-in-from-bottom-8 duration-700 shadow-2xl relative">
                 <div className="card-sheen" />
                 <div className="p-10 border-b border-white/5 relative z-10">
@@ -120,13 +61,13 @@ export default function VerifyPage() {
                     <span className="px-4 py-1.5 bg-white/10 text-white border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
                       <CheckCircle2 className="w-3 h-3" /> Verified Status
                     </span>
-                    <span className="text-neutral-500 text-sm font-mono tracking-widest">{data.internId}</span>
+                    <span className="text-neutral-500 text-sm font-mono tracking-widest">{result.data.internId}</span>
                   </div>
                   <h2 className="text-4xl sm:text-5xl font-black text-white mb-2 uppercase tracking-tighter italic">
-                    {data.firstName} {data.lastName}
+                    {result.data.firstName} {result.data.lastName}
                   </h2>
                   <p className="text-neutral-400 text-lg flex items-center gap-2 font-medium tracking-wide">
-                    <Briefcase className="w-4 h-4" /> {data.role}
+                    <Briefcase className="w-4 h-4" /> {result.data.role}
                   </p>
                 </div>
 
@@ -135,9 +76,9 @@ export default function VerifyPage() {
                     Official Documentation
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {data.offerLetterLink && (
+                    {result.data.offerLetterLink && (
                       <a
-                        href={data.offerLetterLink}
+                        href={result.data.offerLetterLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex items-center p-5 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/10 hover:border-white/20 transition-all duration-300"
@@ -153,9 +94,9 @@ export default function VerifyPage() {
                       </a>
                     )}
 
-                    {data.ndaLink && (
+                    {result.data.ndaLink && (
                       <a
-                        href={data.ndaLink}
+                        href={result.data.ndaLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex items-center p-5 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/10 hover:border-white/20 transition-all duration-300"
@@ -171,7 +112,6 @@ export default function VerifyPage() {
                       </a>
                     )}
                     
-                    {/* Placeholder for future completion certificate */}
                     <div className="flex items-center p-5 bg-white/[0.02] border border-white/5 border-dashed rounded-3xl opacity-60">
                       <div className="w-12 h-12 bg-black/30 rounded-2xl flex items-center justify-center mr-4">
                         <GraduationCap className="w-5 h-5 text-neutral-600" />
@@ -184,7 +124,7 @@ export default function VerifyPage() {
                   </div>
 
                   <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-600 font-mono">
-                    <span className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> ENTRY: {data.submittedAt}</span>
+                    <span className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> ENTRY: {result.data.submittedAt}</span>
                     <span className="uppercase tracking-[0.2em] font-black">Asenra Official Record</span>
                   </div>
                 </div>
