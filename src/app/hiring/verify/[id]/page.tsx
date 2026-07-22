@@ -21,10 +21,13 @@ export default async function VerifiedInternPage({ params }: PageProps) {
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 pt-12">
-        <Link href="/hiring/verify" className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors mb-12 group">
+      <div className="container mx-auto px-6 relative z-30 pt-28 sm:pt-32">
+        <Link 
+          href="/hiring/verify" 
+          className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors cursor-pointer text-sm font-medium tracking-wide group mb-10"
+        >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Verification
+          <span>Back to Verification</span>
         </Link>
 
         <section className="max-w-3xl mx-auto">

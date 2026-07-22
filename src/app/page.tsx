@@ -1,6 +1,8 @@
 import { CinematicHero } from "@/components/ui/cinematic-landing-hero";
+import { SolutionsPreview } from "@/components/sections/SolutionsPreview";
+import { ProcessSection } from "@/components/sections/ProcessSection";
+import { CaseStudiesTeaser } from "@/components/sections/CaseStudiesTeaser";
 import { ProductsSection } from "@/components/sections/ProductsSection";
-import { PricingSection } from "@/components/sections/PricingSection";
 
 export default function Home() {
   return (
@@ -9,19 +11,23 @@ export default function Home() {
         brandName="ASENRA"
         brandLogo="/logo.png"
         brandTextLogo="/asenra-full-logo.png"
-        tagline1="Empowering"
-        tagline2="The Next Billions"
-        cardHeading="High-Performance Systems"
-        cardDescription="Intelligent Automations • Scalable Infrastructure • Elite Web Architectures."
+        tagline1="Enterprise AI Consulting."
+        tagline2="Intelligent Business Systems."
+        cardHeading="Enterprise AI & Business Automation"
+        cardDescription="We help ambitious businesses implement AI, automate operations, and build digital infrastructure that scales."
         metricValue={50}
-        metricLabel="Clients"
-        ctaHeading="Get Your Free Audit"
-        ctaDescription="Schedule your strategy call. Launching in 7 days."
+        metricLabel="Enterprises Scaled"
+        ctaHeading="Transform Your Business."
+        ctaDescription="Book an AI strategy session or request a free technology audit to pinpoint high-ROI automation opportunities."
       />
       
-      <ProductsSection />
+      <SolutionsPreview />
+
+      <ProcessSection />
+
+      <CaseStudiesTeaser />
       
-      <PricingSection />
+      <ProductsSection />
     </main>
   );
 }

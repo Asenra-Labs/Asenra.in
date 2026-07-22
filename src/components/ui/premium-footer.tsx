@@ -3,12 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Globe, MessageSquare } from "lucide-react";
+import { ArrowRight, Globe } from "lucide-react";
 
 interface FooterLink {
   label: string;
   href: string;
-  icon?: React.ElementType;
+  external?: boolean;
 }
 
 interface FooterSection {
@@ -23,70 +23,101 @@ export default function PremiumFooter() {
     {
       title: "Company",
       links: [
-        { label: "Our Vision", href: "/vision" },
-        { label: "Join the Elite", href: "/hiring" },
-        { label: "Architecture", href: "/architecture" },
-        { label: "Services", href: "/services" },
-      ]
+        { label: "Founder Philosophy", href: "/company" },
+        { label: "Careers & Culture", href: "/careers" },
+        { label: "Execution Process", href: "/process" },
+        { label: "System Architecture", href: "/architecture" },
+      ],
     },
     {
-      title: "Products",
+      title: "Solutions",
       links: [
-        { label: "Asenra Demo Engine", href: "/acquisition" },
-        { label: "Astroneo (Stellar Exploration) ↗", href: "https://astroneo.space" },
-      ]
+        { label: "AI Consulting", href: "/solutions#ai-consulting" },
+        { label: "Enterprise AI", href: "/solutions#enterprise-ai-implementation" },
+        { label: "Process Automation", href: "/solutions#business-process-automation" },
+        { label: "Intelligent Software", href: "/solutions#intelligent-software" },
+        { label: "Digital Experiences", href: "/solutions#premium-digital-experiences" },
+      ],
     },
     {
-      title: "Connect",
+      title: "Industries",
       links: [
-        { label: "LinkedIn", href: "https://www.linkedin.com/company/asenra/", icon: Globe },
-        { label: "Instagram", href: "https://www.instagram.com/asenra.in/", icon: Globe }
-      ]
-    }
+        { label: "Manufacturing", href: "/industries#manufacturing" },
+        { label: "Healthcare", href: "/industries#healthcare" },
+        { label: "Finance & Banking", href: "/industries#finance" },
+        { label: "Retail & D2C", href: "/industries#retail" },
+        { label: "Real Estate", href: "/industries#real-estate" },
+        { label: "Hospitality", href: "/industries#hospitality" },
+        { label: "Education", href: "/industries#education" },
+      ],
+    },
+    {
+      title: "Resources & Contact",
+      links: [
+        { label: "Case Studies & ROI", href: "/case-studies" },
+        { label: "Insights & Analysis", href: "/insights" },
+        { label: "Free AI Readiness Audit", href: "/audit" },
+        { label: "Book Strategy Call", href: "/contact" },
+        { label: "LinkedIn ↗", href: "https://www.linkedin.com/company/asenra/", external: true },
+      ],
+    },
   ];
 
   return (
-    <footer className="relative bg-black border-t border-white/5 pt-24 pb-12 overflow-hidden">
+    <footer className="relative bg-black border-t border-white/10 pt-24 pb-12 overflow-hidden">
       {/* Decorative Gradient Glows */}
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-white/2 rounded-full blur-[140px] -translate-x-1/2 translate-y-1/2 pointer-events-none" />
-      <div className="absolute top-0 right-0 w-1/4 h-1/3 bg-white/2 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-white/[0.02] rounded-full blur-[140px] -translate-x-1/2 translate-y-1/2 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-1/4 h-1/3 bg-white/[0.02] rounded-full blur-[120px] translate-x-1/3 -translate-y-1/2 pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-12 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-20">
           
           {/* Brand Column */}
-          <div className="lg:col-span-1 border-r border-white/5 pr-8">
-            <Link href="/" className="inline-block mb-8 group opacity-90 hover:opacity-100 transition-opacity">
+          <div className="lg:col-span-1 border-r border-white/5 pr-6">
+            <Link href="/" className="inline-block mb-6 group opacity-90 hover:opacity-100 transition-opacity">
               <Image 
                 src="/Full_text_logo.png" 
                 alt="Asenra" 
-                width={200} 
-                height={54} 
-                className="h-14 w-auto brightness-[100]" 
+                width={180} 
+                height={48} 
+                className="h-12 w-auto brightness-[100]" 
               />
             </Link>
-            <p className="text-neutral-500 text-sm leading-relaxed max-w-[240px] mb-8 font-medium">
-              Architecting the digital infrastructure for elite Indian businesses. Built for performance, designed for impact.
+            <p className="text-zinc-400 text-xs leading-relaxed font-medium mb-6">
+              Enterprise AI Consulting, Intelligent Business Automation, and Modern Digital Infrastructure engineered for ambitious companies.
             </p>
+            <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+              Asenra Technology Labs
+            </div>
           </div>
 
           {/* Links Columns */}
           {footerLinks.map((section) => (
             <div key={section.title}>
-              <h3 className="text-white text-xs font-black tracking-[0.3em] uppercase mb-8 opacity-40">
+              <h3 className="text-white text-[11px] font-black tracking-[0.25em] uppercase mb-6 text-zinc-400">
                 {section.title}
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link 
-                      href={link.href} 
-                      className="text-neutral-400 hover:text-white transition-colors text-sm font-medium flex items-center group gap-2"
-                    >
-                      {"icon" in link && link.icon && <link.icon className="w-3.5 h-3.5 opacity-50" />}
-                      {link.label}
-                      <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-neutral-500" />
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-zinc-400 hover:text-white transition-colors text-xs font-medium flex items-center group gap-1.5"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link 
+                        href={link.href} 
+                        className="text-zinc-400 hover:text-white transition-colors text-xs font-medium flex items-center group gap-1.5"
+                      >
+                        {link.label}
+                        <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-zinc-500" />
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -96,29 +127,22 @@ export default function PremiumFooter() {
         </div>
 
         {/* Bottom Banner */}
-        <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Massive Text Background */}
-          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden h-[300px] flex items-end justify-center">
-             <span className="text-[14vw] font-black tracking-tighter text-white/5 leading-[0.5] select-none whitespace-nowrap uppercase">
-               Asenra Corp 2026
-             </span>
+        <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="text-zinc-500 text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] order-2 md:order-1">
+            © {currentYear} ASENRA. Enterprise AI Consulting & Intelligent Systems.
           </div>
 
-          <div className="text-neutral-500 text-[10px] sm:text-xs font-black tracking-[0.2em] uppercase order-2 md:order-1">
-            © {currentYear} Asenra Labs Inc. All rights reserved.
-          </div>
-
-          <div className="flex items-center gap-8 order-1 md:order-2">
-             <Link href="/privacy" className="text-neutral-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest">
-               Privacy
-             </Link>
-             <Link href="/terms" className="text-neutral-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest">
-               Terms
-             </Link>
-             <div className="w-1 h-1 rounded-full bg-white/10" />
-             <span className="text-neutral-600 text-[10px] font-black uppercase tracking-widest">
-               Operations Pan-India
-             </span>
+          <div className="flex items-center gap-6 order-1 md:order-2">
+            <Link href="/privacy" className="text-zinc-500 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-widest">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-zinc-500 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-widest">
+              Terms of Service
+            </Link>
+            <div className="w-1 h-1 rounded-full bg-white/10" />
+            <span className="text-zinc-500 text-[10px] font-mono uppercase tracking-widest">
+              Global Delivery & Engineering
+            </span>
           </div>
         </div>
       </div>

@@ -15,10 +15,11 @@ export default function ArchitecturePage() {
   ];
 
   const processSteps = [
-    { num: "01", title: "Blueprint Analysis", desc: "We map out your business logic and aesthetic vision before a single line of code is written." },
-    { num: "02", title: "Elite Engineering", desc: "Build phase starts. We ship daily updates to a staging environment for instant feedback." },
-    { num: "03", title: "Aesthetic Stress Test", desc: "Rigorous testing of animations, responsive layouts, and performance benchmarks." },
-    { num: "04", title: "Final Deployment", desc: "The engine goes live on global edge networks with 24/7 monitoring active." }
+    { num: "01", title: "Business Discovery", desc: "We audit your existing workflows, software stack, and data assets to map high-ROI AI opportunities." },
+    { num: "02", title: "Solution Design", desc: "We design custom architecture blueprints, vector schemas, and security protocols tailored to your business." },
+    { num: "03", title: "Implementation", desc: "Agile engineering sprints build and fine-tune your custom AI models with daily staging updates." },
+    { num: "04", title: "Deployment", desc: "Zero-downtime release across global edge networks with fail-safes and operational handoff." },
+    { num: "05", title: "Optimization", desc: "Continuous 24/7 telemetry monitoring, latency tuning, and iterative AI model refinement." },
   ];
 
   return (

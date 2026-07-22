@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/ui/Navbar";
 import PremiumFooter from "@/components/ui/premium-footer";
 import CookieConsent from "@/components/ui/CookieConsent";
 
@@ -8,17 +9,17 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://asenra.in"),
-  title: "Asenra | Web Development & AI Agents Agency India",
-  description: "Bespoke websites, autonomous AI agents, and custom software engineered for high-growth Indian businesses. Engineering excellence for the global market.",
+  title: "Asenra | Enterprise AI Consulting & Intelligent Business Systems",
+  description: "We help ambitious businesses transform operations through enterprise AI, intelligent automation, and modern digital infrastructure.",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  authors: [{ name: "Asenra Team" }],
+  authors: [{ name: "Asenra Enterprise AI Team" }],
   openGraph: {
-    title: "Asenra | Web Development & AI Agents for Indian Businesses",
-    description: "Cinematic websites, autonomous AI agents & custom software — engineered for high-growth Indian businesses.",
+    title: "Asenra | Enterprise AI Consulting & Intelligent Systems",
+    description: "We help ambitious businesses transform operations through enterprise AI, intelligent automation, and modern digital infrastructure.",
     url: "https://asenra.in",
     siteName: "Asenra",
     locale: "en_IN",
@@ -27,15 +28,15 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Asenra | Web Development & AI Agents Agency India",
+        alt: "Asenra | Enterprise AI Consulting & Intelligent Business Systems",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Asenra | Web Development & AI Agents Agency India",
-    description: "Bespoke websites, autonomous AI agents, and custom software engineered for high-growth Indian businesses.",
+    title: "Asenra | Enterprise AI Consulting & Intelligent Business Systems",
+    description: "We help ambitious businesses transform operations through enterprise AI, intelligent automation, and modern digital infrastructure.",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -69,9 +70,9 @@ export default function RootLayout({
                     "@type": "ImageObject",
                     "url": "https://asenra.in/logo.png"
                   },
-                  "description": "High-performance digital architecture and autonomous AI agents for high-growth Indian businesses.",
+                  "description": "Enterprise AI Consulting, Intelligent Business Automation, and Modern Digital Infrastructure.",
                   "foundingDate": "2024",
-                  "areaServed": "India",
+                  "areaServed": "Global",
                   "sameAs": [
                     "https://www.linkedin.com/company/asenra/",
                     "https://www.instagram.com/asenra.in/"
@@ -91,14 +92,16 @@ export default function RootLayout({
                     "addressRegion": "Maharashtra"
                   },
                   "areaServed": [
-                    { "@type": "Country", "name": "India" }
+                    { "@type": "Country", "name": "Global" }
                   ],
                   "serviceType": [
-                    "Web Development",
-                    "AI Agent Development",
-                    "Custom Software"
+                    "Enterprise AI Consulting",
+                    "Enterprise AI Implementation",
+                    "Business Process Automation",
+                    "Intelligent Software",
+                    "Premium Digital Experiences"
                   ],
-                  "description": "Bespoke websites, autonomous AI agents, and custom software engineered for high-growth Indian businesses.",
+                  "description": "We help ambitious businesses transform operations through enterprise AI, intelligent automation, and modern digital infrastructure.",
                   "sameAs": [
                     "https://www.linkedin.com/company/asenra/",
                     "https://www.instagram.com/asenra.in/"
@@ -108,6 +111,7 @@ export default function RootLayout({
             })
           }}
         />
+        <Navbar />
         {children}
         <PremiumFooter />
         <CookieConsent />

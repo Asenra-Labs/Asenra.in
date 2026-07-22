@@ -19,7 +19,7 @@ export type InternData = {
 export async function verifyIntern(internId: string): Promise<{ success: boolean; data?: InternData; error?: string }> {
   try {
     const response = await fetch(SHEET_URL, {
-      next: { revalidate: 60 }, // Cache for 60 seconds
+      next: { revalidate: 30 }, // Cache for 30 seconds
     });
 
     if (!response.ok) {
@@ -35,13 +35,28 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
 
     const rows = parsed.data as any[];
 
-    // Normalize input to uppercase and trim spaces
-    const normalizedId = internId.trim().toUpperCase();
+    // Clean input ID: remove non-alphanumeric characters and convert to uppercase
+    const cleanInput = internId.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+    
+    if (!cleanInput) {
+      return { success: false, error: "Please enter a valid Intern ID." };
+    }
 
-    // Find the intern matching the ID
+    // Create prefix variants (AES... vs ASN...)
+    const inputVariants = new Set<string>();
+    inputVariants.add(cleanInput);
+    if (cleanInput.startsWith('AES')) {
+      inputVariants.add('ASN' + cleanInput.slice(3));
+    } else if (cleanInput.startsWith('ASN')) {
+      inputVariants.add('AES' + cleanInput.slice(3));
+    }
+
+    // Find the intern matching any variant
     const intern = rows.find((row) => {
-      const id = row["Intern ID"];
-      return id && id.trim().toUpperCase() === normalizedId;
+      const rawId = row["Intern ID"];
+      if (!rawId) return false;
+      const cleanRowId = String(rawId).replace(/[^A-Z0-9]/gi, '').toUpperCase();
+      return inputVariants.has(cleanRowId);
     });
 
     if (!intern) {
@@ -50,15 +65,15 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
 
     // Map the CSV headers to our type
     const internData: InternData = {
-      firstName: intern["First Name"] || "",
-      lastName: intern["Last Name"] || "",
-      email: intern["Email"] || "",
-      phoneNumber: intern["Phone Number"] || "",
-      offerLetterLink: intern["Upload your signed offer letter here that we have sent on your email"] || "",
-      ndaLink: intern["Upload your signed NDA form here that we have sent on your email"] || "",
-      submittedAt: intern["Submitted At"] || "",
-      internId: intern["Intern ID"] || "",
-      role: intern["Role"] || "",
+      firstName: (intern["First Name"] || "").trim(),
+      lastName: (intern["Last Name"] || "").trim(),
+      email: (intern["Email"] || "").trim(),
+      phoneNumber: (intern["Phone Number"] || "").trim(),
+      offerLetterLink: (intern["Upload your signed offer letter here that we have sent on your email"] || "").trim(),
+      ndaLink: (intern["Upload your signed NDA form here that we have sent on your email"] || "").trim(),
+      submittedAt: (intern["Submitted At"] || "").trim(),
+      internId: (intern["Intern ID"] || "").trim(),
+      role: (intern["Role"] || "").trim(),
     };
 
     return { success: true, data: internData };
