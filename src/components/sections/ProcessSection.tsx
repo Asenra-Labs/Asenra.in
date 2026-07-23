@@ -2,38 +2,32 @@
 
 import React from "react";
 import Link from "next/link";
-import { Search, Compass, Code, Rocket, Activity, ArrowRight } from "lucide-react";
+import { Search, Compass, Code, Activity, ArrowRight } from "lucide-react";
 
 const processSteps = [
   {
     step: "01",
-    title: "Business Discovery",
+    title: "Discover",
     icon: Search,
-    description: "We audit your existing workflows, data infrastructure, and operational friction to identify high-ROI AI and automation opportunities.",
+    description: "Understand business operations, audit existing workflows, and identify high-value AI and automation opportunities.",
   },
   {
     step: "02",
-    title: "Solution Design",
+    title: "Architect",
     icon: Compass,
-    description: "We design custom architecture blueprints, data security protocols, and integration specifications tailored to your enterprise systems.",
+    description: "Design the right AI models, software architecture, and integration protocols tailored to your technical ecosystem.",
   },
   {
     step: "03",
-    title: "Implementation",
+    title: "Implement",
     icon: Code,
-    description: "Our engineering team builds and integrates your custom AI models and automation workflows with daily staging updates and rigorous code quality.",
+    description: "Build and integrate intelligent systems seamlessly into your business operations with zero disruption to daily workflows.",
   },
   {
     step: "04",
-    title: "Deployment",
-    icon: Rocket,
-    description: "Seamless, zero-downtime deployment to secure global edge infrastructure with comprehensive team onboarding and operational alignment.",
-  },
-  {
-    step: "05",
-    title: "Optimization",
+    title: "Optimize",
     icon: Activity,
-    description: "Continuous monitoring, performance tuning, and AI model refinement to guarantee ongoing efficiency gains and measurable business ROI.",
+    description: "Continuously monitor performance, refine system capabilities, and measure tangible business outcomes and efficiency gains.",
   },
 ];
 
@@ -46,15 +40,15 @@ export function ProcessSection() {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
-          <div className="mb-4 text-xs font-black uppercase tracking-[0.35em] bg-gradient-to-r from-zinc-300 via-white to-zinc-400 bg-clip-text text-transparent drop-shadow-sm select-none">
-            The Asenra Way
+          <div className="mb-4 text-xs font-black uppercase tracking-[0.35em] text-zinc-500 select-none">
+            How We Work
           </div>
           <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-[0.95] mb-6">
-            Enterprise Execution. <br />
-            <span className="text-silver-matte">Zero Guesswork.</span>
+            Structured Consulting Process. <br />
+            <span className="text-silver-matte">Predictable Execution.</span>
           </h2>
           <p className="text-zinc-400 text-lg sm:text-xl font-medium leading-relaxed">
-            Enterprise clients demand clarity, accountability, and predictable execution. Our 5-stage engineering process ensures total alignment from initial audit to post-deployment scaling.
+            We operate with absolute clarity and accountability. Our 4-stage process ensures seamless integration from initial audit through ongoing optimization.
           </p>
         </div>
 
@@ -83,7 +77,7 @@ export function ProcessSection() {
               </div>
 
               <div className="hidden lg:flex items-center gap-2 text-xs font-mono text-zinc-600 uppercase tracking-widest shrink-0">
-                <span>Phase {item.step}</span>
+                <span>Stage {item.step}</span>
               </div>
             </div>
           ))}
@@ -94,7 +88,7 @@ export function ProcessSection() {
             href="/process"
             className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white text-black font-black uppercase text-xs sm:text-sm tracking-widest hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-[0_0_30px_rgba(255,255,255,0.2)] group"
           >
-            <span>Explore Complete Execution Methodology</span>
+            <span>Explore Complete Process</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

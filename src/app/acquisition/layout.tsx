@@ -1,48 +1,30 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Free Website Demo Generator for Indian Businesses | Asenra",
+  title: "AI Readiness & Website Growth Audit | Asenra",
   description:
-    "See your business website live in seconds — no payment, no signup. Instant AI-powered demo for cafes, gyms, salons, architects & more. India's smartest website preview tool by Asenra.",
+    "Evaluate your digital infrastructure and generate an instant website growth assessment tailored for ambitious businesses. Powered by Asenra Intelligence.",
   keywords: [
-    "free website demo India",
-    "website preview generator",
-    "AI website builder India",
-    "demo website for business",
-    "restaurant website demo",
-    "gym website demo India",
-    "salon website design India",
-    "free web design tool",
-    "Asenra demo engine",
+    "AI readiness assessment",
+    "website growth audit",
+    "digital infrastructure audit",
+    "business website assessment",
+    "AI implementation roadmap",
+    "Asenra audit tool",
   ],
   openGraph: {
-    title: "See Your Business Website Live — Free Demo by Asenra",
+    title: "AI Readiness & Website Growth Audit | Asenra",
     description:
-      "Enter your business name and instantly generate a live website demo. Used by cafes, gyms, salons, and agencies across India.",
+      "Run a live technical audit on your current digital presence and receive an actionable growth assessment.",
     url: "https://asenra.in/acquisition",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Asenra Free Website Demo Generator",
+        alt: "Asenra AI Readiness Assessment",
       },
     ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Free Website Demo for Indian Businesses — Asenra",
-    description:
-      "See how your cafe, gym, or salon would look online. Generate a live demo in seconds — completely free.",
-    images: ["/og-image.png"],
-  },
-  alternates: {
-    canonical: "/acquisition",
-  },
-  robots: {
-    index: true,
-    follow: true,
   },
 };
 
@@ -51,5 +33,5 @@ export default function AcquisitionLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return children;
 }

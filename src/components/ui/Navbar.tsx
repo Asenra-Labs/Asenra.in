@@ -8,13 +8,12 @@ import { Menu, X, ArrowRight, PhoneCall } from "lucide-react";
 import { YouFormModal } from "./YouFormModal";
 
 const navLinks = [
-  { label: "Solutions", href: "/solutions" },
+  { label: "Capabilities", href: "/solutions" },
   { label: "Industries", href: "/industries" },
-  { label: "Case Studies", href: "/case-studies" },
+  { label: "Selected Work", href: "/case-studies" },
   { label: "Process", href: "/process" },
-  { label: "Insights", href: "/insights" },
+  { label: "Packages", href: "/packages" },
   { label: "Company", href: "/company" },
-  { label: "Careers", href: "/careers" },
 ];
 
 export default function Navbar() {
