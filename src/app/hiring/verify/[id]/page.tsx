@@ -60,11 +60,24 @@ export default async function VerifiedInternPage({ params }: PageProps) {
               <div className="premium-depth-card rounded-[40px] overflow-hidden bg-white/2 animate-in fade-in slide-in-from-bottom-8 duration-700 shadow-2xl relative">
                 <div className="card-sheen" />
                 <div className="p-10 border-b border-white/5 relative z-10">
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="px-4 py-1.5 bg-white/10 text-white border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                      <CheckCircle2 className="w-3 h-3" /> Verified Status
+                  <div className="flex flex-wrap items-center gap-3 mb-4">
+                    <span className="px-4 py-1.5 bg-white/10 text-white border border-white/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-white" /> Verified Status
                     </span>
-                    <span className="text-neutral-500 text-sm font-mono tracking-widest">{result.data.internId}</span>
+
+                    {/* Candidate Status Badge */}
+                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-1.5 ${
+                      (result.data.status || 'ONGOING').toUpperCase() === 'ONGOING'
+                        ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+                        : (result.data.status || '').toUpperCase() === 'TERMINATED' || (result.data.status || '').toUpperCase() === 'DISCONTINUED'
+                        ? 'bg-zinc-900 text-zinc-400 border border-zinc-700'
+                        : 'bg-zinc-900 text-zinc-200 border border-white/20'
+                    }`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      Status: {result.data.status || 'ONGOING'}
+                    </span>
+
+                    <span className="text-neutral-500 text-sm font-mono tracking-widest ml-auto">{result.data.internId}</span>
                   </div>
                   <h2 className="text-4xl sm:text-5xl font-black text-white mb-2 uppercase tracking-tighter italic">
                     {result.data.firstName} {result.data.lastName}

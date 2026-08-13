@@ -14,6 +14,7 @@ export type InternData = {
   submittedAt: string;
   internId: string;
   role: string;
+  status: string;
 };
 
 export async function verifyIntern(internId: string): Promise<{ success: boolean; data?: InternData; error?: string }> {
@@ -64,6 +65,8 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
     }
 
     // Map the CSV headers to our type
+    const rawStatus = (intern["status"] || intern["Status"] || intern["STATUS"] || "ONGOING").trim();
+
     const internData: InternData = {
       firstName: (intern["First Name"] || "").trim(),
       lastName: (intern["Last Name"] || "").trim(),
@@ -74,6 +77,7 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
       submittedAt: (intern["Submitted At"] || "").trim(),
       internId: (intern["Intern ID"] || "").trim(),
       role: (intern["Role"] || "").trim(),
+      status: rawStatus.toUpperCase(),
     };
 
     return { success: true, data: internData };

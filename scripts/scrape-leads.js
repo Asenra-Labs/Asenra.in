@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
+const { inspectWebsite } = require("../src/lib/websiteInspector");
+const { evaluateLeadIntelligence } = require("../src/lib/scoringEngine");
 
 // 1. Load environment variables
 const envPath = path.join(__dirname, "../.env.local");
@@ -36,101 +38,116 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// 2. Fallback Leads matching the user's specific Priority Industries & details
-const fallbackLeads = [
+// High-Intent Target Queries across India
+const ICP_QUERIES = [
+  "professional audio manufacturer in India",
+  "sound equipment manufacturer in Mumbai",
+  "AV integrator in Bangalore",
+  "architecture studio in Pune",
+  "interior design firm in Delhi NCR",
+  "luxury furniture manufacturer in Jaipur",
+  "specialized industrial equipment manufacturer in Ahmedabad",
+  "event production company in Hyderabad",
+  "custom automotive shop in Chennai",
+  "boutique hotel in Rajasthan",
+  "real estate developer in Gurgaon",
+  "commercial lighting manufacturer in India"
+];
+
+// Fallback High-Intent Leads matching ASENRA ICP
+const FALLBACK_HIGH_INTENT_LEADS = [
   {
-    name: "Cafe Mondegar",
-    industry: "Cafes / Restaurants",
-    phone: "+91 22 2202 0591",
-    email: "info@cafemondegar.co.in",
-    address: "Colaba Causeway, Apollo Bandar",
-    city: "Mumbai",
+    name: "SRS Sound & Cabinets",
+    industry: "Professional Audio & Manufacturing",
+    phone: "+91 98220 11223",
+    email: "contact@srssound.in",
+    address: " Bhosari Industrial Estate, Pune",
+    city: "Pune",
     state: "Maharashtra",
-    maps_link: "https://maps.app.goo.gl/mondegar",
-    rating: 4.3,
-    review_count: 8200,
-    social_links: "instagram.com/cafemondegar",
-    category: "cafe",
-    tagline: "Retro Jukebox & Iconic Mumbai Vibes",
-    description: "Indulge in delicious drafts, continental breakfasts, and iconic retro vibes at one of Mumbai's oldest and most loved cafe bars.",
-    services: "Brewed Specialty Coffees, English Breakfasts, Draught Beer, Retro Ambience",
-    theme: "gold"
-  },
-  {
-    name: "Iron Grip Strength Gym",
-    industry: "Gyms & Fitness Centers",
-    phone: "+91 98334 12345",
-    email: "contact@irongripgym.com",
-    address: "Link Road, Santacruz West",
-    city: "Mumbai",
-    state: "Maharashtra",
-    maps_link: "https://maps.app.goo.gl/irongrip",
+    maps_link: "https://maps.google.com/?q=SRS+Sound+Pune",
     rating: 4.8,
-    review_count: 312,
-    social_links: "instagram.com/irongrip_gym",
-    category: "gym",
-    tagline: "Heavy Metal & Hardcore Strength Training",
-    description: "No fancy setups, just heavy iron, chalk, and elite powerlifting coaching designed to break your plateaus.",
-    services: "Powerlifting Coaching, Olympic Weightlifting, High-Contrast Strength Zone",
-    theme: "red"
-  },
-  {
-    name: "Zoya Luxury Salon",
-    industry: "Beauty Salons & Spas",
-    phone: "+91 22 6673 8888",
-    email: "appointments@zoyaluxury.com",
-    address: "Altamount Road, South Mumbai",
-    city: "Mumbai",
-    state: "Maharashtra",
-    maps_link: "https://maps.app.goo.gl/zoyasalon",
-    rating: 4.6,
-    review_count: 512,
-    social_links: "instagram.com/zoya_luxury_salon",
-    category: "salon",
-    tagline: "High-Fashion Hair & Couture Skin Treatments",
-    description: "Welcome to zoya. Experience state-of-the-art styling sessions, luxury scalp therapy, and premium global beauty brands.",
-    services: "Precision Styling & Haircuts, Revitalizing Scalp Treatments, Organic Skin Cleansing",
-    theme: "rose"
-  },
-  {
-    name: "Bandra Premium Dental Care",
-    industry: "Clinics & Dental Clinics",
-    phone: "+91 99201 98765",
-    email: "care@bandradental.com",
-    address: "Carter Road, Bandra West",
-    city: "Mumbai",
-    state: "Maharashtra",
-    maps_link: "https://maps.app.goo.gl/bandradental",
-    rating: 4.9,
-    review_count: 120,
-    social_links: "facebook.com/bandradental",
-    category: "services",
-    tagline: "Advanced Invisible Aligners & Smile Design",
-    description: "Experience modern, painless dentistry with India's top orthodontists. Specializing in cosmetic dentistry and laser root canals.",
-    services: "Smile Designing, Invisible Aligners, Laser Root Canals, Pediatric Care",
-    theme: "emerald"
-  },
-  {
-    name: "Vanguard Design Studio",
-    industry: "Interior Designers & Architects",
-    phone: "+91 98190 54321",
-    email: "hello@vanguarddesign.in",
-    address: "Hiranandani Business Park, Powai",
-    city: "Mumbai",
-    state: "Maharashtra",
-    maps_link: "https://maps.app.goo.gl/vanguard",
-    rating: 4.7,
-    review_count: 85,
-    social_links: "instagram.com/vanguard_interiors",
+    review_count: 142,
+    social_links: "instagram.com/srssound_official",
     category: "architecture",
-    tagline: "Cinematic Residential & Commercial Architecture",
-    description: "Crafting bespoke physical spaces that blend high-performance functionality with premium minimalist design aesthetics.",
-    services: "Luxury Residential Interiors, Office Architecture, Minimal Space Planning",
-    theme: "white"
+    website: "", // No website
+    tagline: "Bespoke Concert Loudspeakers & Industrial Enclosures",
+    description: "Pioneering high-output loudspeaker engineering, touring cabinets, and custom acoustic enclosures for pro audio rentals across India.",
+    services: "Touring Line Arrays, Subwoofer Cabinets, Acoustic Design, OEM Pro Audio Manufacturing"
+  },
+  {
+    name: "Aethel Architecture Studio",
+    industry: "Architecture & Interior Design",
+    phone: "+91 98190 88776",
+    email: "projects@aethelstudio.com",
+    address: "Koregaon Park, Pune",
+    city: "Pune",
+    state: "Maharashtra",
+    maps_link: "https://maps.google.com/?q=Aethel+Architecture",
+    rating: 4.9,
+    review_count: 58,
+    social_links: "instagram.com/aethel_architecture",
+    category: "architecture",
+    website: "http://aethelstudio-oldtemp.in", // Outdated website
+    tagline: "Monolithic Residential Architecture & Bespoke Space Planning",
+    description: "Award-winning architectural studio specializing in luxury villa design, sustainable commercial spaces, and high-end residential interiors.",
+    services: "Luxury Villa Architecture, Commercial Space Design, Sustainable Building Planning"
+  },
+  {
+    name: "Kavya Industrial Transformers",
+    industry: "Specialized Industrial Manufacturing",
+    phone: "+91 20 2712 4455",
+    email: "sales@kavyatransformers.co.in",
+    address: "Chakan MIDC Phase 2, Pune",
+    city: "Pune",
+    state: "Maharashtra",
+    maps_link: "https://maps.google.com/?q=Kavya+Industrial",
+    rating: 4.6,
+    review_count: 38,
+    social_links: "linkedin.com/company/kavyatransformers",
+    category: "services",
+    website: "", // No website
+    tagline: "Heavy-Duty Power Transformers & Substation Equipment",
+    description: "Leading manufacturer of industrial step-down transformers, oil-immersed distribution units, and custom power grid infrastructure.",
+    services: "Distribution Transformers, Substation Contracting, Custom Industrial Power Supplies"
+  },
+  {
+    name: "Vogue Living Bespoke Furniture",
+    industry: "Luxury Furniture & Interior Styling",
+    phone: "+91 99201 33445",
+    email: "info@vogueliving.in",
+    address: "Indiranagar 100ft Road, Bangalore",
+    city: "Bangalore",
+    state: "Karnataka",
+    maps_link: "https://maps.google.com/?q=Vogue+Living+Bangalore",
+    rating: 4.7,
+    review_count: 94,
+    social_links: "instagram.com/vogueliving_india",
+    category: "boutique",
+    website: "http://voguelivingfurniture.com", // Weak website
+    tagline: "Bespoke Handcrafted Hardwood Furniture & Luxury Interiors",
+    description: "Custom solid-wood dining tables, brass-finished upholstery, and curated aesthetic furniture for high-end residences and luxury hotels.",
+    services: "Custom Hardwood Furniture, Luxury Sofa Crafting, Commercial Hotel Fitouts"
+  },
+  {
+    name: "Apex Velocity Custom Automotive",
+    industry: "Premium Automotive & Performance",
+    phone: "+91 98450 77112",
+    email: "builds@apexvelocity.in",
+    address: "UB City Corridor, Bangalore",
+    city: "Bangalore",
+    state: "Karnataka",
+    maps_link: "https://maps.google.com/?q=Apex+Velocity",
+    rating: 4.9,
+    review_count: 110,
+    social_links: "instagram.com/apex_velocity_customs",
+    category: "services",
+    website: "", // No website
+    tagline: "Supercar Detailing, Performance Exhausts & Custom Restorations",
+    description: "South India's premier exotic vehicle customization workshop specializing in ceramic coating, performance exhausts, and vintage restorations.",
+    services: "Exotic Car Detailing, Valved Exhaust Systems, Custom Body Restorations"
   }
 ];
 
-// Helper to slugify name
 function slugify(name) {
   return name
     .toLowerCase()
@@ -139,96 +156,35 @@ function slugify(name) {
     .replace(/[\s_]+/g, "-");
 }
 
-// Helper to remove Hindi/regional languages often appended in Google Maps names
 function cleanBusinessName(name) {
   if (!name) return "";
-  
-  // First, split by typical separators
-  const parts = name.split(/[|:-]/);
+  let parts = name.split(/[|:-]/);
   for (let part of parts) {
     part = part.trim();
-    // \u0900-\u097F is Devanagari (Hindi, Marathi, Sanskrit)
-    // \u0A80-\u0AFF is Gujarati
-    // If the part DOES NOT contain these, and is reasonably long, use it!
     if (!/[\u0900-\u097F\u0A80-\u0AFF]/.test(part) && part.length > 2) {
       return part;
     }
   }
-  
-  // Fallback: strip Devanagari/Gujarati and trailing separators
-  let cleaned = name.replace(/[\u0900-\u097F\u0A80-\u0AFF]/g, "");
-  cleaned = cleaned.replace(/^[|:.,\-\&]+|[|:.,\-\&]+$/g, "").trim();
-  cleaned = cleaned.replace(/\s+/g, ' ');
-  
-  // If it's just punctuation left, return empty string
-  if (/^[^a-zA-Z0-9]*$/.test(cleaned)) {
-      return "";
-  }
-  
-  return cleaned;
+  let cleaned = name.replace(/[\u0900-\u097F\u0A80-\u0AFF]/g, "").replace(/^[|:.,\-\&]+|[|:.,\-\&]+$/g, "").trim();
+  return cleaned.replace(/\s+/g, ' ');
 }
 
-// Helper to filter out entries that have a real custom website
-function hasNoRealWebsite(item) {
-  if (!item.website) return true;
-  const domain = item.website.toLowerCase();
-  
-  // If the website is actually a social media page, a directory, or has no domain extension, count it as "no custom website"
-  const socialDomains = [
-    "facebook.com", "instagram.com", "justdial.com", "indiamart.com", 
-    "youtube.com", "twitter.com", "linkedin.com", "pinterest.com", 
-    "yelp.com", "tripadvisor.com", "sulekha.com", "dialindia.com",
-    "maps.google.com"
-  ];
-  return socialDomains.some(social => domain.includes(social));
+// Normalizes business identifier for deduplication
+function getDeduplicationKey(item) {
+  const nameKey = cleanBusinessName(item.name || item.title || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const phoneKey = (item.phone || "").replace(/\D/g, "");
+  return `${nameKey}_${phoneKey.slice(-8)}`;
 }
 
-async function scrapeRealLeads() {
+async function fetchCandidateLeads() {
   if (!apifyToken) {
-    console.log("Apify Token not found in .env.local. Running with fallback high-performance India listings matching priority categories...");
-    return fallbackLeads;
+    console.log("No Apify token found in .env.local. Running with curated high-intent fallback candidates...");
+    return FALLBACK_HIGH_INTENT_LEADS;
   }
 
   try {
-    // Get location and industry from environment variables, or select randomly for daily cron
-    const cityNeighborhoods = {
-      "Mumbai": ["Andheri", "Bandra", "Powai", "Malad", "Colaba", "Dadar", "Juhu", "Goregaon"],
-      "Bangalore": ["Indiranagar", "Koramangala", "Whitefield", "Jayanagar", "HSR Layout", "Malleshwaram"],
-      "Pune": ["Koregaon Park", "Viman Nagar", "Kothrud", "Baner", "Hinjewadi", "Wakad"],
-      "Delhi NCR": ["Connaught Place", "Saket", "Hauz Khas", "Vasant Kunj", "Dwarka", "Rohini"],
-      "Hyderabad": ["Banjara Hills", "Jubilee Hills", "HITEC City", "Gachibowli", "Madhapur", "Kondapur"],
-      "Jaipur": ["Malviya Nagar", "Vaishali Nagar", "C Scheme", "Mansarovar", "Raja Park"],
-      "Gurgaon": ["Cyber Hub", "Sector 29", "Golf Course Road", "DLF Phase 4", "Sohna Road"],
-      "Ahmedabad": ["Vastrapur", "SG Highway", "Navrangpura", "Satellite", "Bopal", "Prahlad Nagar"]
-    };
-    
-    const industries = [
-      "dentists",
-      "gyms",
-      "cafes",
-      "beauty salons",
-      "hair salons",
-      "spas",
-      "clinics",
-      "bakeries",
-      "car repair shops",
-      "physiotherapists",
-      "boutiques"
-    ];
-
-    let selectedLocation = process.env.TARGET_LOCATION;
-    if (!selectedLocation) {
-      const cities = Object.keys(cityNeighborhoods);
-      const randomCity = cities[Math.floor(Math.random() * cities.length)];
-      const neighborhoods = cityNeighborhoods[randomCity];
-      const randomNeighborhood = neighborhoods[Math.floor(Math.random() * neighborhoods.length)];
-      selectedLocation = `${randomNeighborhood}, ${randomCity}`;
-    }
-
-    const selectedIndustry = process.env.TARGET_INDUSTRY || industries[Math.floor(Math.random() * industries.length)];
-    
-    const query = `${selectedIndustry} in ${selectedLocation}`;
-    console.log(`Calling Apify Google Maps Scraper API with Query: "${query}"...`);
+    const selectedQuery = ICP_QUERIES[Math.floor(Math.random() * ICP_QUERIES.length)];
+    console.log(`Searching Apify Google Places for high-intent query: "${selectedQuery}"...`);
 
     const response = await fetch(
       `https://api.apify.com/v2/acts/compass~crawler-google-places/runs?token=${apifyToken}`,
@@ -236,162 +192,181 @@ async function scrapeRealLeads() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          searchStringsArray: [query],
-          maxCrawledPlacesPerSearch: 50,
+          searchStringsArray: [selectedQuery],
+          maxCrawledPlacesPerSearch: 30,
         })
       }
     );
 
     const runData = await response.json();
     if (!runData || !runData.data) {
-      throw new Error(`Apify run initialization failed: ${JSON.stringify(runData)}`);
+      console.warn("Apify run initiation failed. Using curated high-intent fallback candidates...");
+      return FALLBACK_HIGH_INTENT_LEADS;
     }
+
     const runId = runData.data.id;
     const datasetId = runData.data.defaultDatasetId;
 
-    console.log(`Scraper started. Run ID: ${runId}, Dataset ID: ${datasetId}. Waiting for completion...`);
-    let completed = false;
-    let results = [];
-
-    for (let i = 0; i < 36; i++) { // Poll for up to 6 minutes (36 * 10s)
+    // Poll for results up to 3 minutes
+    for (let i = 0; i < 18; i++) {
       await new Promise(r => setTimeout(r, 10000));
-      
-      try {
-        const runRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${apifyToken}`);
-        const runInfo = await runRes.json();
-        const status = runInfo.data?.status;
-        console.log(`Polling status: ${status} (Iteration ${i+1}/36)`);
-        
-        if (status && status !== "RUNNING" && status !== "READY") {
-          console.log(`Run finished with status: ${status}`);
-          completed = true;
-          break;
-        }
-      } catch (e) {
-        console.error("Error fetching run status:", e.message);
+      const runRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${apifyToken}`);
+      const runInfo = await runRes.json();
+      const status = runInfo.data?.status;
+      if (status && status !== "RUNNING" && status !== "READY") {
+        break;
       }
     }
 
     const statusRes = await fetch(`https://api.apify.com/v2/datasets/${datasetId}/items?token=${apifyToken}`);
-    results = await statusRes.json();
-    let filteredResults = results.filter(hasNoRealWebsite);
-    console.log(`Scraped ${results.length} total elements. Filtered down to ${filteredResults.length} leads without websites.`);
+    const results = await statusRes.json();
 
-    if (filteredResults.length === 0) {
-      console.log(`No leads without websites found for "${query}". Attempting backup reliable query (gyms)...`);
-      const backupQuery = `gyms in ${selectedLocation}`;
-      try {
-        const backupResponse = await fetch(
-          `https://api.apify.com/v2/acts/compass~crawler-google-places/runs?token=${apifyToken}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              searchStringsArray: [backupQuery],
-              maxCrawledPlacesPerSearch: 40,
-            })
-          }
-        );
-        const backupRunData = await backupResponse.json();
-        if (backupRunData && backupRunData.data) {
-          const backupRunId = backupRunData.data.id;
-          const backupDatasetId = backupRunData.data.defaultDatasetId;
-          console.log(`Backup scraper started. Run ID: ${backupRunId}, Dataset ID: ${backupDatasetId}. Waiting...`);
-          
-          for (let i = 0; i < 24; i++) { // wait up to 4 minutes
-            await new Promise(r => setTimeout(r, 10000));
-            try {
-              const runRes = await fetch(`https://api.apify.com/v2/actor-runs/${backupRunId}?token=${apifyToken}`);
-              const runInfo = await runRes.json();
-              const status = runInfo.data?.status;
-              console.log(`Polling backup status: ${status} (Iteration ${i+1}/24)`);
-              if (status && status !== "RUNNING" && status !== "READY") {
-                break;
-              }
-            } catch (e) {
-              console.error("Backup polling error:", e.message);
-            }
-          }
-          const backupStatusRes = await fetch(`https://api.apify.com/v2/datasets/${backupDatasetId}/items?token=${apifyToken}`);
-          const backupResults = await backupStatusRes.json();
-          filteredResults = backupResults.filter(hasNoRealWebsite);
-          console.log(`Backup search finished. Found ${filteredResults.length} leads without websites.`);
-        }
-      } catch (err) {
-        console.error("Backup query failed:", err.message);
-      }
+    if (!Array.isArray(results) || results.length === 0) {
+      return FALLBACK_HIGH_INTENT_LEADS;
     }
 
-    if (filteredResults.length === 0) {
-      console.log("Still no leads without websites found. Using fallback leads...");
-      return fallbackLeads;
-    }
-
-    return filteredResults.slice(0, 15).map(item => {
-      const category = item.categoryName ? item.categoryName.toLowerCase() : "general";
-      let mappedCategory = "general";
-      let industry = item.categoryName || "Local Service Business";
-
-      if (category.includes("cafe") || category.includes("restaurant") || category.includes("coffee")) {
-        mappedCategory = "cafe";
-        industry = "Cafes & Restaurants";
-      } else if (category.includes("gym") || category.includes("fitness") || category.includes("workout")) {
-        mappedCategory = "gym";
-        industry = "Gyms & Fitness Centers";
-      } else if (category.includes("salon") || category.includes("spa") || category.includes("beauty")) {
-        mappedCategory = "salon";
-        industry = "Beauty Salons & Spas";
-      } else if (category.includes("cleaning") || category.includes("plumbing") || category.includes("dentist") || category.includes("clinic")) {
-        mappedCategory = "services";
-        industry = item.categoryName || "Clinics & Local Services";
-      } else if (category.includes("architect") || category.includes("interior") || category.includes("design") || category.includes("construction") || category.includes("builder")) {
-        mappedCategory = "architecture";
-        industry = item.categoryName || "Architecture & Interior Design";
-      }
-
-      let cleanName = cleanBusinessName(item.title);
-      let cleanTagline = cleanBusinessName(item.subTitle);
-      let cleanDesc = cleanBusinessName(item.description);
-      
-      if (!cleanName) cleanName = "Local Business";
-      // We allow tagline and desc to be empty so frontend falls back to default properly
-
-      return {
-        name: cleanName,
-        industry: industry,
-        phone: item.phone || "+91 XXXXX XXXXX",
-        email: item.email || "",
-        address: item.address || "Mumbai, India",
-        city: item.city || "Mumbai",
-        state: item.state || "Maharashtra",
-        maps_link: item.url || "https://maps.google.com",
-        rating: item.totalScore || 4.2,
-        review_count: item.reviewsCount || 0,
-        social_links: item.instagram || item.facebook || "",
-        category: mappedCategory,
-        tagline: cleanTagline || null,
-        description: cleanDesc || null,
-        services: item.additionalInfo?.services || "High Quality Services, Expert Care",
-        theme: mappedCategory === "cafe" ? "gold" : mappedCategory === "gym" ? "red" : mappedCategory === "salon" ? "rose" : mappedCategory === "services" ? "emerald" : "blue"
-      };
-    });
+    return results.map(item => ({
+      name: cleanBusinessName(item.title || "Business Candidate"),
+      industry: item.categoryName || "Specialized Commercial Business",
+      phone: item.phone || "",
+      email: item.email || "",
+      address: item.address || "India",
+      city: item.city || "Mumbai",
+      state: item.state || "Maharashtra",
+      maps_link: item.url || "https://maps.google.com",
+      rating: item.totalScore || 4.5,
+      review_count: item.reviewsCount || 0,
+      social_links: item.instagram || item.facebook || item.linkedin || "",
+      category: (item.categoryName || "").toLowerCase().includes("architect") ? "architecture" : "services",
+      website: item.website || "",
+      tagline: item.subTitle || null,
+      description: item.description || null,
+      services: item.additionalInfo?.services || "Bespoke Commercial Services"
+    }));
   } catch (err) {
     console.error("Apify scraping failed:", err.message);
-    console.log("Falling back to premium local Mumbai business list...");
-    return fallbackLeads;
+    return FALLBACK_HIGH_INTENT_LEADS;
   }
 }
 
-async function run() {
-  const scrapedLeads = await scrapeRealLeads();
-  console.log(`Processing ${scrapedLeads.length} leads...`);
+async function runProspectingPipeline() {
+  console.log("=================================================");
+  console.log("ASENRA HIGH-INTENT OPPORTUNITY INTELLIGENCE ENGINE");
+  console.log("=================================================");
 
-  let addedCount = 0;
+  const rawCandidates = await fetchCandidateLeads();
+  console.log(`Discovered ${rawCandidates.length} raw business candidates.`);
 
-  for (const lead of scrapedLeads) {
-    const slug = slugify(lead.name);
-    const leadData = {
-      slug,
+  // 1. Deduplication Map
+  const uniqueCandidatesMap = new Map();
+  for (const candidate of rawCandidates) {
+    const key = getDeduplicationKey(candidate);
+    if (!uniqueCandidatesMap.has(key) && candidate.name) {
+      uniqueCandidatesMap.set(key, candidate);
+    }
+  }
+
+  const uniqueCandidates = Array.from(uniqueCandidatesMap.values());
+  console.log(`Deduplicated down to ${uniqueCandidates.length} unique candidates.`);
+
+  // 2. Audit & Score Candidates
+  const qualifiedScoredLeads = [];
+
+  for (const candidate of uniqueCandidates) {
+    console.log(`\nInspecting digital presence & scoring: ${candidate.name}...`);
+    
+    // Website Opportunity Audit
+    const websiteAudit = await inspectWebsite(candidate.website, {
+      category: candidate.category,
+      industry: candidate.industry
+    });
+
+    // Multi-factor qualification & intelligence score
+    const intelligence = evaluateLeadIntelligence(candidate, websiteAudit);
+
+    console.log(`  └ Website Status: ${intelligence.website_status}`);
+    console.log(`  └ Total Score: ${intelligence.total_score}/100 [Priority: ${intelligence.priority}]`);
+    console.log(`  └ Disqualified: ${intelligence.disqualified ? 'YES' : 'NO'}`);
+
+    if (!intelligence.disqualified) {
+      qualifiedScoredLeads.push({
+        ...candidate,
+        slug: slugify(candidate.name),
+        status: "QUALIFIED",
+        website: candidate.website || "",
+        website_status: intelligence.website_status,
+        website_opportunity_type: intelligence.website_opportunity_type,
+        total_score: intelligence.total_score,
+        priority: intelligence.priority,
+        maturity_score: intelligence.maturity_score,
+        commercial_value_score: intelligence.commercial_value_score,
+        visual_richness_score: intelligence.visual_richness_score,
+        digital_gap_score: intelligence.digital_gap_score,
+        contactability_score: intelligence.contactability_score,
+        growth_intent_score: intelligence.growth_intent_score,
+        confidence_indicators: intelligence.confidence_indicators,
+        why_this_lead: intelligence.why_this_lead,
+        why_asenra: intelligence.why_asenra,
+        key_signals: intelligence.key_signals
+      });
+    }
+  }
+
+  // 3. Global Ranking & Industry Diversity Enforcement
+  qualifiedScoredLeads.sort((a, b) => b.total_score - a.total_score);
+
+  const finalTop5Leads = [];
+  const industryCounts = new Map();
+
+  for (const lead of qualifiedScoredLeads) {
+    const indKey = (lead.industry || "general").toLowerCase();
+    const currentCount = industryCounts.get(indKey) || 0;
+
+    // Enforce max 2 leads per industry category in daily batch
+    if (currentCount < 2) {
+      finalTop5Leads.push(lead);
+      industryCounts.set(indKey, currentCount + 1);
+    }
+
+    if (finalTop5Leads.length >= 5) {
+      break;
+    }
+  }
+
+  console.log("\n-------------------------------------------------");
+  console.log(`FINAL QUALIFIED TOP ${finalTop5Leads.length} HIGH-INTENT LEADS FOR TODAY:`);
+  console.log("-------------------------------------------------");
+
+  let upsertCount = 0;
+  for (let i = 0; i < finalTop5Leads.length; i++) {
+    const lead = finalTop5Leads[i];
+    console.log(`#${i + 1} | ${lead.name} (${lead.city}, ${lead.state}) | Score: ${lead.total_score}/100 | Status: ${lead.website_status}`);
+    console.log(`     Why Asenra: "${lead.why_asenra}"`);
+
+    // Construct database payload matching Supabase table schema
+    let parsedDescription = lead.description || "";
+    const intelligenceMeta = {
+      summary: parsedDescription,
+      website: lead.website || "",
+      why_asenra: lead.why_asenra,
+      why_this_lead: lead.why_this_lead,
+      key_signals: lead.key_signals,
+      scores: {
+        total_score: lead.total_score,
+        priority: lead.priority,
+        website_status: lead.website_status,
+        website_opportunity_type: lead.website_opportunity_type,
+        maturity_score: lead.maturity_score,
+        commercial_value_score: lead.commercial_value_score,
+        visual_richness_score: lead.visual_richness_score,
+        digital_gap_score: lead.digital_gap_score,
+        contactability_score: lead.contactability_score,
+        growth_intent_score: lead.growth_intent_score
+      }
+    };
+
+    const dbPayload = {
+      slug: lead.slug,
       name: lead.name,
       industry: lead.industry,
       phone: lead.phone,
@@ -404,26 +379,26 @@ async function run() {
       review_count: lead.review_count,
       social_links: lead.social_links,
       category: lead.category,
-      tagline: lead.tagline,
-      description: lead.description,
+      tagline: `[Score: ${lead.total_score}/100 | ${lead.website_status} | ${lead.priority} Priority] ${lead.tagline || ''}`.trim(),
+      description: JSON.stringify(intelligenceMeta),
       services: lead.services,
-      color_theme: lead.theme,
-      status: "new"
+      status: lead.status || "QUALIFIED"
     };
 
-    console.log(`Inserting/Upserting lead: ${lead.name} (${slug})...`);
+    // Save/Upsert to Supabase
     const { error } = await supabase
       .from("leads")
-      .upsert(leadData, { onConflict: "slug" });
+      .upsert(dbPayload, { onConflict: "slug" });
 
     if (error) {
-      console.error(`Error inserting ${lead.name}:`, error.message);
+      console.error(`Error saving ${lead.name}:`, error.message);
     } else {
-      addedCount++;
+      upsertCount++;
     }
   }
 
-  console.log(`\nDaily Automation Job Complete! Successfully updated ${addedCount} leads in Supabase.`);
+  console.log(`\nPipeline execution complete. ${upsertCount} high-intent opportunity records saved to Supabase.`);
+  console.log("NOTE: Automatic demo website generation was NOT executed. Demo creation is now human-initiated in the Admin UI.");
 }
 
-run();
+runProspectingPipeline();

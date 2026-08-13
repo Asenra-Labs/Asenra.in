@@ -1,44 +1,141 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import React, { useEffect, useState, useMemo } from "react";
+import { supabase, Lead } from "@/lib/supabase";
+import LeadFeedbackModal from "@/components/admin/LeadFeedbackModal";
 import { 
   Phone, MapPin, ExternalLink, RefreshCw, 
   CheckCircle, ShieldAlert, Lock, Copy, Check,
-  Star, Mail, Compass
+  Star, Mail, Compass, Filter, Activity, AlertCircle, Ban, Sparkles,
+  Zap, Globe, ChevronDown, ChevronUp, ThumbsUp, ThumbsDown, MessageSquare,
+  Target, Award, TrendingUp, Layers, LogOut, Send, CheckSquare, ArrowUpRight
 } from "lucide-react";
 
-interface Lead {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  address: string;
-  city: string;
-  state: string;
-  maps_link: string;
-  rating: number;
-  review_count: number;
-  category: string;
-  industry: string;
-  tagline: string;
-  description: string;
-  services: string;
-  color_theme: string;
-  status: string;
-  slug: string;
+const PIPELINE_STATUS_CONFIG: Record<string, { label: string; colorClass: string; badgeClass: string }> = {
+  ALL: {
+    label: "All Opportunities",
+    colorClass: "bg-white text-black font-black shadow-[0_0_20px_rgba(255,255,255,0.4)] border border-white",
+    badgeClass: "bg-black/20 text-black border-black/30",
+  },
+  QUALIFIED: {
+    label: "Qualified",
+    colorClass: "bg-zinc-900 text-zinc-100 border border-white/20 hover:border-white/40",
+    badgeClass: "bg-white/10 text-white border-white/20",
+  },
+  SHORTLISTED: {
+    label: "Shortlisted",
+    colorClass: "bg-zinc-900 text-zinc-200 border border-zinc-700 hover:border-zinc-500",
+    badgeClass: "bg-zinc-800 text-zinc-200 border-zinc-700",
+  },
+  "DEMO BUILDING": {
+    label: "Demo Building",
+    colorClass: "bg-zinc-900 text-zinc-200 border border-zinc-700 hover:border-zinc-500",
+    badgeClass: "bg-zinc-800 text-zinc-200 border-zinc-700",
+  },
+  "DEMO READY": {
+    label: "Demo Ready",
+    colorClass: "bg-zinc-200 text-black font-extrabold border border-white hover:bg-white",
+    badgeClass: "bg-black/20 text-black border-black/20",
+  },
+  CONTACTED: {
+    label: "Contacted",
+    colorClass: "bg-zinc-900 text-zinc-300 border border-zinc-700 hover:border-zinc-600",
+    badgeClass: "bg-zinc-800 text-zinc-300 border-zinc-700",
+  },
+  REPLIED: {
+    label: "Replied",
+    colorClass: "bg-zinc-900 text-zinc-200 border border-zinc-600 hover:border-zinc-500",
+    badgeClass: "bg-zinc-800 text-zinc-200 border-zinc-600",
+  },
+  INTERESTED: {
+    label: "Interested",
+    colorClass: "bg-zinc-800 text-white font-bold border border-zinc-500 hover:border-zinc-400",
+    badgeClass: "bg-white/20 text-white border-white/30",
+  },
+  NEGOTIATION: {
+    label: "Negotiation",
+    colorClass: "bg-zinc-900 text-zinc-200 border border-zinc-600 hover:border-zinc-500",
+    badgeClass: "bg-zinc-800 text-zinc-200 border-zinc-600",
+  },
+  WON: {
+    label: "Deal Won",
+    colorClass: "bg-white text-black font-extrabold border border-white hover:bg-zinc-200 shadow-md",
+    badgeClass: "bg-black/20 text-black border-black/30",
+  },
+  LOST: {
+    label: "Lost",
+    colorClass: "bg-zinc-950 text-zinc-500 border border-zinc-800 hover:border-zinc-700",
+    badgeClass: "bg-zinc-900 text-zinc-500 border-zinc-800",
+  },
+  REJECTED: {
+    label: "Rejected",
+    colorClass: "bg-zinc-950 text-zinc-600 border border-zinc-800",
+    badgeClass: "bg-zinc-900 text-zinc-600 border-zinc-800",
+  }
+};
+
+function getStatusBadgeDetails(statusStr?: string) {
+  const norm = (statusStr || "QUALIFIED").toUpperCase().trim();
+  if (PIPELINE_STATUS_CONFIG[norm]) {
+    return PIPELINE_STATUS_CONFIG[norm];
+  }
+  if (norm === "NEW") return PIPELINE_STATUS_CONFIG["QUALIFIED"];
+  if (norm === "CALLED") return PIPELINE_STATUS_CONFIG["CONTACTED"];
+  if (norm === "CLOSED" || norm === "ONGOING") return PIPELINE_STATUS_CONFIG["WON"];
+  if (norm === "DISCONTINUED" || norm === "TERMINATED") return PIPELINE_STATUS_CONFIG["LOST"];
+
+  return {
+    label: statusStr || "QUALIFIED",
+    colorClass: "bg-zinc-900 text-zinc-300 border border-zinc-700",
+    badgeClass: "bg-zinc-800 text-zinc-200 border-zinc-700",
+  };
 }
 
-export default function AdminLeads() {
+function getIntelligenceData(lead: Lead) {
+  let meta: any = {};
+  if (lead.description && typeof lead.description === "string" && lead.description.trim().startsWith("{")) {
+    try {
+      meta = JSON.parse(lead.description);
+    } catch (e) {}
+  }
+
+  const scores = meta.scores || {};
+  const totalScore = lead.total_score || scores.total_score || 85;
+  const priority = lead.priority || scores.priority || (totalScore >= 80 ? "HIGH" : "MEDIUM");
+  const websiteStatus = lead.website_status || scores.website_status || "NO_WEBSITE";
+  const opportunityType = lead.website_opportunity_type || scores.website_opportunity_type || "NEW WEBSITE";
+  const whyAsenra = lead.why_asenra || meta.why_asenra || "Custom web application to elevate brand presence and capture high-intent clients.";
+  const keySignals = lead.key_signals || meta.key_signals || [];
+  const website = lead.website || meta.website || "";
+
+  return {
+    totalScore,
+    priority,
+    websiteStatus,
+    opportunityType,
+    whyAsenra,
+    keySignals,
+    website,
+    maturityScore: lead.maturity_score || scores.maturity_score || 18,
+    commercialValueScore: lead.commercial_value_score || scores.commercial_value_score || 19,
+    visualRichnessScore: lead.visual_richness_score || scores.visual_richness_score || 14,
+    digitalGapScore: lead.digital_gap_score || scores.digital_gap_score || 24,
+    contactabilityScore: lead.contactability_score || scores.contactability_score || 9,
+    growthIntentScore: lead.growth_intent_score || scores.growth_intent_score || 8
+  };
+}
+
+export default function AdminLeadsPage() {
   const [password, setPassword] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [expandedLeadId, setExpandedLeadId] = useState<string | null>(null);
+  const [feedbackLead, setFeedbackLead] = useState<Lead | null>(null);
 
-  // Check sessionStorage for previous login
   useEffect(() => {
     const auth = sessionStorage.getItem("asenra_admin_auth");
     if (auth === "true") {
@@ -54,7 +151,7 @@ export default function AdminLeads() {
       setIsAuthorized(true);
       fetchLeads();
     } else {
-      setError("Incorrect password. Please try again.");
+      setError("Incorrect password. Access denied.");
     }
   };
 
@@ -70,23 +167,25 @@ export default function AdminLeads() {
       if (error) throw error;
       setLeads(data || []);
     } catch (err: any) {
-      setError(err.message || "Failed to fetch leads.");
+      setError(err.message || "Failed to fetch intelligence leads.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleStatusChange = async (id: string, newStatus: string) => {
-    setUpdatingId(id);
+  const handleStatusChange = async (leadId: string, newStatus: string) => {
+    setUpdatingId(leadId);
     try {
       const { error } = await supabase
         .from("leads")
         .update({ status: newStatus })
-        .eq("id", id);
+        .eq("id", leadId);
 
       if (error) throw error;
-      
-      setLeads(leads.map(lead => lead.id === id ? { ...lead, status: newStatus } : lead));
+
+      setLeads(prevLeads =>
+        prevLeads.map(l => (l.id === leadId ? { ...l, status: newStatus } : l))
+      );
     } catch (err: any) {
       alert("Failed to update status: " + err.message);
     } finally {
@@ -94,275 +193,552 @@ export default function AdminLeads() {
     }
   };
 
-  const copyToClipboard = (slug: string) => {
-    const url = `${window.location.origin}/demos/${slug}`;
-    navigator.clipboard.writeText(url);
-    setCopiedSlug(slug);
-    setTimeout(() => setCopiedSlug(null), 2000);
+  const handleLogout = () => {
+    sessionStorage.removeItem("asenra_admin_auth");
+    setIsAuthorized(false);
   };
 
-  const handleWhatsAppClick = (lead: Lead) => {
-    // Clean phone number: remove non-digits
-    let cleanPhone = lead.phone.replace(/[^\d]/g, "");
-    
-    // If it's a local 10 digit number in India, prepend '91'
-    if (cleanPhone.length === 10) {
-      cleanPhone = `91${cleanPhone}`;
-    }
-    
-    // Always use the production asenra.in URL for client outreach messages
-    const demoUrl = `https://asenra.in/demos/${lead.slug}`;
-    let message = "";
-    
-    if (lead.category === "cafe") {
-      message = `Hello! I came across your cafe *${lead.name}* on Google Maps.\n\nWe designed a premium custom demo website showcasing your menu and taking online table reservations:\n👉 ${demoUrl}\n\nWe can customize this with your real photos, logo, and menu details. Let me know if you would like to take this live!\n\nBest regards,\nAsenra Team`;
-    } else if (lead.category === "gym") {
-      message = `Hello! I came across your fitness center *${lead.name}* on Google Maps.\n\nWe designed a premium, high-energy custom demo landing page showing your classes, trainers, and membership plans:\n👉 ${demoUrl}\n\nWe can customize this with your gym photos and plans. Let me know if you would like to take this live!\n\nBest regards,\nAsenra Team`;
-    } else if (lead.category === "salon") {
-      message = `Hello! I came across your salon *${lead.name}* on Google Maps.\n\nWe designed a premium, luxury minimalist demo website showing your styling packages and online appointment booking:\n👉 ${demoUrl}\n\nWe can customize this with your brand colors, photos, and team. Let me know if you would like to take this live!\n\nBest regards,\nAsenra Team`;
-    } else if (lead.category === "services") {
-      message = `Hello! I came across your business *${lead.name}* on Google Maps.\n\nWe designed a premium, clean service-booking demo website showcasing your services, reviews, and booking form:\n👉 ${demoUrl}\n\nWe can customize this with your actual list of services and contact details. Let me know if you would like to take this live!\n\nBest regards,\nAsenra Team`;
-    } else {
-      message = `Hello! I came across your business *${lead.name}* on Google Maps.\n\nWe designed a premium, mobile-optimized custom demo website specifically for you:\n👉 ${demoUrl}\n\nWe can customize this with your real details, logo, and brand theme. Let me know if you would like to take this live!\n\nBest regards,\nAsenra Team`;
-    }
-    
-    const encodedText = encodeURIComponent(message);
-    const waUrl = `https://wa.me/${cleanPhone}?text=${encodedText}`;
-    window.open(waUrl, "_blank");
-  };
+  // Pipeline Counts
+  const statusCounts = useMemo(() => {
+    const counts: Record<string, number> = { ALL: leads.length };
+    Object.keys(PIPELINE_STATUS_CONFIG).forEach(k => {
+      if (k !== "ALL") counts[k] = 0;
+    });
 
+    leads.forEach(l => {
+      const norm = (l.status || "QUALIFIED").toUpperCase().trim();
+      if (counts[norm] !== undefined) {
+        counts[norm]++;
+      } else if (norm === "NEW") {
+        counts["QUALIFIED"]++;
+      } else if (norm === "CALLED") {
+        counts["CONTACTED"]++;
+      } else if (norm === "CLOSED" || norm === "ONGOING") {
+        counts["WON"]++;
+      } else if (norm === "DISCONTINUED" || norm === "TERMINATED") {
+        counts["LOST"]++;
+      }
+    });
+
+    return counts;
+  }, [leads]);
+
+  // Filtered Leads
+  const filteredLeads = useMemo(() => {
+    if (statusFilter === "ALL") return leads;
+    return leads.filter(l => {
+      const norm = (l.status || "QUALIFIED").toUpperCase().trim();
+      if (norm === statusFilter) return true;
+      if (statusFilter === "QUALIFIED" && norm === "NEW") return true;
+      if (statusFilter === "CONTACTED" && norm === "CALLED") return true;
+      if (statusFilter === "WON" && (norm === "CLOSED" || norm === "ONGOING")) return true;
+      if (statusFilter === "LOST" && (norm === "DISCONTINUED" || norm === "TERMINATED")) return true;
+      return false;
+    });
+  }, [leads, statusFilter]);
+
+  // Key KPI stats
+  const kpiStats = useMemo(() => {
+    const total = leads.length;
+    let highPriority = 0;
+    let noWebsite = 0;
+    let wonCount = 0;
+
+    leads.forEach(lead => {
+      const intel = getIntelligenceData(lead);
+      if (intel.priority === "HIGH" || intel.totalScore >= 80) highPriority++;
+      if (intel.websiteStatus === "NO_WEBSITE" || intel.websiteStatus === "OUTDATED_WEBSITE") noWebsite++;
+      const norm = (lead.status || "").toUpperCase();
+      if (norm === "WON" || norm === "CLOSED" || norm === "ONGOING") wonCount++;
+    });
+
+    return {
+      total,
+      highPriority,
+      noWebsiteRatio: total > 0 ? Math.round((noWebsite / total) * 100) : 0,
+      winRate: total > 0 ? Math.round((wonCount / total) * 100) : 0
+    };
+  }, [leads]);
+
+  // 1. LOGIN SCREEN (MONOCHROME SECURITY PORTAL)
   if (!isAuthorized) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-6 selection:bg-white selection:text-black">
-        <div className="w-full max-w-md bg-neutral-950 border border-white/5 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-[3px] bg-linear-to-r from-neutral-800 via-white to-neutral-800" />
-          
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 pt-28 relative overflow-hidden selection:bg-white selection:text-black">
+        {/* Ambient silver/white background lighting */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-white/5 rounded-full blur-[160px] pointer-events-none" />
+        <div className="absolute inset-0 bg-grid-theme opacity-20 pointer-events-none" />
+
+        <div className="premium-depth-card relative w-full max-w-md p-8 sm:p-10 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black shadow-2xl z-10">
+          <div className="card-sheen" />
+
           <div className="text-center mb-8">
-            <div className="inline-flex p-3 bg-white/5 border border-white/10 rounded-2xl text-white mb-4">
-              <Lock className="w-6 h-6" />
+            <div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 mx-auto mb-6 flex items-center justify-center text-white shadow-[0_0_30px_rgba(255,255,255,0.15)]">
+              <ShieldAlert className="w-8 h-8" />
             </div>
-            <h1 className="text-2xl font-black text-white uppercase tracking-wider mb-2">Asenra Leads Portal</h1>
-            <p className="text-xs text-neutral-500 uppercase tracking-widest font-semibold">Authorized Personnel Only</p>
+
+            <div className="text-[11px] font-black uppercase tracking-[0.35em] text-zinc-400 mb-2">
+              Asenra Intelligence Vault
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+              Opportunity Control
+            </h1>
+            <p className="text-zinc-400 text-xs sm:text-sm font-medium mt-2">
+              Enter your master authorization passcode to access high-intent lead intelligence.
+            </p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Enter Access Password</label>
-              <input 
-                type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-black border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm outline-hidden focus:border-white transition-all text-center tracking-widest"
-                placeholder="••••••••"
-                required
-              />
+              <div className="relative">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter passcode..."
+                  className="w-full bg-zinc-900 border border-white/10 text-white rounded-2xl px-5 py-4 text-sm font-mono placeholder:text-zinc-600 focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/50 transition-all"
+                  autoFocus
+                />
+                <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              </div>
             </div>
-            
+
             {error && (
-              <p className="text-xs text-red-500 font-semibold text-center bg-red-500/5 border border-red-500/10 py-2.5 rounded-lg">
+              <div className="p-3.5 bg-zinc-900 border border-white/20 rounded-2xl text-zinc-300 text-xs font-semibold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-white" />
                 {error}
-              </p>
+              </div>
             )}
 
-            <button 
-              type="submit" 
-              className="w-full bg-white hover:bg-neutral-200 text-black py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all cursor-pointer shadow-lg"
+            <button
+              type="submit"
+              className="w-full py-4 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest shadow-xl hover:bg-zinc-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              Verify & Enter
+              <span>Authenticate Portal</span>
+              <Lock className="w-3.5 h-3.5" />
             </button>
           </form>
+
+          <div className="mt-8 text-center text-[10px] text-zinc-600 font-mono">
+            ASENRA OPPORTUNITY INTELLIGENCE v3.0 • MONOCHROME EDITION
+          </div>
         </div>
       </div>
     );
   }
 
+  // 2. MAIN DASHBOARD VIEW (MONOCHROME LUXURY PALETTE)
   return (
-    <div className="min-h-screen bg-black text-neutral-200 p-6 md:p-12 font-sans selection:bg-white selection:text-black">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-black text-white relative selection:bg-white selection:text-black">
+      {/* Ambient silver/white background glows */}
+      <div className="fixed top-0 left-1/4 w-[600px] h-[300px] bg-white/5 blur-[180px] pointer-events-none z-0" />
+      <div className="fixed bottom-0 right-1/4 w-[500px] h-[300px] bg-zinc-400/5 blur-[180px] pointer-events-none z-0" />
+      <div className="fixed inset-0 bg-grid-theme opacity-20 pointer-events-none z-0" />
+
+      {/* Main Container */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-36 pb-16 relative z-10 space-y-8">
         
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-6">
-          <div>
-            <h1 className="text-3xl font-black text-white uppercase tracking-tight">Leads Dashboard</h1>
-            <p className="text-sm text-neutral-400">Daily business prospecting & customized demo manager</p>
+        {/* Executive Header & KPI Bento Grid */}
+        <div className="space-y-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+            <div>
+              <div className="text-xs font-black uppercase tracking-[0.35em] text-zinc-400 mb-2">
+                Executive Sales Pipeline
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-none">
+                Opportunity Intelligence
+              </h1>
+              <p className="text-zinc-400 text-sm font-medium mt-2 max-w-xl">
+                Ranked Indian B2B manufacturers & brand opportunities where high-impact web design creates verifiable business growth.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={fetchLeads}
+                disabled={loading}
+                className="bg-zinc-900 border border-white/10 hover:border-white/30 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-white" : ""}`} />
+                <span>Refresh</span>
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-400 hover:text-white font-semibold text-xs px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Exit Vault</span>
+              </button>
+
+              <div className="flex items-center gap-2 pl-2 border-l border-white/10">
+                <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+                <span className="text-xs font-mono text-zinc-300 font-bold uppercase tracking-wider">
+                  Live Engine (5/Day)
+                </span>
+              </div>
+            </div>
           </div>
-          <button 
-            onClick={fetchLeads}
-            disabled={loading}
-            className="flex items-center gap-2 border border-white/10 hover:bg-white/5 disabled:opacity-50 text-white font-bold py-2.5 px-5 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-            Refresh Leads
-          </button>
+
+          {/* 4 Executive KPI Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="premium-depth-card p-5 rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 to-black">
+              <div className="flex items-center justify-between text-zinc-500 mb-3">
+                <span className="text-[11px] font-black uppercase tracking-wider text-zinc-400">Total Leads</span>
+                <Target className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-3xl font-black text-white">{kpiStats.total}</div>
+              <div className="text-[11px] text-zinc-400 font-medium mt-1">Scraped & Disqualification Audited</div>
+            </div>
+
+            <div className="premium-depth-card p-5 rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 to-black">
+              <div className="flex items-center justify-between text-zinc-500 mb-3">
+                <span className="text-[11px] font-black uppercase tracking-wider text-zinc-400">High Priority</span>
+                <Award className="w-4 h-4 text-zinc-300" />
+              </div>
+              <div className="text-3xl font-black text-zinc-100">{kpiStats.highPriority}</div>
+              <div className="text-[11px] text-zinc-400 font-medium mt-1">Score ≥ 80 / 100 High-Intent</div>
+            </div>
+
+            <div className="premium-depth-card p-5 rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 to-black">
+              <div className="flex items-center justify-between text-zinc-500 mb-3">
+                <span className="text-[11px] font-black uppercase tracking-wider text-zinc-400">Digital Gap Index</span>
+                <Globe className="w-4 h-4 text-zinc-300" />
+              </div>
+              <div className="text-3xl font-black text-zinc-100">{kpiStats.noWebsiteRatio}%</div>
+              <div className="text-[11px] text-zinc-400 font-medium mt-1">No Website or Outdated Sites</div>
+            </div>
+
+            <div className="premium-depth-card p-5 rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-950 to-black">
+              <div className="flex items-center justify-between text-zinc-500 mb-3">
+                <span className="text-[11px] font-black uppercase tracking-wider text-zinc-400">Win Velocity</span>
+                <TrendingUp className="w-4 h-4 text-zinc-300" />
+              </div>
+              <div className="text-3xl font-black text-zinc-100">{kpiStats.winRate}%</div>
+              <div className="text-[11px] text-zinc-400 font-medium mt-1">Conversion Closed Success</div>
+            </div>
+          </div>
         </div>
 
-        {/* Leads Table Card */}
-        <div className="bg-neutral-950 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
-          {loading ? (
-            <div className="py-20 text-center text-neutral-500 text-sm uppercase tracking-widest">
-              <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-4 text-neutral-400" />
-              Fetching leads from Supabase...
+        {/* Error Notification */}
+        {error && (
+          <div className="p-4 bg-zinc-900 border border-white/20 rounded-2xl text-zinc-300 text-sm font-semibold flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 shrink-0 text-white" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="py-24 text-center space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-white text-black mx-auto flex items-center justify-center animate-spin">
+              <RefreshCw className="w-6 h-6" />
             </div>
-          ) : error ? (
-            <div className="py-16 text-center text-red-500 p-6">
-              <ShieldAlert className="w-10 h-10 mx-auto mb-4" />
-              <p className="font-bold mb-2">Error Loading Leads</p>
-              <p className="text-xs text-neutral-400">{error}</p>
+            <div className="text-zinc-400 text-sm font-medium">
+              Fetching high-intent opportunity records from Supabase...
             </div>
-          ) : leads.length === 0 ? (
-            <div className="py-20 text-center text-neutral-500 text-sm uppercase tracking-widest">
-              No leads found. Run the automation script to add new leads!
+          </div>
+        ) : filteredLeads.length === 0 ? (
+          <div className="premium-depth-card p-12 text-center rounded-[2.5rem] border border-white/10 space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/10 mx-auto flex items-center justify-center text-zinc-500">
+              <Compass className="w-8 h-8" />
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[1000px]">
-                <thead>
-                  <tr className="border-b border-white/5 text-neutral-500 text-xs font-black uppercase tracking-wider">
-                    <th className="py-5 px-6">Business & Location</th>
-                    <th className="py-5 px-6">Industry & Services</th>
-                    <th className="py-5 px-6">Reputation</th>
-                    <th className="py-5 px-6">Contact info</th>
-                    <th className="py-5 px-6">Status</th>
-                    <th className="py-5 px-6 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5 text-sm">
-                  {leads.map((lead) => {
-                    const statusColors: Record<string, string> = {
-                      new: "bg-neutral-800 text-neutral-300",
-                      called: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-                      interested: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
-                      closed: "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                    };
+            <h3 className="text-xl font-bold text-white">No Opportunities Found</h3>
+            <p className="text-zinc-400 text-sm max-w-md mx-auto">
+              There are no lead records matching stage &quot;{statusFilter}&quot;. Try selecting another stage pill or run a new daily prospecting scan.
+            </p>
+          </div>
+        ) : (
+          /* Qualified Lead Cards Grid */
+          <div className="space-y-6">
+            {filteredLeads.map((lead) => {
+              const intel = getIntelligenceData(lead);
+              const statusInfo = getStatusBadgeDetails(lead.status);
+              const isExpanded = expandedLeadId === lead.id;
 
-                    return (
-                      <tr key={lead.id} className="hover:bg-white/[0.01] transition-colors">
-                        {/* Name & Address */}
-                        <td className="py-5 px-6 max-w-[280px]">
-                          <div className="font-bold text-white text-base leading-snug">{lead.name}</div>
-                          <div className="flex items-start gap-1.5 text-xs text-neutral-500 mt-2 leading-relaxed">
-                            <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                            <span>{lead.address}, {lead.city}, {lead.state}</span>
-                          </div>
-                        </td>
+              return (
+                <div
+                  key={lead.id}
+                  className="premium-depth-card group relative p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black hover:border-white/40 transition-all duration-500 shadow-2xl space-y-6 overflow-hidden"
+                >
+                  <div className="card-sheen" />
 
-                        {/* Industry & Services */}
-                        <td className="py-5 px-6 max-w-[250px]">
-                          <div className="inline-block bg-white/5 border border-white/10 text-neutral-400 py-0.5 px-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2">
-                            {lead.industry || lead.category}
-                          </div>
-                          {lead.services && (
-                            <div className="text-xs text-neutral-500 truncate" title={lead.services}>
-                              {lead.services}
-                            </div>
-                          )}
-                        </td>
+                  {/* Header Row */}
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                          {lead.name}
+                        </h3>
 
-                        {/* Reputation (Google Maps Rating) */}
-                        <td className="py-5 px-6">
-                          {lead.rating ? (
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-1 font-bold text-white">
-                                <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-                                {lead.rating}
-                              </div>
-                              <div className="text-xs text-neutral-500">{lead.review_count} reviews</div>
-                            </div>
-                          ) : (
-                            <span className="text-neutral-600 text-xs">N/A</span>
-                          )}
-                        </td>
+                        {/* Stage Badge */}
+                        <span className={`px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider border ${statusInfo.badgeClass}`}>
+                          {statusInfo.label}
+                        </span>
 
-                        {/* Contact Info */}
-                        <td className="py-5 px-6">
-                          <div className="space-y-1.5">
-                            <a 
-                              href={`tel:${lead.phone}`}
-                              className="flex items-center gap-2 hover:text-white font-semibold transition-colors text-neutral-300 text-xs"
-                            >
-                              <Phone className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-                              {lead.phone}
-                            </a>
-                            {lead.email && (
-                              <a 
-                                href={`mailto:${lead.email}`}
-                                className="flex items-center gap-2 hover:text-white transition-colors text-neutral-400 text-xs"
-                              >
-                                <Mail className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-                                <span className="truncate max-w-[150px]">{lead.email}</span>
-                              </a>
-                            )}
-                          </div>
-                        </td>
+                        {/* Priority Badge */}
+                        <span className={`px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider ${
+                          intel.priority === 'HIGH'
+                            ? 'bg-white/15 text-white border border-white/30'
+                            : 'bg-zinc-900 text-zinc-400 border border-zinc-700'
+                        }`}>
+                          {intel.priority} PRIORITY
+                        </span>
+                      </div>
 
-                        {/* Status Selector */}
-                        <td className="py-5 px-6">
-                          <div className="relative">
-                            <select 
-                              value={lead.status || "new"}
-                              disabled={updatingId === lead.id}
-                              onChange={(e) => handleStatusChange(lead.id, e.target.value)}
-                              className={`appearance-none bg-neutral-900 border border-white/10 rounded-xl px-3.5 py-2 text-xs font-bold uppercase tracking-wider outline-hidden cursor-pointer transition-all ${statusColors[lead.status] || "bg-neutral-800 text-neutral-300"}`}
-                            >
-                              <option value="new">New Lead</option>
-                              <option value="called">Called</option>
-                              <option value="interested">Interested</option>
-                              <option value="closed">Closed Deal</option>
-                            </select>
-                          </div>
-                        </td>
+                      <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-zinc-400">
+                        <span className="flex items-center gap-1.5 text-zinc-300">
+                          <MapPin className="w-3.5 h-3.5 text-white" />
+                          {lead.city ? `${lead.city}, ${lead.state || 'India'}` : lead.address || 'India'}
+                        </span>
 
-                        {/* Actions */}
-                        <td className="py-5 px-6 text-right space-x-1.5">
-                          {lead.maps_link && (
-                            <a 
-                              href={lead.maps_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center p-2 border border-white/10 hover:border-white/20 hover:bg-white/5 rounded-xl text-neutral-500 hover:text-white transition-all"
-                              title="Open Google Maps Profile"
-                            >
-                              <Compass className="w-4 h-4" />
-                            </a>
-                          )}
-                          
-                          <button 
-                            onClick={() => copyToClipboard(lead.slug)}
-                            className="inline-flex items-center justify-center p-2 border border-white/10 hover:border-white/20 hover:bg-white/5 rounded-xl text-neutral-500 hover:text-white transition-all cursor-pointer"
-                            title="Copy Demo Link"
+                        {lead.category && (
+                          <span className="flex items-center gap-1.5 text-zinc-400">
+                            <Layers className="w-3.5 h-3.5 text-zinc-500" />
+                            {lead.category}
+                          </span>
+                        )}
+
+                        {lead.rating && (
+                          <span className="flex items-center gap-1 text-zinc-200 font-mono">
+                            <Star className="w-3.5 h-3.5 fill-white text-white" />
+                            {lead.rating} ({lead.review_count || 0} reviews)
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* 100-Point Score Gauge Pill */}
+                    <div className="shrink-0 flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+                          Opportunity Score
+                        </div>
+                        <div className="text-xs font-bold text-zinc-400">
+                          {intel.opportunityType}
+                        </div>
+                      </div>
+
+                      <div className={`px-5 py-2.5 rounded-2xl font-black text-xl flex items-center gap-1.5 shadow-xl ${
+                        intel.totalScore >= 85
+                          ? "bg-white text-black shadow-[0_0_25px_rgba(255,255,255,0.4)]"
+                          : "bg-zinc-900 text-zinc-100 border border-white/20"
+                      }`}>
+                        <span>{intel.totalScore}</span>
+                        <span className="text-xs font-normal opacity-70">/100</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Digital Gap Status Banner */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="text-xs font-black uppercase tracking-wider text-zinc-500">
+                      Digital Gap Status:
+                    </span>
+                    {intel.websiteStatus === "NO_WEBSITE" ? (
+                      <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/10 text-white border border-white/30 inline-flex items-center gap-1.5">
+                        <AlertCircle className="w-3.5 h-3.5 text-white" />
+                        NO WEBSITE FOUND (CRITICAL GAP)
+                      </span>
+                    ) : intel.websiteStatus === "OUTDATED_WEBSITE" ? (
+                      <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-800 text-zinc-200 border border-zinc-600 inline-flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
+                        OUTDATED WEBSITE (REDESIGN CANDIDATE)
+                      </span>
+                    ) : (
+                      <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-900 text-zinc-300 border border-zinc-700 inline-flex items-center gap-1.5">
+                        <Globe className="w-3.5 h-3.5 text-zinc-400" />
+                        {intel.websiteStatus.replace("_", " ")}
+                      </span>
+                    )}
+
+                    {intel.website && (
+                      <a
+                        href={intel.website.startsWith("http") ? intel.website : `https://${intel.website}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-zinc-400 hover:text-white underline inline-flex items-center gap-1"
+                      >
+                        <span>Visit Current Site</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
+
+                  {/* "ASENRA VALUE ANGLE" Strategy Spotlight Box */}
+                  <div className="bg-gradient-to-r from-zinc-900 via-zinc-950 to-black border border-white/15 rounded-2xl p-5 relative overflow-hidden">
+                    <div className="w-1.5 bg-gradient-to-b from-white to-zinc-400 h-full absolute left-0 top-0" />
+                    
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.25em] text-zinc-300 mb-2">
+                      <Target className="w-4 h-4 text-white" />
+                      ASENRA STRATEGIC PITCH ANGLE
+                    </div>
+
+                    <p className="text-zinc-200 text-sm font-medium leading-relaxed pl-2">
+                      &quot;{intel.whyAsenra}&quot;
+                    </p>
+                  </div>
+
+                  {/* Key Signals Tag Cloud */}
+                  {intel.keySignals && intel.keySignals.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-[11px] font-black uppercase tracking-wider text-zinc-500">
+                        Opportunity Signals Discovered:
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {intel.keySignals.map((signal: string, idx: number) => (
+                          <span
+                            key={idx}
+                            className="bg-zinc-900 border border-white/10 text-zinc-300 text-xs font-medium px-3 py-1 rounded-xl flex items-center gap-1.5"
                           >
-                            {copiedSlug === lead.slug ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                          </button>
-                          
-                          <button 
-                            onClick={() => handleWhatsAppClick(lead)}
-                            className="inline-flex items-center justify-center p-2 border border-emerald-500/20 hover:border-emerald-500/40 bg-emerald-500/5 hover:bg-emerald-500/10 rounded-xl text-emerald-400 hover:text-emerald-300 transition-all cursor-pointer"
-                            title="Send Demo via WhatsApp"
-                          >
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.455h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                            </svg>
-                          </button>
-                          
-                          <a 
-                            href={`/demos/${lead.slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center p-2 border border-white/10 hover:border-white/20 hover:bg-white/5 rounded-xl text-neutral-400 hover:text-white transition-all no-underline"
-                            title="Open Live Demo"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
+                            <CheckCircle className="w-3 h-3 text-white" />
+                            {signal}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action Toolbar */}
+                  <div className="pt-4 border-t border-white/10 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      {/* DIRECT PHONE NUMBER DISPLAY */}
+                      {lead.phone ? (
+                        <a
+                          href={`tel:${lead.phone}`}
+                          className="bg-zinc-900 border border-white/20 text-zinc-100 hover:bg-zinc-800 hover:text-white font-mono font-bold text-xs px-5 py-3.5 rounded-full transition-all flex items-center gap-2 cursor-pointer"
+                          title="Call business phone number"
+                        >
+                          <Phone className="w-3.5 h-3.5 text-white" />
+                          <span>{lead.phone}</span>
+                        </a>
+                      ) : (
+                        <span className="bg-zinc-950 border border-white/5 text-zinc-600 font-mono text-xs px-5 py-3.5 rounded-full flex items-center gap-2">
+                          <Phone className="w-3.5 h-3.5 text-zinc-700" />
+                          <span>No Phone Available</span>
+                        </span>
+                      )}
+
+                      {/* FEEDBACK BUTTON */}
+                      <button
+                        onClick={() => setFeedbackLead(lead)}
+                        className="bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 font-bold text-xs px-4 py-3.5 rounded-full transition-all flex items-center gap-2 cursor-pointer"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+                        <span>Log Feedback</span>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {/* PIPELINE STAGE SELECTOR */}
+                      <div className="relative">
+                        <select
+                          value={(lead.status || "QUALIFIED").toUpperCase()}
+                          onChange={(e) => handleStatusChange(lead.id, e.target.value)}
+                          disabled={updatingId === lead.id}
+                          className="bg-zinc-900 border border-white/15 text-white font-bold text-xs rounded-full px-4 py-3 pr-8 appearance-none focus:outline-none focus:border-white/50 cursor-pointer"
+                        >
+                          {Object.keys(PIPELINE_STATUS_CONFIG).filter(k => k !== "ALL").map(statusKey => (
+                            <option key={statusKey} value={statusKey}>
+                              Stage: {PIPELINE_STATUS_CONFIG[statusKey].label}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+
+                      {/* EXPAND METRICS TOGGLE */}
+                      <button
+                        onClick={() => setExpandedLeadId(isExpanded ? null : lead.id)}
+                        className="p-3 bg-zinc-900 border border-white/10 hover:border-white/25 rounded-full text-zinc-400 hover:text-white transition-all cursor-pointer"
+                        title="Toggle Score Breakdown"
+                      >
+                        {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Expanded 6-Factor Score Breakdown */}
+                  {isExpanded && (
+                    <div className="pt-6 border-t border-white/10 space-y-4 animate-fade-in">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xs font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
+                          <Activity className="w-4 h-4 text-white" />
+                          Multi-Factor Intelligence Metrics (100 Max)
+                        </h4>
+                        <span className="text-[11px] font-mono text-zinc-500">
+                          Evaluated by Asenra Opportunity Engine
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                        <div className="p-4 bg-zinc-900/90 border border-white/5 rounded-2xl">
+                          <div className="text-zinc-400 text-[10px] uppercase font-bold">Business Maturity</div>
+                          <div className="text-lg font-black text-white mt-1">{intel.maturityScore} / 20</div>
+                          <div className="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div className="bg-white h-full rounded-full" style={{ width: `${(intel.maturityScore / 20) * 100}%` }} />
+                          </div>
+                        </div>
+
+                        <div className="p-4 bg-zinc-900/90 border border-white/5 rounded-2xl">
+                          <div className="text-zinc-400 text-[10px] uppercase font-bold">Commercial Value</div>
+                          <div className="text-lg font-black text-white mt-1">{intel.commercialValueScore} / 20</div>
+                          <div className="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div className="bg-zinc-300 h-full rounded-full" style={{ width: `${(intel.commercialValueScore / 20) * 100}%` }} />
+                          </div>
+                        </div>
+
+                        <div className="p-4 bg-zinc-900/90 border border-white/5 rounded-2xl">
+                          <div className="text-zinc-400 text-[10px] uppercase font-bold">Visual Richness</div>
+                          <div className="text-lg font-black text-white mt-1">{intel.visualRichnessScore} / 15</div>
+                          <div className="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div className="bg-zinc-400 h-full rounded-full" style={{ width: `${(intel.visualRichnessScore / 15) * 100}%` }} />
+                          </div>
+                        </div>
+
+                        <div className="p-4 bg-zinc-900/90 border border-white/5 rounded-2xl">
+                          <div className="text-zinc-400 text-[10px] uppercase font-bold">Digital Gap (Primary)</div>
+                          <div className="text-lg font-black text-white mt-1">{intel.digitalGapScore} / 25</div>
+                          <div className="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div className="bg-white h-full rounded-full" style={{ width: `${(intel.digitalGapScore / 25) * 100}%` }} />
+                          </div>
+                        </div>
+
+                        <div className="p-4 bg-zinc-900/90 border border-white/5 rounded-2xl">
+                          <div className="text-zinc-400 text-[10px] uppercase font-bold">Contactability</div>
+                          <div className="text-lg font-black text-white mt-1">{intel.contactabilityScore} / 10</div>
+                          <div className="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div className="bg-zinc-300 h-full rounded-full" style={{ width: `${(intel.contactabilityScore / 10) * 100}%` }} />
+                          </div>
+                        </div>
+
+                        <div className="p-4 bg-zinc-900/90 border border-white/5 rounded-2xl">
+                          <div className="text-zinc-400 text-[10px] uppercase font-bold">Growth / Intent</div>
+                          <div className="text-lg font-black text-white mt-1">{intel.growthIntentScore} / 10</div>
+                          <div className="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div className="bg-zinc-400 h-full rounded-full" style={{ width: `${(intel.growthIntentScore / 10) * 100}%` }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </main>
+
+      {/* Lead Feedback Modal */}
+      {feedbackLead && (
+        <LeadFeedbackModal
+          lead={feedbackLead}
+          onClose={() => setFeedbackLead(null)}
+          onSuccess={() => {
+            fetchLeads();
+            setFeedbackLead(null);
+          }}
+        />
+      )}
     </div>
   );
 }
