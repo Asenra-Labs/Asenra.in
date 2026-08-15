@@ -200,7 +200,6 @@ export default function SuperAdminPortalPage() {
                 placeholder="••••••••••••"
                 className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
               />
-              <p className="text-[10px] text-zinc-500 font-mono">Default passcode: asenra2026</p>
             </div>
 
             <button

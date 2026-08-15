@@ -202,12 +202,6 @@ function LoginForm() {
           </button>
         </form>
 
-        <div className="mt-6 p-3.5 rounded-2xl bg-white/5 border border-white/10 text-center">
-          <p className="text-[11px] text-zinc-400 leading-relaxed font-mono">
-            <strong>Default Employee Password:</strong> <code className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">asenra2026</code>
-          </p>
-        </div>
-
         <div className="mt-6 pt-6 border-t border-white/10 text-center">
           <p className="text-xs text-zinc-400">
             Don&apos;t have an account yet?{" "}
