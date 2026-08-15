@@ -26,7 +26,7 @@ const phoneCapabilities = [
   {
     title: "AI DASHBOARD",
     badge: "ACTIVE",
-    badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    badgeColor: "bg-white/20 text-white border-white/30",
     icon: Brain,
     stat: "42ms Latency",
     substat: "Custom Domain Fine-Tuned Model",
@@ -34,10 +34,10 @@ const phoneCapabilities = [
       <div className="space-y-2">
         <div className="flex justify-between items-center text-[10px] text-zinc-400 font-mono">
           <span>Model Throughput</span>
-          <span className="text-emerald-400 font-bold">99.98%</span>
+          <span className="text-white font-bold">99.98%</span>
         </div>
         <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-          <div className="w-[85%] h-full bg-gradient-to-r from-emerald-500 to-white rounded-full" />
+          <div className="w-[85%] h-full bg-gradient-to-r from-zinc-400 to-white rounded-full" />
         </div>
         <div className="flex justify-between text-[9px] text-zinc-500 font-mono pt-1">
           <span>Tokens: 1.4M / hr</span>
@@ -49,7 +49,7 @@ const phoneCapabilities = [
   {
     title: "WORKFLOW AUTOMATION",
     badge: "RUNNING",
-    badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+    badgeColor: "bg-zinc-800 text-zinc-200 border-zinc-700",
     icon: Workflow,
     stat: "1,420 Jobs / day",
     substat: "Zero Manual Backlog Friction",
@@ -57,11 +57,11 @@ const phoneCapabilities = [
       <div className="space-y-1.5 text-[10px] font-mono">
         <div className="p-2 bg-white/5 rounded border border-white/10 flex justify-between items-center">
           <span className="text-zinc-300">Invoice Extraction</span>
-          <span className="text-blue-400 font-bold">Auto-Routed</span>
+          <span className="text-white font-bold">Auto-Routed</span>
         </div>
         <div className="p-2 bg-white/5 rounded border border-white/10 flex justify-between items-center">
           <span className="text-zinc-300">EHR Patient Sync</span>
-          <span className="text-emerald-400 font-bold">Completed</span>
+          <span className="text-zinc-300 font-bold">Completed</span>
         </div>
       </div>
     ),
@@ -69,7 +69,7 @@ const phoneCapabilities = [
   {
     title: "BUSINESS ANALYTICS",
     badge: "LIVE",
-    badgeColor: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+    badgeColor: "bg-white/10 text-zinc-200 border-white/20",
     icon: BarChart3,
     stat: "$1.2M Saved",
     substat: "Annual Overhead Reduction",
@@ -77,13 +77,13 @@ const phoneCapabilities = [
       <div className="space-y-2">
         <div className="flex justify-between text-[10px] font-mono text-zinc-400">
           <span>Efficiency Lift</span>
-          <span className="text-purple-400 font-bold">+70%</span>
+          <span className="text-white font-bold">+70%</span>
         </div>
         <div className="h-10 w-full flex items-end gap-1 pt-1">
           {[40, 65, 50, 80, 70, 95, 88].map((h, i) => (
             <div
               key={i}
-              className="flex-1 bg-gradient-to-t from-purple-600/50 to-white rounded-t"
+              className="flex-1 bg-gradient-to-t from-zinc-700 to-white rounded-t"
               style={{ height: `${h}%` }}
             />
           ))}
@@ -94,7 +94,7 @@ const phoneCapabilities = [
   {
     title: "AI ASSISTANT",
     badge: "24/7 AGENT",
-    badgeColor: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+    badgeColor: "bg-zinc-800 text-zinc-300 border-zinc-700",
     icon: Bot,
     stat: "Multi-Agent Swarm",
     substat: "Autonomous Query Execution",
@@ -105,7 +105,7 @@ const phoneCapabilities = [
         </div>
         <div className="flex justify-between text-[9px] text-zinc-400">
           <span>Confidence: 99.8%</span>
-          <span className="text-cyan-400 font-bold">Action Taken</span>
+          <span className="text-white font-bold">Action Taken</span>
         </div>
       </div>
     ),
@@ -113,7 +113,7 @@ const phoneCapabilities = [
   {
     title: "CRM INTEGRATION",
     badge: "SYNCED",
-    badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    badgeColor: "bg-white/10 text-zinc-300 border-white/20",
     icon: Layers,
     stat: "Score: 94/100",
     substat: "Automated Enterprise Pipeline",
@@ -121,7 +121,7 @@ const phoneCapabilities = [
       <div className="space-y-1.5 text-[10px] font-mono">
         <div className="flex justify-between text-zinc-300">
           <span>New Enterprise Lead</span>
-          <span className="text-amber-400 font-bold">Qualified</span>
+          <span className="text-white font-bold">Qualified</span>
         </div>
         <div className="p-2 bg-white/5 rounded border border-white/10 text-zinc-400 text-[9px]">
           Meeting Auto-Scheduled · Strategy Brief Sent
@@ -151,7 +151,7 @@ const phoneCapabilities = [
   {
     title: "EXECUTIVE DASHBOARD",
     badge: "VERIFIED",
-    badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    badgeColor: "bg-zinc-800 text-zinc-200 border-zinc-700",
     icon: ShieldCheck,
     stat: "System Health 100%",
     substat: "Unified Business Intelligence",
@@ -163,7 +163,7 @@ const phoneCapabilities = [
         </div>
         <div className="flex justify-between pt-1">
           <span>Compliance Status</span>
-          <span className="font-bold text-emerald-400">SOC2 / HIPAA OK</span>
+          <span className="font-bold text-white">SOC2 / HIPAA OK</span>
         </div>
       </div>
     ),
@@ -464,7 +464,7 @@ export function CinematicHero({
 
                     {/* Dynamic Island Notch */}
                     <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-[85px] h-[22px] bg-black rounded-full z-50 flex items-center justify-end px-2.5 shadow-[inset_0_-1px_2px_rgba(255,255,255,0.1)]">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)] animate-pulse" />
                     </div>
 
                     {/* Dynamic Capabilities Screen Interface */}

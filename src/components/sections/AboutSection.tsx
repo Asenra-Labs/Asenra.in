@@ -16,8 +16,8 @@ export function AboutSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <div className="bg-black/40 p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="mb-6 p-4 inline-flex rounded-xl bg-neutral-950/50 text-indigo-400">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="mb-6 p-4 inline-flex rounded-xl bg-neutral-950/50 text-white">
                <Target className="w-8 h-8" />
             </div>
             <h3 className="text-2xl font-semibold mb-3">Our Mission</h3>
@@ -27,8 +27,8 @@ export function AboutSection() {
           </div>
 
           <div className="bg-black/40 p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="mb-6 p-4 inline-flex rounded-xl bg-neutral-950/50 text-emerald-400">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="mb-6 p-4 inline-flex rounded-xl bg-neutral-950/50 text-zinc-300">
                <Users className="w-8 h-8" />
             </div>
             <h3 className="text-2xl font-semibold mb-3">Expert Team</h3>
@@ -38,8 +38,8 @@ export function AboutSection() {
           </div>
 
           <div className="bg-black/40 p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="mb-6 p-4 inline-flex rounded-xl bg-neutral-950/50 text-amber-400">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="mb-6 p-4 inline-flex rounded-xl bg-neutral-950/50 text-zinc-200">
                <MapPin className="w-8 h-8" />
             </div>
             <h3 className="text-2xl font-semibold mb-3">Global Standard</h3>

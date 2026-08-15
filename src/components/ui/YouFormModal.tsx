@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
 interface YouFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  formId: string;
+  formId?: string;
 }
 
-export function YouFormModal({ isOpen, onClose, formId }: YouFormModalProps) {
+export function YouFormModal({ isOpen, onClose, formId = "v71b3eiv" }: YouFormModalProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -41,7 +41,7 @@ export function YouFormModal({ isOpen, onClose, formId }: YouFormModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/5 bg-[#0D0D0D]">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
             <span className="text-xs font-black uppercase tracking-[0.3em] text-neutral-400">Secure Consultation Portal</span>
           </div>
           <button 
@@ -54,19 +54,11 @@ export function YouFormModal({ isOpen, onClose, formId }: YouFormModalProps) {
 
         {/* Content */}
         <div className="flex-1 overflow-hidden bg-black relative">
-          {/* Iframe is used instead of embed script for stability when switching between forms */}
           <iframe 
             src={`https://app.youform.com/forms/${formId}`}
             className="w-full h-full border-none"
-            title="Application Form"
+            title="Asenra Consultation Form"
           />
-        </div>
-        
-        {/* Footer info (optional) */}
-        <div className="p-4 border-t border-white/5 text-center bg-[#0D0D0D]">
-          <p className="text-[10px] text-neutral-600 font-black uppercase tracking-widest leading-none">
-            Asenra Infrastructure · encrypted & private
-          </p>
         </div>
       </div>
     </div>

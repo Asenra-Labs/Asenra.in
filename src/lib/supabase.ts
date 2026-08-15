@@ -128,3 +128,26 @@ export interface Lead {
   outcome_data?: OutcomeData;
 }
 
+export type InternStatus = "ongoing" | "discontinued" | "terminated" | "completed";
+
+export interface InternRecord {
+  id?: string;
+  intern_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number?: string;
+  role: string;
+  status: InternStatus | string;
+  submitted_at?: string;
+  duration?: string;
+  offer_letter_url?: string;
+  nda_url?: string;
+  certificate_url?: string;
+  passcode?: string;
+  key_contributions?: string[];
+  tech_stack?: string[];
+  created_at?: string;
+}
+
+

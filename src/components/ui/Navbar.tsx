@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ArrowRight, PhoneCall } from "lucide-react";
+import { Menu, X, ArrowRight, PhoneCall, User as UserIcon, Lock } from "lucide-react";
 import { YouFormModal } from "./YouFormModal";
+import { useAuth } from "@/lib/auth";
 
 const navLinks = [
   { label: "Capabilities", href: "/solutions" },
@@ -14,6 +15,7 @@ const navLinks = [
   { label: "Process", href: "/process" },
   { label: "Packages", href: "/packages" },
   { label: "Company", href: "/company" },
+  { label: "Careers", href: "/careers" },
 ];
 
 export default function Navbar() {
@@ -21,6 +23,9 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const pathname = usePathname();
+  const { user, activeEmail, isLoggedIn } = useAuth();
+
+  const displayEmail = activeEmail || user?.email;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,13 +81,25 @@ export default function Navbar() {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
-            <Link
-              href="/audit"
-              className="px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 text-[11px] font-semibold text-zinc-300 hover:text-white transition-all whitespace-nowrap"
-            >
-              Free AI Audit
-            </Link>
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
+            {isLoggedIn && displayEmail ? (
+              <Link
+                href="/portal"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-[11px] font-bold text-white transition-all whitespace-nowrap shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+              >
+                <UserIcon className="w-3.5 h-3.5 text-zinc-300" />
+                <span className="max-w-[140px] truncate">{displayEmail.split("@")[0]}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-[11px] font-bold text-zinc-300 hover:text-white transition-all whitespace-nowrap"
+              >
+                <Lock className="w-3 h-3" />
+                <span>Portal Sign In</span>
+              </Link>
+            )}
+
             <button
               onClick={() => setIsFormOpen(true)}
               className="btn-modern-light px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
@@ -129,13 +146,26 @@ export default function Navbar() {
           </div>
 
           <div className="space-y-3 pt-6 border-t border-white/10 mt-6">
-            <Link
-              href="/audit"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-3.5 rounded-xl border border-white/10 bg-white/5 text-center text-xs font-bold uppercase tracking-widest text-white block"
-            >
-              Free AI Readiness Assessment
-            </Link>
+            {isLoggedIn && displayEmail ? (
+              <Link
+                href="/portal"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-3.5 rounded-xl border border-white/20 bg-white/10 text-center text-xs font-bold uppercase tracking-widest text-white flex items-center justify-center gap-2 block"
+              >
+                <UserIcon className="w-4 h-4 text-zinc-300" />
+                <span>Portal ({displayEmail})</span>
+              </Link>
+            ) : (
+              <Link
+                href="/auth/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-3.5 rounded-xl border border-white/10 bg-white/5 text-center text-xs font-bold uppercase tracking-widest text-white flex items-center justify-center gap-2 block"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Portal Sign In / Register</span>
+              </Link>
+            )}
+
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -150,12 +180,8 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Strategy Session Modal */}
-      <YouFormModal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        formId="vt3flmg8"
-      />
+      {/* YouForm Lead / Consultation Modal */}
+      <YouFormModal isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
     </>
   );
 }

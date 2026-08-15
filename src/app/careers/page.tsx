@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Code2, Cpu, Layout, Sparkles, CheckCircle2, Shield, HeartHandshake } from "lucide-react";
 import { YouFormModal } from "@/components/ui/YouFormModal";
+import { AuthModal } from "@/components/auth/AuthModal";
+import { useAuth } from "@/lib/auth";
 
 const values = [
   {
@@ -56,7 +58,24 @@ const openRoles = [
 ];
 
 export default function CareersPage() {
+  const { user } = useAuth();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [selectedRoleTitle, setSelectedRoleTitle] = useState("");
+
+  const handleApplyClick = (roleTitle: string) => {
+    setSelectedRoleTitle(roleTitle);
+    if (user) {
+      setIsFormOpen(true);
+    } else {
+      setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleAuthSuccess = () => {
+    setIsAuthModalOpen(false);
+    setIsFormOpen(true);
+  };
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pt-32 pb-32 overflow-hidden relative">
@@ -78,7 +97,7 @@ export default function CareersPage() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all rounded-full text-xs font-bold uppercase tracking-wider"
           >
             <Shield className="w-3.5 h-3.5" />
-            <span>Verify Certificates</span>
+            <span>Verify Credentials</span>
           </Link>
         </div>
 
@@ -151,7 +170,7 @@ export default function CareersPage() {
                 </div>
 
                 <button
-                  onClick={() => setIsFormOpen(true)}
+                  onClick={() => handleApplyClick(role.title)}
                   className="px-6 py-3.5 rounded-full bg-white text-black font-extrabold text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
                 >
                   Apply Now
@@ -170,7 +189,7 @@ export default function CareersPage() {
             We are always looking for exceptional engineers, AI researchers, and designers. Send us your work and let's talk.
           </p>
           <button
-            onClick={() => setIsFormOpen(true)}
+            onClick={() => handleApplyClick("General Application")}
             className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-white text-black font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all text-sm cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.2)]"
           >
             <span>Submit General Application</span>
@@ -180,6 +199,15 @@ export default function CareersPage() {
 
       </div>
 
+      {/* Auth Gating Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={handleAuthSuccess}
+        roleTitle={selectedRoleTitle}
+      />
+
+      {/* Application Form Modal */}
       <YouFormModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}

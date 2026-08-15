@@ -1,8 +1,6 @@
 "use server";
 
-import Papa from "papaparse";
-
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/1MZTjGoyTzfntRqd6NOS2JPX3GjC4rq4alaN33SVPsEA/export?format=csv&gid=2077283251";
+import { supabase, InternRecord } from "@/lib/supabase";
 
 export type InternData = {
   firstName: string;
@@ -11,39 +9,25 @@ export type InternData = {
   phoneNumber: string;
   offerLetterLink: string;
   ndaLink: string;
+  certificateUrl?: string;
   submittedAt: string;
   internId: string;
   role: string;
   status: string;
+  duration?: string;
+  keyContributions?: string[];
+  techStack?: string[];
 };
 
 export async function verifyIntern(internId: string): Promise<{ success: boolean; data?: InternData; error?: string }> {
   try {
-    const response = await fetch(SHEET_URL, {
-      next: { revalidate: 30 }, // Cache for 30 seconds
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch intern data");
-    }
-
-    const csvText = await response.text();
-
-    const parsed = Papa.parse(csvText, {
-      header: true,
-      skipEmptyLines: true,
-    });
-
-    const rows = parsed.data as any[];
-
-    // Clean input ID: remove non-alphanumeric characters and convert to uppercase
     const cleanInput = internId.replace(/[^A-Z0-9]/gi, '').toUpperCase();
     
     if (!cleanInput) {
       return { success: false, error: "Please enter a valid Intern ID." };
     }
 
-    // Create prefix variants (AES... vs ASN...)
+    // Build variant set (e.g. ASN vs AES)
     const inputVariants = new Set<string>();
     inputVariants.add(cleanInput);
     if (cleanInput.startsWith('AES')) {
@@ -52,37 +36,85 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
       inputVariants.add('AES' + cleanInput.slice(3));
     }
 
-    // Find the intern matching any variant
-    const intern = rows.find((row) => {
-      const rawId = row["Intern ID"];
-      if (!rawId) return false;
-      const cleanRowId = String(rawId).replace(/[^A-Z0-9]/gi, '').toUpperCase();
-      return inputVariants.has(cleanRowId);
-    });
+    // Fetch interns from Supabase
+    const { data: interns, error } = await supabase
+      .from("interns")
+      .select("*");
 
-    if (!intern) {
-      return { success: false, error: "Intern ID not found. Please check and try again." };
+    if (error) {
+      console.error("Supabase query error:", error.message);
+      return { success: false, error: "Failed to connect to verification database." };
     }
 
-    // Map the CSV headers to our type
-    const rawStatus = (intern["status"] || intern["Status"] || intern["STATUS"] || "ONGOING").trim();
+    if (!interns || interns.length === 0) {
+      return { success: false, error: "No records found in database." };
+    }
+
+    // Match candidate by Intern ID variant
+    const matched = (interns as InternRecord[]).find((item) => {
+      if (!item.intern_id) return false;
+      const cleanDbId = item.intern_id.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+      return inputVariants.has(cleanDbId);
+    });
+
+    if (!matched) {
+      return { success: false, error: `Intern ID ${internId} not found in verified records.` };
+    }
 
     const internData: InternData = {
-      firstName: (intern["First Name"] || "").trim(),
-      lastName: (intern["Last Name"] || "").trim(),
-      email: (intern["Email"] || "").trim(),
-      phoneNumber: (intern["Phone Number"] || "").trim(),
-      offerLetterLink: (intern["Upload your signed offer letter here that we have sent on your email"] || "").trim(),
-      ndaLink: (intern["Upload your signed NDA form here that we have sent on your email"] || "").trim(),
-      submittedAt: (intern["Submitted At"] || "").trim(),
-      internId: (intern["Intern ID"] || "").trim(),
-      role: (intern["Role"] || "").trim(),
-      status: rawStatus.toUpperCase(),
+      firstName: matched.first_name || "",
+      lastName: matched.last_name || "",
+      email: matched.email || "",
+      phoneNumber: matched.phone_number || "",
+      offerLetterLink: matched.offer_letter_url || "",
+      ndaLink: matched.nda_url || "",
+      certificateUrl: matched.certificate_url || "Pending Completion",
+      submittedAt: matched.submitted_at || "",
+      internId: matched.intern_id,
+      role: matched.role || "",
+      status: (matched.status || "ongoing").toUpperCase(),
+      duration: matched.duration || "Jun 2026 - Present",
+      keyContributions: Array.isArray(matched.key_contributions) ? matched.key_contributions : [],
+      techStack: Array.isArray(matched.tech_stack) ? matched.tech_stack : []
     };
 
     return { success: true, data: internData };
-  } catch (error: any) {
-    console.error("Error verifying intern:", error);
-    return { success: false, error: "An error occurred while verifying the intern. Please try again later." };
+  } catch (err: any) {
+    console.error("Error in verifyIntern action:", err);
+    return { success: false, error: "An error occurred during credential lookup." };
+  }
+}
+
+export async function getAllInterns(): Promise<{ success: boolean; data?: InternData[]; error?: string }> {
+  try {
+    const { data, error } = await supabase
+      .from("interns")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const mapped: InternData[] = (data as InternRecord[]).map((item) => ({
+      firstName: item.first_name || "",
+      lastName: item.last_name || "",
+      email: item.email || "",
+      phoneNumber: item.phone_number || "",
+      offerLetterLink: item.offer_letter_url || "",
+      ndaLink: item.nda_url || "",
+      certificateUrl: item.certificate_url || "Pending Completion",
+      submittedAt: item.submitted_at || "",
+      internId: item.intern_id,
+      role: item.role || "",
+      status: (item.status || "ongoing").toUpperCase(),
+      duration: item.duration || "Jun 2026 - Present",
+      keyContributions: Array.isArray(item.key_contributions) ? item.key_contributions : [],
+      techStack: Array.isArray(item.tech_stack) ? item.tech_stack : []
+    }));
+
+    return { success: true, data: mapped };
+  } catch (err: any) {
+    return { success: false, error: err.message };
   }
 }

@@ -1,33 +1,29 @@
 "use client";
 
 import React, { useState } from "react";
-import { verifyIntern, InternData } from "./actions";
-import { Search, Loader2, CheckCircle2, FileText, Briefcase, Calendar, Shield, ExternalLink, GraduationCap, ArrowLeft, XCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Search, Loader2, ArrowLeft, ShieldCheck, Lock } from "lucide-react";
 import Link from "next/link";
 
 export default function VerifyPage() {
-  const [internId, setInternId] = useState("AES-");
+  const router = useRouter();
+  const [internId, setInternId] = useState("ASN-");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [data, setData] = useState<InternData | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let raw = e.target.value.toUpperCase();
     
-    // Determine prefix (AES or ASN)
-    let prefix = 'AES-';
-    if (raw.startsWith('ASN')) {
-      prefix = 'ASN-';
+    let prefix = 'ASN-';
+    if (raw.startsWith('AES')) {
+      prefix = 'AES-';
     }
 
-    // Ensure it starts with valid prefix
     if (!raw.startsWith('AES-') && !raw.startsWith('ASN-')) {
       raw = prefix;
     }
 
     const isDeleting = raw.length < internId.length;
 
-    // Handle backspace when user deletes a hyphen
     if (isDeleting && internId.endsWith('-') && !raw.endsWith('-')) {
       const stripped = raw.substring(prefix.length).replace(/-/g, '');
       if (stripped.length === 3) {
@@ -49,7 +45,6 @@ export default function VerifyPage() {
     let formatted = prefix;
     if (part1.length > 0) {
       formatted += part1;
-      // Auto-append '-' as soon as 3 category letters (e.g. INT) are entered
       if (part1.length === 3) {
         formatted += '-';
       }
@@ -57,7 +52,6 @@ export default function VerifyPage() {
     
     if (part2.length > 0) {
       formatted += part2;
-      // Auto-append '-' as soon as 4 year digits (e.g. 2026) are entered
       if (part2.length === 4) {
         formatted += '-';
       }
@@ -70,56 +64,61 @@ export default function VerifyPage() {
     setInternId(formatted);
   };
 
-  const handleVerify = async (e: React.FormEvent) => {
+  const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!internId.trim() || internId.trim() === 'AES-' || internId.trim() === 'ASN-') return;
-
+    const clean = internId.trim();
+    if (!clean || clean === 'AES-' || clean === 'ASN-') return;
     setLoading(true);
-    setError("");
-    setData(null);
-
-    const result = await verifyIntern(internId);
-
-    if (result.success && result.data) {
-      setData(result.data);
-    } else {
-      setError(result.error || "Verification failed");
-    }
-
-    setLoading(false);
+    router.push(`/hiring/verify/${clean}`);
   };
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pb-24">
-      {/* Liquid Glass Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/5 rounded-full blur-[120px]" />
+      {/* Background Lighting */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] bg-white/5 rounded-full blur-[140px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] bg-zinc-400/5 rounded-full blur-[140px]" />
+        <div className="absolute inset-0 bg-grid-theme opacity-15" />
       </div>
 
       <div className="container mx-auto px-6 relative z-30 pt-28 sm:pt-32">
-        <Link 
-          href="/careers" 
-          className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors cursor-pointer text-sm font-medium tracking-wide group mb-10"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Careers</span>
-        </Link>
+        <div className="flex items-center justify-between mb-10">
+          <Link 
+            href="/careers" 
+            className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors cursor-pointer text-sm font-medium tracking-wide group"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span>Back to Careers</span>
+          </Link>
+
+          <Link
+            href="/portal"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-white rounded-xl transition-all"
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>Employee Portal</span>
+          </Link>
+        </div>
 
         <section className="max-w-3xl mx-auto">
-          <div className="space-y-4 mb-16 text-center">
+          <div className="space-y-4 mb-14 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-widest text-zinc-300 mb-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-white" />
+              <span>Native Asenra Credentials Database</span>
+            </div>
             <h1 className="text-sm font-bold tracking-[0.4em] text-neutral-400 uppercase">
               Identity Protocol
             </h1>
-            <h2 className="text-5xl sm:text-6xl font-black tracking-tighter uppercase italic">
+            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase italic">
               Verify <span className="text-silver-matte">Credentials.</span>
             </h2>
-            <p className="text-lg text-neutral-400 max-w-xl mx-auto leading-relaxed mt-6">
+            <p className="text-base sm:text-lg text-neutral-400 max-w-xl mx-auto leading-relaxed mt-4">
               Enter the unique Asenra Identification Number to access verified candidate records and official documentation.
             </p>
           </div>
 
-          <div className="premium-depth-card p-2 rounded-[30px] relative overflow-hidden bg-white/2 mb-10 shadow-2xl">
+          {/* Search Box */}
+          <div className="premium-depth-card p-2 rounded-[30px] relative overflow-hidden bg-white/2 mb-10 shadow-2xl border border-white/10">
             <div className="card-sheen" />
             <form onSubmit={handleVerify} className="relative flex items-center z-10">
               <div className="absolute left-6 text-neutral-500">
@@ -127,7 +126,7 @@ export default function VerifyPage() {
               </div>
               <input
                 type="text"
-                placeholder="AES-INT-2026-001"
+                placeholder="ASN-INT-2026-001"
                 value={internId}
                 onChange={handleInputChange}
                 className="w-full bg-transparent border-0 pl-16 pr-36 h-16 text-lg focus:outline-none focus:ring-0 text-white placeholder:text-neutral-600 font-mono tracking-widest font-bold"
@@ -143,104 +142,6 @@ export default function VerifyPage() {
               </div>
             </form>
           </div>
-
-          {error && (
-            <div className="bg-red-950/30 border border-red-500/20 text-red-400 p-6 rounded-3xl text-center font-medium tracking-wide animate-in fade-in slide-in-from-top-2 duration-300 shadow-xl mb-10 flex items-center justify-center gap-3">
-              <XCircle className="w-5 h-5 shrink-0 text-red-400" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {data && (
-            <div className="premium-depth-card rounded-[40px] overflow-hidden bg-white/2 animate-in fade-in slide-in-from-bottom-6 duration-500 shadow-2xl relative border border-white/10">
-              <div className="card-sheen" />
-              <div className="p-8 sm:p-10 border-b border-white/5 relative z-10">
-                <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <span className="px-4 py-1.5 bg-white/10 text-white border border-white/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-white" /> Verified Status
-                  </span>
-
-                  {/* Candidate Status Badge */}
-                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-1.5 ${
-                    (data.status || 'ONGOING').toUpperCase() === 'ONGOING'
-                      ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)]'
-                      : (data.status || '').toUpperCase() === 'TERMINATED' || (data.status || '').toUpperCase() === 'DISCONTINUED'
-                      ? 'bg-zinc-900 text-zinc-400 border border-zinc-700'
-                      : 'bg-zinc-900 text-zinc-200 border border-white/20'
-                  }`}>
-                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                    Status: {data.status || 'ONGOING'}
-                  </span>
-
-                  <span className="text-neutral-400 text-sm font-mono tracking-widest font-bold ml-auto">{data.internId}</span>
-                </div>
-                <h2 className="text-3xl sm:text-5xl font-black text-white mb-2 uppercase tracking-tighter italic">
-                  {data.firstName} {data.lastName}
-                </h2>
-                <p className="text-neutral-400 text-base sm:text-lg flex items-center gap-2 font-medium tracking-wide">
-                  <Briefcase className="w-4 h-4 text-white" /> {data.role}
-                </p>
-              </div>
-
-              <div className="p-8 sm:p-10 bg-black/40 relative z-10">
-                <h3 className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em] mb-6">
-                  Official Documentation
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {data.offerLetterLink && (
-                    <a
-                      href={data.offerLetterLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center p-5 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 hover:border-white/20 transition-all duration-300"
-                    >
-                      <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                        <FileText className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-white font-bold text-sm tracking-wide uppercase truncate">Offer Letter</h4>
-                        <p className="text-neutral-400 text-xs mt-0.5 truncate">Signed Official Copy</p>
-                      </div>
-                      <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-white transition-colors shrink-0 ml-2" />
-                    </a>
-                  )}
-
-                  {data.ndaLink && (
-                    <a
-                      href={data.ndaLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center p-5 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 hover:border-white/20 transition-all duration-300"
-                    >
-                      <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                        <Shield className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-white font-bold text-sm tracking-wide uppercase truncate">NDA Agreement</h4>
-                        <p className="text-neutral-400 text-xs mt-0.5 truncate">Non-Disclosure Agreement</p>
-                      </div>
-                      <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-white transition-colors shrink-0 ml-2" />
-                    </a>
-                  )}
-                  
-                  <div className="flex items-center p-5 bg-white/[0.02] border border-white/5 border-dashed rounded-3xl opacity-60">
-                    <div className="w-12 h-12 bg-black/30 rounded-2xl flex items-center justify-center mr-4">
-                      <GraduationCap className="w-5 h-5 text-neutral-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-neutral-400 font-bold text-sm tracking-wide uppercase">Certificate</h4>
-                      <p className="text-neutral-600 text-xs mt-0.5">Pending Completion</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-500 font-mono">
-                  <span className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> ENTRY: {data.submittedAt}</span>
-                  <span className="uppercase tracking-[0.2em] font-black text-neutral-400">Asenra Official Record</span>
-                </div>
-              </div>
-            </div>
-          )}
         </section>
       </div>
     </main>

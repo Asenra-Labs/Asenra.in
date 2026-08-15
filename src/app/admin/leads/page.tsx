@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
 import { supabase, Lead } from "@/lib/supabase";
 import LeadFeedbackModal from "@/components/admin/LeadFeedbackModal";
+import { authenticateAdminAccount } from "../actions";
 import { 
   Phone, MapPin, ExternalLink, RefreshCw, 
   CheckCircle, ShieldAlert, Lock, Copy, Check,
@@ -144,14 +146,16 @@ export default function AdminLeadsPage() {
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "asenra2026") {
+    setError("");
+    const res = await authenticateAdminAccount("karan.patil@asenra.in", password);
+    if (res.success || password === "asenra2026") {
       sessionStorage.setItem("asenra_admin_auth", "true");
       setIsAuthorized(true);
       fetchLeads();
     } else {
-      setError("Incorrect password. Access denied.");
+      setError(res.error || "Incorrect password. Access denied.");
     }
   };
 
@@ -341,9 +345,24 @@ export default function AdminLeadsPage() {
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
             <div>
-              <div className="text-xs font-black uppercase tracking-[0.35em] text-zinc-400 mb-2">
-                Executive Sales Pipeline
+              <div className="flex items-center gap-3 mb-3">
+                <div className="text-xs font-black uppercase tracking-[0.35em] text-zinc-400">
+                  Executive Control Dashboard
+                </div>
+
+                <div className="flex items-center gap-2 bg-white/5 border border-white/10 p-1 rounded-xl">
+                  <span className="px-3.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-white text-black">
+                    Leads CRM
+                  </span>
+                  <Link
+                    href="/admin/interns"
+                    className="px-3.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Intern Database
+                  </Link>
+                </div>
               </div>
+
               <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-none">
                 Opportunity Intelligence
               </h1>

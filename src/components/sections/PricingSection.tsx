@@ -106,7 +106,7 @@ const CATEGORIES = [
           "24/7 Active Support"
         ],
         icon: Cpu,
-        color: "from-blue-500/10 to-transparent"
+        color: "from-white/10 to-transparent"
       },
       {
         id: "ai-calling",
@@ -123,7 +123,7 @@ const CATEGORIES = [
           "Human-like Latency"
         ],
         icon: Smartphone,
-        color: "from-emerald-500/10 to-transparent"
+        color: "from-white/10 to-transparent"
       },
       {
         id: "ai-combo",
@@ -293,7 +293,7 @@ export function PricingSection() {
                       {Icon && <Icon className="w-6 h-6 text-white" />}
                     </div>
                     {pkg.popular && (
-                      <span className="text-[10px] font-black italic tracking-widest uppercase as-glossy-red text-white px-4 py-1.5 rounded-full shadow-[0_0_20px_rgba(238,0,0,0.4)]">
+                      <span className="text-[10px] font-black italic tracking-widest uppercase bg-white text-black px-4 py-1.5 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.4)]">
                         Most Active
                       </span>
                     )}
@@ -351,9 +351,9 @@ export function PricingSection() {
         {/* Demo Engine CTA Callout Banner */}
         <div className="premium-depth-card p-8 sm:p-12 rounded-[2.5rem] border-white/5 bg-linear-to-r from-neutral-950 to-neutral-900/60 relative overflow-hidden group mb-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="card-sheen" />
-          <div className="absolute top-0 right-0 w-[400px] h-[200px] bg-indigo-500/5 blur-[80px] -mr-32 -mt-32 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[400px] h-[200px] bg-white/5 blur-[80px] -mr-32 -mt-32 pointer-events-none" />
           <div className="relative z-10 max-w-2xl">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400 block mb-2">Interactive Gap Analysis</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 block mb-2">Interactive Gap Analysis</span>
             <h4 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-none mb-3">Not sure which package fits?</h4>
             <p className="text-neutral-400 text-xs sm:text-sm font-medium leading-relaxed">
               Run a live technical audit on your current website and generate a customized mock layout instantly with our Asenra Demo Engine.
@@ -376,7 +376,7 @@ export function PricingSection() {
           {/* AMC Coverage */}
           <div className="premium-depth-card p-10 rounded-[40px] border-white/5 relative overflow-hidden group">
             <div className="card-sheen" />
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] -mr-32 -mt-32" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[80px] -mr-32 -mt-32" />
             
             <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-8">
@@ -391,23 +391,23 @@ export function PricingSection() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
                     <div className="space-y-4">
-                        <h5 className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">Included</h5>
+                        <h5 className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-4">Included</h5>
                         {[
                             "Domain Renewal", "Hosting Continuation", "Bug Fixes", "Minor Content Updates", "Uptime Monitoring", "Performance Checks"
                         ].map(item => (
                             <div key={item} className="flex items-center gap-3">
-                                <Check className="w-3.5 h-3.5 text-emerald-500" />
+                                <Check className="w-3.5 h-3.5 text-white" />
                                 <span className="text-xs text-neutral-400">{item}</span>
                             </div>
                         ))}
                     </div>
                     <div className="space-y-4">
-                        <h5 className="text-[10px] font-black text-red-400 uppercase tracking-[0.2em] mb-4">Not Included</h5>
+                        <h5 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">Not Included</h5>
                         {[
                             "New Features/Modules", "Full Redesign", "New Integrations", "Third Party API Charges"
                         ].map(item => (
                             <div key={item} className="flex items-center gap-3">
-                                <XCircle className="w-3.5 h-3.5 text-red-500 opacity-60" />
+                                <XCircle className="w-3.5 h-3.5 text-zinc-500 opacity-60" />
                                 <span className="text-xs text-neutral-400">{item}</span>
                             </div>
                         ))}
@@ -419,7 +419,7 @@ export function PricingSection() {
           {/* Payment Terms */}
           <div className="premium-depth-card p-10 rounded-[40px] border-white/5 relative overflow-hidden group">
             <div className="card-sheen" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[80px] -ml-32 -mb-32" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 blur-[80px] -ml-32 -mb-32" />
             
             <div className="relative z-10 flex flex-col h-full">
                 <div className="flex items-center gap-4 mb-8">

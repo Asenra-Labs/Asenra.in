@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
 import PremiumFooter from "@/components/ui/premium-footer";
 import CookieConsent from "@/components/ui/CookieConsent";
+import { AuthProvider } from "@/lib/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -111,10 +112,12 @@ export default function RootLayout({
             })
           }}
         />
-        <Navbar />
-        {children}
-        <PremiumFooter />
-        <CookieConsent />
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <PremiumFooter />
+          <CookieConsent />
+        </AuthProvider>
       </body>
     </html>
   );
