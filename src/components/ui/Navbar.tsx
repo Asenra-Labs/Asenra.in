@@ -35,6 +35,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/portal") || pathname?.startsWith("/auth")) {
+    return null;
+  }
+
   return (
     <>
       <header
