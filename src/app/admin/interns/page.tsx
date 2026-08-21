@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getAdminInterns, updateInternStatusAction, updateInternDetailsAction, createInternAction, deleteInternAction } from "./actions";
-import { InternRecord, InternStatus } from "@/lib/supabase";
+import { InternRecord, InternStatus, supabase } from "@/lib/supabase";
 import { 
   Users, Search, ShieldCheck, Plus, Lock, KeyRound, Loader2, CheckCircle2, 
   XCircle, Edit3, Trash2, ExternalLink, Briefcase, Calendar, Code2, Save, X, ChevronRight, Layers, ArrowUpRight
@@ -112,10 +112,41 @@ export default function AdminInternsPage() {
 
     setSavingDetails(false);
     if (res.success) {
-      setSelectedIntern(null);
       loadInterns();
+      setSelectedIntern(null);
     } else {
-      alert("Failed to save changes: " + res.error);
+      alert("Error saving details: " + res.error);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'offer_letter' | 'nda' | 'certificate') => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedIntern) return;
+
+    try {
+      setSavingDetails(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${selectedIntern.intern_id}_${type}_${Date.now()}.${fileExt}`;
+      const filePath = `interns/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('documents').getPublicUrl(filePath);
+      const publicUrl = data.publicUrl;
+
+      if (type === 'offer_letter') setEditingOfferLetter(publicUrl);
+      if (type === 'nda') setEditingNda(publicUrl);
+      if (type === 'certificate') setEditingCertificate(publicUrl);
+
+    } catch (error: any) {
+      alert("Error uploading file: " + error.message);
+    } finally {
+      setSavingDetails(false);
+      if (e.target) e.target.value = ''; // Reset input
     }
   };
 
@@ -457,6 +488,10 @@ export default function AdminInternsPage() {
                     placeholder="https://docs.google.com/..."
                     className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
                   />
+                  <label className="px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
+                    Upload
+                    <input type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={(e) => handleFileUpload(e, 'offer_letter')} />
+                  </label>
                   {editingOfferLetter && (
                     <a href={editingOfferLetter} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center shrink-0">
                       View
@@ -475,6 +510,10 @@ export default function AdminInternsPage() {
                     placeholder="https://docs.google.com/..."
                     className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
                   />
+                  <label className="px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
+                    Upload
+                    <input type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={(e) => handleFileUpload(e, 'nda')} />
+                  </label>
                   {editingNda && (
                     <a href={editingNda} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center shrink-0">
                       View
@@ -493,6 +532,10 @@ export default function AdminInternsPage() {
                     placeholder="Pending Completion"
                     className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
                   />
+                  <label className="px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
+                    Upload
+                    <input type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={(e) => handleFileUpload(e, 'certificate')} />
+                  </label>
                   {editingCertificate && editingCertificate !== "Pending Completion" && (
                     <a href={editingCertificate} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center shrink-0">
                       View
