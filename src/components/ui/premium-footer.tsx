@@ -85,6 +85,21 @@ export default function PremiumFooter() {
             <p className="text-zinc-400 text-xs leading-relaxed font-medium mb-6">
               Enterprise AI Consulting, Intelligent Business Automation, and Modern Digital Infrastructure engineered for ambitious companies.
             </p>
+            {/*
+              Relocated from the hero, where it floated over the headline with
+              a glowing pulse ring and competed with the primary CTA. The
+              signal is worth keeping; the hero is not the place for it.
+            */}
+            <Link
+              href="/careers"
+              className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 transition-colors hover:border-white/25 hover:bg-white/[0.06]"
+            >
+              <span className="size-1.5 rounded-full bg-white/70" />
+              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70">
+                We are hiring
+              </span>
+            </Link>
+
             <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
               Asenra Technology Labs
             </div>
