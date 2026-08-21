@@ -1,6 +1,7 @@
 # ASENRA — "Enterprise Premium" Refactor Plan
 
-**Status:** Awaiting approval · **Baseline:** `npm run build` passes (30 routes, 1.9 MB `.next/static`) on commit `b912d45`
+**Status:** Complete — all six phases shipped on `refactor/enterprise-premium`. See §9 for measured results.
+**Baseline:** `npm run build` passed (30 routes, 1.9 MB `.next/static`) on commit `b912d45`
 **Scope:** Homepage (`/`) experience + shared design-system/CSS foundations. Inner pages are touched only where a shared class or component changes underneath them.
 
 ---
@@ -188,3 +189,66 @@ src/
 - **Retiring GSAP** from the remaining 5 files — running two animation libraries is a real cost; consolidating is follow-up work, not a Phase-5 smash-and-grab.
 - **`/admin`, `/portal`, `/acquisition`** (798/779/763 lines each) — the largest files in the repo and well over the 200-line rule, but they are internal tooling, not the marketing surface. They deserve their own pass.
 - **Copywriting.** Hero copy is *shortened*; nothing else is reworded.
+
+
+---
+
+## 9. Results — measured, not asserted
+
+Recorded with `scripts/measure-route-js.mjs`, which sums the gzipped size of
+every `<script src>` in the prerendered HTML for `/`. Next 16 no longer prints
+the Size / First Load JS columns, so this replaces them.
+
+| Stage | Raw | Gzip | Scripts |
+|---|---|---|---|
+| Baseline (`b912d45`) | 1060.2 kB | **317.3 kB** | 14 |
+| Phase 2 — hero rebuilt | 999.5 kB | 296.4 kB | 13 |
+| Phase 3 — showcase added | 1126.6 kB | 338.8 kB | 14 |
+| Phase 3 — after LazyMotion | 1082.2 kB | 325.5 kB | 14 |
+| Phase 4 — RSC sweep | 1071.2 kB | 321.9 kB | 13 |
+| Phase 5 — GSAP retired | 1002.7 kB | **295.5 kB** | 12 |
+
+**Net: −21.8 kB gzip and two fewer requests**, while adding a scroll-linked
+showcase that did not exist before.
+
+### Success criteria
+
+| Criterion | Result |
+|---|---|
+| Hero renders with JS disabled | **Met.** The `h1` is in the HTML; no `visibility: hidden` and no inline `opacity: 0` anywhere in the hero. |
+| Zero scroll pinning | **Met.** No `ScrollTrigger`, no `pin`. The showcase's left column is CSS `sticky`; the document scrolls normally beneath it. |
+| Homepage client components 7 → ≤ 3 | **Met.** Three: `ShowcaseSequence`, `Reveal`, `MotionFeatures`. `HeroBackdrop` came in under budget as a Server Component. |
+| First Load JS below baseline | **Met.** 295.5 kB gz vs 317.3 kB. |
+| No default easing in new code | **Met for motion.** Every transform and opacity animation runs on a spring from `lib/motion.ts`. Colour and border hovers use Tailwind's standard curve, which is a deliberate exception — springing a border colour would be worse, not better. |
+| `prefers-reduced-motion` yields a static page | **Met.** A global CSS guard neutralises animation and transition site-wide (nothing honoured it before), and each client leaf branches on `useReducedMotion()`. |
+| No new file over 200 lines | **Met.** Largest is `showcase.data.ts` at 119. |
+| Build and lint clean at every phase | **Met.** Lint went 199 problems / 65 errors → 194 / 63; every remaining one is pre-existing and none are in new files. |
+| Other routes unchanged | **Partly verified.** All 22 routes return 200 from a production server. A *visual* pass was not possible — browser tooling is unavailable in this session — so `/admin`, `/portal`, `/demos` and the inner marketing pages are verified structurally, not by eye. |
+
+### Deviations from the plan
+
+1. **`HeroBackdrop` is a Server Component**, not a dynamically-imported client
+   one. The mesh has no state and no pointer input, so it is three CSS-animated
+   gradients. Fewer client bundles than budgeted.
+2. **`LazyMotion` was necessary.** Importing the `motion` proxy pulls every
+   feature Motion ships and cost +42 kB gz. Switching to `m` with an explicit
+   `domAnimation` bundle recovered 13 kB. Worth knowing before Motion is used
+   anywhere else in this codebase.
+3. **GSAP was retired from `CookieConsent`**, which §8 had listed as out of
+   scope. It sits in the root layout, so its 26.4 kB gz chunk loaded on every
+   page and was the entire reason the homepage sat above its bundle target.
+   Three slide tweens became CSS transitions. The rewrite also fixed a real
+   bug: the old code wrote the consent choice inside a GSAP `onComplete`, so
+   navigating away mid-animation lost it and the banner reappeared.
+
+### Still open
+
+- **GSAP remains in four files** — `demo/Templates.tsx`, `PricingSection`,
+  `ProductsSection`, `ContactSection` — none of which are on the homepage.
+- **The navbar was not touched.** It still uses `.btn-modern-light` and the
+  older type scale, and now sits above a hero built to different rules.
+- **`ContactSection` still renders `.text-glossy-red`**, a `#EE0000` gradient
+  heading that contradicts the palette this refactor establishes.
+- **`body` keeps `overflow-x-hidden`.** `w-screen` is gone from the codebase,
+  but pages outside this brief still position glow layers past the viewport
+  edge, so removing the guard needs its own audit.

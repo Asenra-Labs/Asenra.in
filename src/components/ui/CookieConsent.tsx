@@ -1,20 +1,24 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import { gsap } from "gsap";
+import React, { useCallback, useEffect, useState } from "react";
 import { Cookie, XCircle } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
+/** Matches the CSS transition duration below. */
+const EXIT_MS = 400;
+
 export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  /** Drives the slide-in; flipped one frame after the banner mounts. */
+  const [isEntered, setIsEntered] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     // Force a fresh check on every mount
     setIsMounted(true);
-    
+
     const initializeConsent = setTimeout(() => {
       // We use a newer version key to force it to show after our updates
       const hasConsented = localStorage.getItem("cookie-consent-v5");
@@ -26,72 +30,41 @@ export default function CookieConsent() {
     return () => clearTimeout(initializeConsent);
   }, []);
 
+  // Enter on the frame after mount, so the browser has an off-screen start
+  // state to transition from.
   useEffect(() => {
-    if (isVisible && isMounted && containerRef.current) {
-      // Clean start: force initial state before animating
-      gsap.fromTo(
-        containerRef.current,
-        { 
-          y: "100%", 
-          opacity: 0,
-          scale: 0.98
-        },
-        { 
-          y: "0%", 
-          opacity: 1, 
-          scale: 1,
-          duration: 1.5, 
-          ease: "expo.out"
-        }
-      );
-    }
-  }, [isVisible, isMounted]);
+    if (!isVisible) return;
+    const frame = requestAnimationFrame(() => setIsEntered(true));
+    return () => cancelAnimationFrame(frame);
+  }, [isVisible]);
 
-  const handleAccept = () => {
-    if (containerRef.current) {
-      gsap.to(containerRef.current, {
-        y: "100%",
-        opacity: 0,
-        scale: 0.98,
-        duration: 0.8,
-        ease: "expo.in",
-        onComplete: () => {
-          localStorage.setItem("cookie-consent-v5", "accepted");
-          setIsVisible(false);
-        }
-      });
-    }
-  };
+  const dismiss = useCallback((choice: "accepted" | "declined") => {
+    // Persist first. The old implementation wrote the choice in a GSAP
+    // onComplete callback, so navigating away mid-animation lost it and the
+    // banner returned on the next page.
+    localStorage.setItem("cookie-consent-v5", choice);
+    setIsExiting(true);
+    setTimeout(() => setIsVisible(false), EXIT_MS);
+  }, []);
 
-  const handleDecline = () => {
-    if (containerRef.current) {
-      gsap.to(containerRef.current, {
-        y: "100%",
-        opacity: 0,
-        scale: 0.98,
-        duration: 0.8,
-        ease: "expo.in",
-        onComplete: () => {
-          localStorage.setItem("cookie-consent-v5", "declined");
-          setIsVisible(false);
-        }
-      });
-    }
-  };
+  const handleAccept = () => dismiss("accepted");
+  const handleDecline = () => dismiss("declined");
 
   if (!isMounted || !isVisible) return null;
 
   return (
-    <div 
-      ref={containerRef}
+    <div
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-[10000] w-full",
-        "pointer-events-auto"
+        "fixed bottom-0 left-0 right-0 z-[10000] w-full pointer-events-auto",
+        "transition-[transform,opacity] duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform",
+        isEntered && !isExiting
+          ? "translate-y-0 opacity-100"
+          : "translate-y-full opacity-0"
       )}
+      role="dialog"
+      aria-label="Cookie consent"
     >
       <div className="relative border-t border-white/10 bg-black/90 backdrop-blur-md md:backdrop-blur-4xl shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
-        <div className="card-sheen" aria-hidden="true" />
-        
         <div className="max-w-7xl mx-auto px-6 py-4 sm:py-6 flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-6">
             <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 shrink-0 hidden sm:flex">
