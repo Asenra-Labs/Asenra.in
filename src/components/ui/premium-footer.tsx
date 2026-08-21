@@ -29,10 +29,10 @@ const footerLinks: FooterSection[] = [
     title: "Capabilities",
     links: [
       { label: "AI Consulting", href: "/solutions#ai-consulting" },
-      { label: "AI Implementation", href: "/solutions#ai-implementation" },
-      { label: "Intelligent Automation", href: "/solutions#process-automation" },
-      { label: "Custom Software", href: "/solutions#custom-software" },
-      { label: "Digital Infrastructure", href: "/solutions#digital-infrastructure" },
+      { label: "AI Implementation", href: "/solutions#enterprise-ai-implementation" },
+      { label: "Intelligent Automation", href: "/solutions#business-process-automation" },
+      { label: "Custom Software", href: "/solutions#intelligent-software" },
+      { label: "Digital Infrastructure", href: "/solutions#premium-digital-experiences" },
     ],
   },
   {
@@ -42,7 +42,7 @@ const footerLinks: FooterSection[] = [
       { label: "Healthcare", href: "/industries#healthcare" },
       { label: "Finance & Banking", href: "/industries#finance" },
       { label: "Retail & D2C", href: "/industries#retail" },
-      { label: "Professional Services", href: "/industries#professional-services" },
+      { label: "Real Estate", href: "/industries#real-estate" },
     ],
   },
   {

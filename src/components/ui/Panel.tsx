@@ -18,15 +18,19 @@ export function Panel({
   className,
   as: Tag = "div",
   interactive = true,
+  id,
 }: {
   children: React.ReactNode;
   className?: string;
   as?: "div" | "li" | "article";
   /** Set false for panels that are not links and should not respond to hover. */
   interactive?: boolean;
+  /** Anchor target, for panels that are deep-linked from elsewhere. */
+  id?: string;
 }) {
   return (
     <Tag
+      id={id}
       className={cn(
         "relative flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-8 backdrop-blur-sm",
         interactive &&
