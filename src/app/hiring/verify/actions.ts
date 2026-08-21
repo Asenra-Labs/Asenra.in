@@ -15,6 +15,7 @@ export type InternData = {
   role: string;
   status: string;
   duration?: string;
+  description?: string | null;
   keyContributions?: string[];
   techStack?: string[];
 };
@@ -68,14 +69,17 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
       phoneNumber: matched.phone_number || "",
       offerLetterLink: matched.offer_letter_url || "",
       ndaLink: matched.nda_url || "",
-      certificateUrl: matched.certificate_url || "Pending Completion",
+      certificateUrl: matched.certificate_url,
       submittedAt: matched.submitted_at || "",
       internId: matched.intern_id,
       role: matched.role || "",
       status: (matched.status || "ongoing").toUpperCase(),
       duration: matched.duration || "Jun 2026 - Present",
+      certificateUrl: matched.certificate_url || "Pending Completion",
+      passcode: matched.passcode,
       keyContributions: Array.isArray(matched.key_contributions) ? matched.key_contributions : [],
-      techStack: Array.isArray(matched.tech_stack) ? matched.tech_stack : []
+      techStack: Array.isArray(matched.tech_stack) ? matched.tech_stack : [],
+      description: matched.description || null
     };
 
     return { success: true, data: internData };

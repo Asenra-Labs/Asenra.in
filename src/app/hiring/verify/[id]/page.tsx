@@ -101,6 +101,14 @@ export default async function VerifiedInternPage({ params }: PageProps) {
                     <p className="text-neutral-300 text-lg flex items-center gap-2 font-medium tracking-wide">
                       <Briefcase className="w-4 h-4 text-white" /> {result.data.role}
                     </p>
+                    
+                    {result.data.description && (
+                      <div className="mt-6 pt-6 border-t border-white/10">
+                        <p className="text-zinc-300 text-sm md:text-base leading-relaxed tracking-wide font-medium">
+                          {result.data.description}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-8 sm:p-10 bg-black/40 relative z-10 space-y-8">

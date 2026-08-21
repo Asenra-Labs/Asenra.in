@@ -20,10 +20,7 @@ export default function AdminInternsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const [selectedIntern, setSelectedIntern] = useState<InternRecord | null>(null);
-  const [editingContributions, setEditingContributions] = useState<string[]>([]);
-  const [newContrib, setNewContrib] = useState("");
-  const [editingTechStack, setEditingTechStack] = useState<string[]>([]);
-  const [newTech, setNewTech] = useState("");
+  const [editingDescription, setEditingDescription] = useState<string>("");
   const [editingInternId, setEditingInternId] = useState("");
   const [editingPasscode, setEditingPasscode] = useState("");
   const [editingStatus, setEditingStatus] = useState<string>("");
@@ -86,8 +83,7 @@ export default function AdminInternsPage() {
   const openEditDrawer = (intern: InternRecord) => {
     setSelectedIntern(intern);
     setEditingInternId(intern.intern_id);
-    setEditingContributions(Array.isArray(intern.key_contributions) ? intern.key_contributions : []);
-    setEditingTechStack(Array.isArray(intern.tech_stack) ? intern.tech_stack : []);
+    setEditingDescription(intern.description || "");
     setEditingPasscode(intern.passcode || "asenra2026");
     setEditingStatus(intern.status || "ongoing");
     setEditingOfferLetter(intern.offer_letter_url || "");
@@ -101,8 +97,7 @@ export default function AdminInternsPage() {
 
     const res = await updateInternDetailsAction(selectedIntern.intern_id, {
       intern_id: editingInternId,
-      key_contributions: editingContributions,
-      tech_stack: editingTechStack,
+      description: editingDescription,
       passcode: editingPasscode,
       status: editingStatus as InternStatus,
       offer_letter_url: editingOfferLetter,
@@ -346,7 +341,7 @@ export default function AdminInternsPage() {
                     <th className="py-4 px-6">Role</th>
                     <th className="py-4 px-6">Status</th>
                     <th className="py-4 px-6">Contact Info</th>
-                    <th className="py-4 px-6">Contributions & Stack</th>
+                    <th className="py-4 px-6">Professional Description</th>
                     <th className="py-4 px-6 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -376,16 +371,15 @@ export default function AdminInternsPage() {
                       </td>
                       <td className="py-4 px-6">
                         <div className="space-y-1 max-w-xs">
-                          <span className="text-[10px] font-mono text-zinc-500 block">
-                            {Array.isArray(item.key_contributions) ? item.key_contributions.length : 0} Contributions Listed
-                          </span>
-                          <div className="flex flex-wrap gap-1">
-                            {Array.isArray(item.tech_stack) && item.tech_stack.slice(0, 3).map((t, idx) => (
-                              <span key={idx} className="text-[9px] font-mono px-2 py-0.5 bg-white/5 text-zinc-300 rounded border border-white/10">
-                                {t}
-                              </span>
-                            ))}
-                          </div>
+                          {item.description ? (
+                            <span className="text-[10px] font-mono text-zinc-300 block truncate" title={item.description}>
+                              {item.description}
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-mono text-zinc-500 block italic">
+                              No description added
+                            </span>
+                          )}
                         </div>
                       </td>
                       <td className="py-4 px-6 text-right space-x-2">
@@ -545,88 +539,18 @@ export default function AdminInternsPage() {
               </div>
             </div>
 
-            {/* Key Contributions */}
+            {/* Professional Description */}
             <div className="space-y-3">
               <label className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block">
-                Key Contributions & Deliverables ({editingContributions.length})
+                Professional Description
               </label>
-              <div className="space-y-2">
-                {editingContributions.map((contrib, idx) => (
-                  <div key={idx} className="flex items-start gap-2 bg-white/5 border border-white/10 p-3 rounded-xl">
-                    <span className="text-xs text-zinc-300 font-medium flex-1">{contrib}</span>
-                    <button
-                      onClick={() => setEditingContributions(editingContributions.filter((_, i) => i !== idx))}
-                      className="text-red-400 hover:text-red-300 text-xs font-bold"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Add new contribution bullet point..."
-                  value={newContrib}
-                  onChange={(e) => setNewContrib(e.target.value)}
-                  className="flex-1 bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (newContrib.trim()) {
-                      setEditingContributions([...editingContributions, newContrib.trim()]);
-                      setNewContrib("");
-                    }
-                  }}
-                  className="px-4 py-2 bg-white text-black font-bold uppercase text-xs rounded-xl hover:bg-zinc-200"
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-
-            {/* Tech Stack */}
-            <div className="space-y-3">
-              <label className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block">
-                Tech Stack Pills ({editingTechStack.length})
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {editingTechStack.map((tech, idx) => (
-                  <span key={idx} className="px-3 py-1 bg-white/10 border border-white/15 text-white font-mono text-xs rounded-xl flex items-center gap-2">
-                    {tech}
-                    <button
-                      onClick={() => setEditingTechStack(editingTechStack.filter((_, i) => i !== idx))}
-                      className="text-zinc-400 hover:text-white font-bold"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="e.g. Next.js, Python, Supabase..."
-                  value={newTech}
-                  onChange={(e) => setNewTech(e.target.value)}
-                  className="flex-1 bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (newTech.trim()) {
-                      setEditingTechStack([...editingTechStack, newTech.trim()]);
-                      setNewTech("");
-                    }
-                  }}
-                  className="px-4 py-2 bg-white text-black font-bold uppercase text-xs rounded-xl hover:bg-zinc-200"
-                >
-                  Add Pill
-                </button>
-              </div>
+              <textarea
+                value={editingDescription}
+                onChange={(e) => setEditingDescription(e.target.value)}
+                placeholder="Write a professional paragraph about their internship experience..."
+                rows={6}
+                className="w-full bg-black border border-white/15 rounded-xl px-4 py-3 text-sm text-zinc-300 focus:outline-none focus:border-white leading-relaxed resize-none"
+              />
             </div>
 
             {/* Save Buttons */}

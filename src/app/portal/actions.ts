@@ -42,6 +42,7 @@ export async function getEmployeeByEmail(
       role: intern.role || "",
       status: (intern.status || "ongoing").toUpperCase(),
       duration: intern.duration || "Jun 2026 - Present",
+      description: intern.description,
       keyContributions: Array.isArray(intern.key_contributions) ? intern.key_contributions : [],
       techStack: Array.isArray(intern.tech_stack) ? intern.tech_stack : []
     };
@@ -130,6 +131,7 @@ export async function authenticateEmployee(
       role: intern.role || "",
       status: (intern.status || "ongoing").toUpperCase(),
       duration: intern.duration || "Jun 2026 - Present",
+      description: intern.description,
       keyContributions: Array.isArray(intern.key_contributions) ? intern.key_contributions : [],
       techStack: Array.isArray(intern.tech_stack) ? intern.tech_stack : []
     };

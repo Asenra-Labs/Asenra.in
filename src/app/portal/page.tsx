@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { 
   ShieldCheck, FileText, User, 
-  ExternalLink, KeyRound, Loader2, AlertCircle, ArrowLeft, LogOut, Key, CheckCircle2
+  ExternalLink, KeyRound, Loader2, AlertCircle, ArrowLeft, LogOut, Key, CheckCircle2, Award, Briefcase
 } from "lucide-react";
 
 export default function PortalPage() {
@@ -257,8 +257,20 @@ export default function PortalPage() {
                       </div>
                     </div>
 
+                    {/* Professional Description */}
+                    {internData.description && (
+                      <div className="premium-depth-card p-6 sm:p-8 rounded-[2rem] border border-white/10 bg-zinc-950/80">
+                        <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 mb-4 flex items-center gap-2">
+                          <Briefcase className="w-4 h-4" /> Professional Summary
+                        </h3>
+                        <p className="text-zinc-300 text-sm md:text-base leading-relaxed tracking-wide font-medium">
+                          {internData.description}
+                        </p>
+                      </div>
+                    )}
+
                     {/* Official Documents Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {/* Offer Letter */}
                       <div className="premium-depth-card p-6 sm:p-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 relative overflow-hidden flex flex-col justify-between">
                         <div className="card-sheen" />
@@ -322,6 +334,40 @@ export default function PortalPage() {
                           ) : (
                             <div className="p-3 rounded-xl bg-white/5 text-center text-xs text-zinc-500 font-mono">
                               Document Pending
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Certificate */}
+                      <div className="premium-depth-card p-6 sm:p-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 relative overflow-hidden flex flex-col justify-between">
+                        <div className="card-sheen" />
+                        <div>
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white">
+                              <Award className="w-6 h-6" />
+                            </div>
+                            <span className="text-[10px] font-mono font-bold text-white border border-white/20 px-2.5 py-1 rounded-full bg-white/10">
+                              Official Certificate
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-bold text-white mb-1">Internship Certificate</h3>
+                          <p className="text-xs text-zinc-400 mb-6">
+                            Verified proof of internship completion and tenure.
+                          </p>
+                          {internData.certificateUrl && internData.certificateUrl !== "Pending Completion" ? (
+                            <a
+                              href={internData.certificateUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                            >
+                              <span>Download Certificate</span>
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          ) : (
+                            <div className="p-3 rounded-xl bg-white/5 text-center text-xs text-zinc-500 font-mono">
+                              Pending Completion
                             </div>
                           )}
                         </div>
