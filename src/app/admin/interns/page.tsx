@@ -26,6 +26,9 @@ export default function AdminInternsPage() {
   const [newTech, setNewTech] = useState("");
   const [editingPasscode, setEditingPasscode] = useState("");
   const [editingStatus, setEditingStatus] = useState<string>("");
+  const [editingOfferLetter, setEditingOfferLetter] = useState("");
+  const [editingNda, setEditingNda] = useState("");
+  const [editingCertificate, setEditingCertificate] = useState("");
   const [savingDetails, setSavingDetails] = useState(false);
 
   // New Intern Modal
@@ -85,6 +88,9 @@ export default function AdminInternsPage() {
     setEditingTechStack(Array.isArray(intern.tech_stack) ? intern.tech_stack : []);
     setEditingPasscode(intern.passcode || "asenra2026");
     setEditingStatus(intern.status || "ongoing");
+    setEditingOfferLetter(intern.offer_letter_url || "");
+    setEditingNda(intern.nda_url || "");
+    setEditingCertificate(intern.certificate_url || "");
   };
 
   const handleSaveDetails = async () => {
@@ -95,11 +101,11 @@ export default function AdminInternsPage() {
       key_contributions: editingContributions,
       tech_stack: editingTechStack,
       passcode: editingPasscode,
+      status: editingStatus as InternStatus,
+      offer_letter_url: editingOfferLetter,
+      nda_url: editingNda,
+      certificate_url: editingCertificate,
     });
-
-    if (editingStatus !== selectedIntern.status) {
-      await updateInternStatusAction(selectedIntern.intern_id, editingStatus as InternStatus);
-    }
 
     setSavingDetails(false);
     if (res.success) {
@@ -427,6 +433,65 @@ export default function AdminInternsPage() {
                 onChange={(e) => setEditingPasscode(e.target.value)}
                 className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-white"
               />
+            </div>
+
+            {/* Document Links */}
+            <div className="space-y-4">
+              <label className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block border-b border-white/10 pb-2">Documents & Credentials</label>
+              
+              <div className="space-y-2">
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 block">Offer Letter URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editingOfferLetter}
+                    onChange={(e) => setEditingOfferLetter(e.target.value)}
+                    placeholder="https://docs.google.com/..."
+                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
+                  />
+                  {editingOfferLetter && (
+                    <a href={editingOfferLetter} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center shrink-0">
+                      View
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 block">NDA URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editingNda}
+                    onChange={(e) => setEditingNda(e.target.value)}
+                    placeholder="https://docs.google.com/..."
+                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
+                  />
+                  {editingNda && (
+                    <a href={editingNda} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center shrink-0">
+                      View
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 block">Certificate URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editingCertificate}
+                    onChange={(e) => setEditingCertificate(e.target.value)}
+                    placeholder="Pending Completion"
+                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
+                  />
+                  {editingCertificate && editingCertificate !== "Pending Completion" && (
+                    <a href={editingCertificate} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center shrink-0">
+                      View
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Key Contributions */}

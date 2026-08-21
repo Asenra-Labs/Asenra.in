@@ -45,6 +45,7 @@ export async function updateInternDetailsAction(
     role?: string;
     duration?: string;
     passcode?: string;
+    status?: InternStatus;
     key_contributions?: string[];
     tech_stack?: string[];
     offer_letter_url?: string;
