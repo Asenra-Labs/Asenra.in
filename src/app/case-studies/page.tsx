@@ -1,9 +1,10 @@
-"use client";
+import { PhoneCall } from "lucide-react";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { ArrowRight, ShieldCheck, Zap, BarChart3, TrendingUp, CheckCircle2, PhoneCall } from "lucide-react";
-import { YouFormModal } from "@/components/ui/YouFormModal";
+import { BookCallButton } from "@/components/ui/BookCallButton";
+import { CtaSection } from "@/components/ui/CtaSection";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Panel, PanelLabel } from "@/components/ui/Panel";
+import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 const caseStudiesList = [
   {
@@ -64,120 +65,81 @@ const caseStudiesList = [
   },
 ];
 
+const PHASES = ["01. The challenge", "02. Asenra solution", "03. Measurable impact"] as const;
+
 export default function CaseStudiesPage() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pt-32 pb-32 overflow-hidden relative">
-      {/* Glow Ambience */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/4 left-[-10%] w-[50%] h-[50%] bg-white/[0.02] rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/[0.015] rounded-full blur-[130px]" />
-      </div>
+    <main className="min-h-screen bg-black">
+      <PageHeader
+        eyebrow="Proof of impact"
+        title={
+          <>
+            Enterprise results.
+            <br />
+            Proven ROI.
+          </>
+        }
+        lede="Explore how Asenra partners with ambitious enterprises to eliminate operational friction, automate complex workflows, and unlock millions in business value."
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Header */}
-        <div className="max-w-4xl mb-24">
-          <div className="mb-4 text-xs sm:text-sm font-black uppercase tracking-[0.35em] bg-gradient-to-r from-zinc-300 via-white to-zinc-400 bg-clip-text text-transparent drop-shadow-sm select-none">
-            Proof of Impact
-          </div>
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-8">
-            Enterprise Results. <br />
-            <span className="text-silver-matte">Proven ROI.</span>
-          </h1>
-          <p className="text-zinc-400 text-xl sm:text-2xl font-medium leading-relaxed max-w-2xl">
-            Explore how Asenra partners with ambitious enterprises to eliminate operational friction, automate complex workflows, and unlock millions in business value.
-          </p>
-        </div>
+      <section className="relative isolate bg-black py-24 md:py-32">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
+          <RevealGroup className="space-y-5">
+            {caseStudiesList.map((study) => (
+              <RevealItem key={study.id}>
+                <Panel id={study.id} className="scroll-mt-32 p-8 sm:p-10 md:p-12">
+                  <header className="border-b border-white/[0.07] pb-8">
+                    <PanelLabel>{study.industry}</PanelLabel>
+                    <h2 className="mt-5 max-w-3xl text-2xl font-medium tracking-tighter text-white text-balance sm:text-3xl md:text-4xl">
+                      {study.headline}
+                    </h2>
+                    <p className="mt-3 text-sm font-medium text-white/70">{study.client}</p>
+                  </header>
 
-        {/* Case Studies Deep Dive List */}
-        <div className="space-y-16 mb-32">
-          {caseStudiesList.map((cs) => (
-            <div
-              key={cs.id}
-              className="premium-depth-card group p-8 sm:p-12 md:p-16 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950/60 backdrop-blur-2xl transition-all duration-500 shadow-2xl relative overflow-hidden"
-            >
-              <div className="card-sheen" />
+                  <dl className="mt-10 grid grid-cols-1 gap-8 rounded-xl border border-white/[0.07] bg-black/40 p-7 sm:grid-cols-3">
+                    {study.metrics.map((metric: { label: string; value: string }) => (
+                      <div key={metric.label}>
+                        <dt className="sr-only">{metric.label}</dt>
+                        <dd>
+                          <span className="block text-2xl font-medium leading-none tracking-tighter text-white sm:text-3xl">
+                            {metric.value}
+                          </span>
+                          <span className="mt-2.5 block text-xs text-white/45 text-pretty">
+                            {metric.label}
+                          </span>
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
 
-              <div className="flex flex-col lg:flex-row justify-between gap-8 mb-10 pb-8 border-b border-white/10">
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.25em] text-zinc-500 border border-white/10 px-3 py-1 rounded-full mb-4 inline-block">
-                    {cs.industry}
-                  </span>
-                  <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white mt-3">
-                    {cs.headline}
-                  </h2>
-                  <p className="text-zinc-400 text-sm font-bold mt-2">{cs.client}</p>
-                </div>
-              </div>
-
-              {/* Metrics Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 bg-white/5 border border-white/10 p-6 rounded-2xl">
-                {cs.metrics.map((m) => (
-                  <div key={m.label}>
-                    <span className="text-2xl sm:text-3xl font-black text-white block tracking-tight">
-                      {m.value}
-                    </span>
-                    <span className="text-xs font-semibold text-zinc-400 block mt-1">
-                      {m.label}
-                    </span>
+                  <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+                    {[study.challenge, study.solution, study.impact].map((copy, index) => (
+                      <div key={PHASES[index]}>
+                        <PanelLabel className={index === 1 ? "text-white/70" : undefined}>
+                          {PHASES[index]}
+                        </PanelLabel>
+                        <p className="mt-4 text-sm leading-relaxed text-white/45 text-pretty">
+                          {copy}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-
-              {/* Challenge / Solution / Impact Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                  <h3 className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-3">
-                    01. The Challenge
-                  </h3>
-                  <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-medium">
-                    {cs.challenge}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xs font-black uppercase tracking-widest text-white mb-3">
-                    02. Asenra Solution
-                  </h3>
-                  <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed font-medium">
-                    {cs.solution}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-3">
-                    03. Measurable Impact
-                  </h3>
-                  <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-medium">
-                    {cs.impact}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+                </Panel>
+              </RevealItem>
+            ))}
+          </RevealGroup>
         </div>
+      </section>
 
-        {/* Strategy Consultation Callout */}
-        <section className="text-center py-20 border-t border-white/10 relative z-10">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white mb-6">
-            Ready to achieve similar enterprise results?
-          </h2>
-          <p className="text-zinc-400 text-lg font-medium max-w-xl mx-auto mb-10 leading-relaxed">
-            Schedule a strategy call with our lead engineering team to review your current tech stack and identify high-value AI solutions.
-          </p>
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-white text-black font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all text-sm cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.2)]"
-          >
-            <PhoneCall className="w-5 h-5" />
-            <span>Book AI Strategy Session</span>
-          </button>
-        </section>
-      </div>
-
-      <YouFormModal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        formId="vt3flmg8"
+      <CtaSection
+        title="Ready to achieve similar enterprise results?"
+        lede="Schedule a strategy call with our lead engineering team to review your current tech stack and identify high-value AI solutions."
+        actions={
+          <BookCallButton variant="primary" size="lg" formId="vt3flmg8">
+            <PhoneCall className="size-4" />
+            <span>Book an AI strategy session</span>
+          </BookCallButton>
+        }
       />
     </main>
   );
