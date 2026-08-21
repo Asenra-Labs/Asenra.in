@@ -6,17 +6,7 @@ import { GlowField } from "@/components/ui/GlowField";
 import { GridBackdrop } from "@/components/ui/GridBackdrop";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 import { HeroBackdrop } from "./HeroBackdrop";
-import { HeroVideo } from "./HeroVideo";
-
-/**
- * Background footage. See public/hero/README.md for encoding targets.
- * Missing files degrade to the CSS mesh rather than to a black rectangle.
- */
-const HERO_VIDEO = {
-  src: "/hero/asenra-hero.mp4",
-  webm: "/hero/asenra-hero.webm",
-  poster: "/hero/asenra-hero-poster.jpg",
-} as const;
+import { HeroCanvas } from "./HeroCanvas";
 
 /**
  * The hero copy, kept in one place so it can be revised without reading the
@@ -35,16 +25,19 @@ const HERO = {
 /**
  * Homepage hero.
  *
- * A Server Component with no JavaScript at all. It renders complete in the
- * HTML payload — no `visibility: hidden`, no hydration gate, no scroll
- * pinning. Its predecessor hid the `h1` behind a GSAP timeline and held the
- * viewport for 4000px of wheel travel before releasing it.
+ * A Server Component. Every word of it — eyebrow, headline, subhead, both
+ * CTAs — renders in the HTML payload with no `visibility: hidden`, no
+ * hydration gate and no scroll pinning. Its predecessor hid the `h1` behind a
+ * GSAP timeline and held the viewport for 4000px of wheel travel first.
+ *
+ * `HeroCanvas` is the one client component here, and it is purely decorative:
+ * strip its JavaScript and the fold still reads exactly as intended.
  */
 export function Hero() {
   return (
     <section className="relative isolate flex min-h-[88svh] items-center overflow-hidden border-b border-white/5 bg-black">
-      <HeroVideo {...HERO_VIDEO} />
       <HeroBackdrop />
+      <HeroCanvas />
       <GridBackdrop />
       <GlowField
         intensity="strong"

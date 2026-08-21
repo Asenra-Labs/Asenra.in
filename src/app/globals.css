@@ -330,3 +330,13 @@
 .mesh-a { animation: mesh-drift-a 34s ease-in-out infinite alternate; }
 .mesh-b { animation: mesh-drift-b 46s ease-in-out infinite alternate; }
 .mesh-c { animation: mesh-drift-c 58s ease-in-out infinite alternate; }
+
+/*
+ * The lattice canvas is masked so it dissolves toward the edges and never
+ * competes with the headline sitting on the left of the fold.
+ */
+.hero-canvas {
+  mask-image: radial-gradient(ellipse 85% 75% at 62% 45%, #000 10%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 62% 45%, #000 10%, transparent 78%);
+  opacity: 0.75;
+}
