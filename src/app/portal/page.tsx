@@ -6,11 +6,17 @@ import { getEmployeeByEmail } from "./actions";
 import { InternData } from "../hiring/verify/actions";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { 
-  ShieldCheck, FileText, User, 
-  ExternalLink, KeyRound, Loader2, AlertCircle, ArrowLeft, LogOut, Key, CheckCircle2, Award, Briefcase
+import {
+  ArrowLeft, Award, Briefcase, ExternalLink, FileText, Key, KeyRound,
+  Loader2, LogOut, ShieldCheck, User,
 } from "lucide-react";
 
+import { Field } from "@/components/ui/Field";
+import { FormAlert } from "@/components/ui/FormAlert";
+import { GlowField } from "@/components/ui/GlowField";
+import { GridBackdrop } from "@/components/ui/GridBackdrop";
+import { Panel, PanelIcon, PanelLabel } from "@/components/ui/Panel";
+import { cn } from "@/lib/utils";
 export default function PortalPage() {
   const { user, loading: authLoading, signOut } = useAuth();
 
@@ -105,418 +111,362 @@ export default function PortalPage() {
 
   if (authLoading && !activeEmail) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="flex items-center gap-3 text-zinc-400 font-mono text-sm">
-          <Loader2 className="w-5 h-5 animate-spin text-white" />
-          <span>Authenticating Session...</span>
+      <main className="flex min-h-screen items-center justify-center bg-black">
+        <div className="flex items-center gap-3 font-mono text-xs text-white/40">
+          <Loader2 className="size-4 animate-spin" />
+          <span>Authenticating session…</span>
         </div>
       </main>
     );
   }
 
-  return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pt-28 pb-32 relative overflow-hidden">
-      {/* Background Lighting */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-zinc-400/5 rounded-full blur-[140px]" />
-        <div className="absolute inset-0 bg-grid-theme opacity-15" />
-      </div>
+  /*
+   * The three document cards were three near-identical 35-line blocks that
+   * differed only in icon, title, blurb, and which field on internData they
+   * read. Describing them as data means a fourth document is one entry.
+   */
+  const documents = internData
+    ? [
+        {
+          icon: FileText,
+          badge: "Signed offer letter",
+          title: "Official offer letter",
+          blurb: "Official engagement terms and agreement contract.",
+          href: internData.offerLetterLink,
+          pending: "Document pending",
+        },
+        {
+          icon: ShieldCheck,
+          badge: "Signed NDA",
+          title: "Non-disclosure agreement",
+          blurb: "Intellectual property protection and confidentiality terms.",
+          href: internData.ndaLink,
+          pending: "Document pending",
+        },
+        {
+          icon: Award,
+          badge: "Official certificate",
+          title: "Internship certificate",
+          blurb: "Verified proof of internship completion and tenure.",
+          href:
+            internData.certificateUrl &&
+            internData.certificateUrl !== "Pending Completion"
+              ? internData.certificateUrl
+              : null,
+          pending: "Pending completion",
+        },
+      ]
+    : [];
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-4xl">
-        
-        {/* Navigation & Sign Out */}
-        <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
+  const tabs = [
+    { id: "documents" as const, label: "Official documents", icon: FileText },
+    { id: "security" as const, label: "Security & password", icon: KeyRound },
+  ];
+
+  const profileFacts = internData
+    ? [
+        { label: "Role title", value: internData.role, mono: false },
+        { label: "Tenure / duration", value: internData.duration, mono: false },
+        { label: "Verification ID", value: internData.internId, mono: true },
+      ]
+    : [];
+
+  return (
+    <main className="relative isolate min-h-screen overflow-hidden bg-black pb-28 pt-28">
+      <GridBackdrop className="opacity-50" />
+      <GlowField
+        intensity="faint"
+        className="left-1/2 top-0 h-[420px] w-[760px] -translate-x-1/2"
+      />
+
+      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 md:px-10">
+        <div className="flex items-center justify-between gap-4 border-b border-white/[0.07] pb-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors cursor-pointer text-sm font-medium tracking-wide group"
+            className="group inline-flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span>Return to Home</span>
+            <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
+            <span>Return to home</span>
           </Link>
 
-          {activeEmail && (
+          {activeEmail ? (
             <div className="flex items-center gap-3">
-              <span className="text-xs font-mono text-zinc-400 hidden sm:inline">
+              <span className="hidden font-mono text-[11px] text-white/35 sm:inline">
                 {activeEmail}
               </span>
               <button
                 onClick={handleSignOut}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:bg-red-950/40 hover:border-red-500/30 text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-red-300 rounded-xl transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-[12px] text-white/55 transition-colors hover:border-white/25 hover:text-white"
               >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
+                <LogOut className="size-3.5" />
+                <span>Sign out</span>
               </button>
             </div>
-          )}
+          ) : null}
         </div>
 
-        {/* LOGGED IN USER INTERFACE */}
         {activeEmail ? (
-          <div className="space-y-8">
-            
-            {/* Header Identity Card */}
-            <div className="premium-depth-card p-8 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 backdrop-blur-2xl">
-              <div className="card-sheen" />
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
+          <div className="mt-10 space-y-6">
+            <Panel interactive={false} className="p-7 sm:p-8">
+              <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white font-black text-xl italic uppercase">
-                    {internData ? `${internData.firstName[0]}${internData.lastName[0]}` : (activeEmail[0].toUpperCase())}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono font-bold text-zinc-400">
-                        {internData ? internData.internId : "TEAM-ACCOUNT"}
-                      </span>
-                      <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-white text-black">
-                        {internData ? internData.status : "ACTIVE"}
+                  <span className="flex size-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] text-lg font-medium tracking-tight text-white">
+                    {internData
+                      ? `${internData.firstName[0]}${internData.lastName[0]}`
+                      : activeEmail[0].toUpperCase()}
+                  </span>
+
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <PanelLabel>
+                        {internData ? internData.internId : "Team account"}
+                      </PanelLabel>
+                      <span className="rounded-full bg-white px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] text-black">
+                        {internData ? internData.status : "Active"}
                       </span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
-                      {internData ? `${internData.firstName} ${internData.lastName}` : activeEmail.split('@')[0]}
+
+                    <h1 className="mt-2 text-2xl font-medium tracking-tighter text-white sm:text-3xl">
+                      {internData
+                        ? `${internData.firstName} ${internData.lastName}`
+                        : activeEmail.split("@")[0]}
                     </h1>
-                    <p className="text-xs font-mono text-zinc-400 mt-0.5">
-                      {internData ? internData.role : "Asenra Registered Account"}
+                    <p className="mt-1 text-sm text-white/45">
+                      {internData ? internData.role : "Asenra registered account"}
                     </p>
                   </div>
                 </div>
 
-                {internData && (
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-2xl">
-                    <ShieldCheck className="w-4 h-4 text-white" />
-                    <span className="text-xs font-bold text-white uppercase tracking-wider">
-                      Verified Employee Record
-                    </span>
+                {internData ? (
+                  <div className="flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2">
+                    <ShieldCheck className="size-3.5 text-white/70" />
+                    <PanelLabel>Verified record</PanelLabel>
                   </div>
-                )}
+                ) : null}
               </div>
+            </Panel>
+
+            <div
+              role="tablist"
+              aria-label="Portal sections"
+              className="flex w-fit flex-wrap gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1"
+            >
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex items-center gap-2 rounded-full px-4 py-2 text-[12.5px] tracking-tight transition-colors",
+                    activeTab === tab.id
+                      ? "bg-white text-black"
+                      : "text-white/45 hover:text-white"
+                  )}
+                >
+                  <tab.icon className="size-3.5" />
+                  <span>{tab.label}</span>
+                </button>
+              ))}
             </div>
 
-            {/* Navigation Tabs */}
-            <div className="flex items-center gap-2 border-b border-white/10 pb-4">
-              <button
-                onClick={() => setActiveTab("documents")}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 ${
-                  activeTab === "documents"
-                    ? "bg-white text-black shadow-lg"
-                    : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10"
-                }`}
-              >
-                <FileText className="w-3.5 h-3.5" />
-                <span>Official Documents</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("security")}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 ${
-                  activeTab === "security"
-                    ? "bg-white text-black shadow-lg"
-                    : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10"
-                }`}
-              >
-                <KeyRound className="w-3.5 h-3.5" />
-                <span>Security & Password</span>
-              </button>
-            </div>
-
-            {/* TAB 1: DOCUMENTS */}
-            {activeTab === "documents" && (
-              <div className="space-y-6">
+            {activeTab === "documents" ? (
+              <div className="space-y-5">
                 {dataLoading ? (
-                  <div className="p-12 text-center text-zinc-500 font-mono text-xs flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-white" />
-                    <span>Loading profile documents...</span>
+                  <div className="flex items-center justify-center gap-2 py-16 font-mono text-xs text-white/35">
+                    <Loader2 className="size-4 animate-spin" />
+                    <span>Loading profile documents…</span>
                   </div>
                 ) : internData ? (
-                  /* REGISTERED EMPLOYEE DOCUMENTS */
-                  <div className="space-y-6">
-                    {/* Employee Profile Summary */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div className="premium-depth-card p-5 rounded-2xl border border-white/10 bg-zinc-950">
-                        <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                          Role Title
-                        </div>
-                        <div className="text-sm font-bold text-white">
-                          {internData.role}
-                        </div>
-                      </div>
-                      <div className="premium-depth-card p-5 rounded-2xl border border-white/10 bg-zinc-950">
-                        <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                          Tenure / Duration
-                        </div>
-                        <div className="text-sm font-bold text-white">
-                          {internData.duration}
-                        </div>
-                      </div>
-                      <div className="premium-depth-card p-5 rounded-2xl border border-white/10 bg-zinc-950">
-                        <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                          Verification ID
-                        </div>
-                        <div className="text-sm font-mono font-bold text-white">
-                          {internData.internId}
-                        </div>
-                      </div>
-                    </div>
+                  <>
+                    <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+                      {profileFacts.map((fact) => (
+                        <Panel key={fact.label} interactive={false} className="p-5">
+                          <dt>
+                            <PanelLabel>{fact.label}</PanelLabel>
+                          </dt>
+                          <dd
+                            className={cn(
+                              "mt-2.5 text-sm font-medium text-white text-pretty",
+                              fact.mono && "font-mono"
+                            )}
+                          >
+                            {fact.value}
+                          </dd>
+                        </Panel>
+                      ))}
+                    </dl>
 
-                    {/* Professional Description */}
-                    {internData.description && (
-                      <div className="premium-depth-card p-6 sm:p-8 rounded-[2rem] border border-white/10 bg-zinc-950/80">
-                        <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 mb-4 flex items-center gap-2">
-                          <Briefcase className="w-4 h-4" /> Professional Summary
-                        </h3>
-                        <p className="text-zinc-300 text-sm md:text-base leading-relaxed tracking-wide font-medium">
+                    {internData.description ? (
+                      <Panel interactive={false} className="p-7 sm:p-8">
+                        <div className="flex items-center gap-2.5">
+                          <Briefcase className="size-3.5 text-white/50" />
+                          <PanelLabel>Professional summary</PanelLabel>
+                        </div>
+                        <p className="mt-5 text-sm leading-relaxed text-white/60 text-pretty">
                           {internData.description}
                         </p>
-                      </div>
-                    )}
+                      </Panel>
+                    ) : null}
 
-                    {/* Official Documents Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* Offer Letter */}
-                      <div className="premium-depth-card p-6 sm:p-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 relative overflow-hidden flex flex-col justify-between">
-                        <div className="card-sheen" />
-                        <div>
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white">
-                              <FileText className="w-6 h-6" />
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                      {documents.map((doc) => (
+                        <Panel key={doc.title} className="justify-between p-7">
+                          <div>
+                            <div className="flex items-start justify-between gap-3">
+                              <PanelIcon icon={doc.icon} />
+                              <PanelLabel className="max-w-[9ch] text-right">
+                                {doc.badge}
+                              </PanelLabel>
                             </div>
-                            <span className="text-[10px] font-mono font-bold text-white border border-white/20 px-2.5 py-1 rounded-full bg-white/10">
-                              Signed Offer Letter
-                            </span>
+
+                            <h2 className="mt-7 text-base font-medium tracking-tight text-white text-pretty">
+                              {doc.title}
+                            </h2>
+                            <p className="mt-2.5 text-xs leading-relaxed text-white/40 text-pretty">
+                              {doc.blurb}
+                            </p>
                           </div>
-                          <h3 className="text-lg font-bold text-white mb-1">Official Offer Letter</h3>
-                          <p className="text-xs text-zinc-400 mb-6">
-                            Official engagement terms and agreement contract.
-                          </p>
-                          {internData.offerLetterLink ? (
+
+                          {doc.href ? (
                             <a
-                              href={internData.offerLetterLink}
+                              href={doc.href}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:scale-[1.02] transition-all whitespace-nowrap px-2"
+                              className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-2.5 text-[12.5px] font-medium tracking-tight text-black transition-colors hover:bg-white/90"
                             >
-                              <span>Download Offer Letter</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
+                              <span>Download</span>
+                              <ExternalLink className="size-3.5" />
                             </a>
                           ) : (
-                            <div className="p-3 rounded-xl bg-white/5 text-center text-xs text-zinc-500 font-mono">
-                              Document Pending
-                            </div>
+                            <p className="mt-7 rounded-full border border-white/[0.07] bg-white/[0.02] py-2.5 text-center font-mono text-[11px] uppercase tracking-[0.15em] text-white/30">
+                              {doc.pending}
+                            </p>
                           )}
-                        </div>
-                      </div>
-
-                      {/* NDA Agreement */}
-                      <div className="premium-depth-card p-6 sm:p-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 relative overflow-hidden flex flex-col justify-between">
-                        <div className="card-sheen" />
-                        <div>
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white">
-                              <ShieldCheck className="w-6 h-6" />
-                            </div>
-                            <span className="text-[10px] font-mono font-bold text-white border border-white/20 px-2.5 py-1 rounded-full bg-white/10">
-                              Signed NDA Agreement
-                            </span>
-                          </div>
-                          <h3 className="text-lg font-bold text-white mb-1">Non-Disclosure Agreement</h3>
-                          <p className="text-xs text-zinc-400 mb-6">
-                            Intellectual property protection and confidentiality terms.
-                          </p>
-                          {internData.ndaLink ? (
-                            <a
-                              href={internData.ndaLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:scale-[1.02] transition-all whitespace-nowrap px-2"
-                            >
-                              <span>Download NDA Form</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </a>
-                          ) : (
-                            <div className="p-3 rounded-xl bg-white/5 text-center text-xs text-zinc-500 font-mono">
-                              Document Pending
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Certificate */}
-                      <div className="premium-depth-card p-6 sm:p-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 relative overflow-hidden flex flex-col justify-between">
-                        <div className="card-sheen" />
-                        <div>
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white">
-                              <Award className="w-6 h-6" />
-                            </div>
-                            <span className="text-[10px] font-mono font-bold text-white border border-white/20 px-2.5 py-1 rounded-full bg-white/10">
-                              Official Certificate
-                            </span>
-                          </div>
-                          <h3 className="text-lg font-bold text-white mb-1">Internship Certificate</h3>
-                          <p className="text-xs text-zinc-400 mb-6">
-                            Verified proof of internship completion and tenure.
-                          </p>
-                          {internData.certificateUrl && internData.certificateUrl !== "Pending Completion" ? (
-                            <a
-                              href={internData.certificateUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:scale-[1.02] transition-all whitespace-nowrap px-2 shadow-[0_0_15px_rgba(255,255,255,0.4)]"
-                            >
-                              <span>Download Certificate</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </a>
-                          ) : (
-                            <div className="p-3 rounded-xl bg-white/5 text-center text-xs text-zinc-500 font-mono">
-                              Pending Completion
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                        </Panel>
+                      ))}
                     </div>
-                  </div>
+                  </>
                 ) : (
-                  /* GENERAL ACCOUNT DASHBOARD (NO EMPLOYEE DOCUMENTS LINKED TO THIS EMAIL) */
-                  <div className="premium-depth-card p-10 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 text-center space-y-6">
-                    <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 mx-auto flex items-center justify-center text-zinc-400">
-                      <User className="w-8 h-8" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-black uppercase text-white tracking-tight mb-2">
-                        Account Signed In
-                      </h3>
-                      <p className="text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed">
-                        You are logged in with <strong className="text-white">{activeEmail}</strong>. No official employee records are linked to this email address.
-                      </p>
-                    </div>
+                  <Panel interactive={false} className="items-center p-10 text-center sm:p-12">
+                    <PanelIcon icon={User} className="size-14" />
+                    <h2 className="mt-7 text-xl font-medium tracking-tighter text-white sm:text-2xl">
+                      Account signed in.
+                    </h2>
+                    <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-white/45 text-pretty">
+                      You are signed in as{" "}
+                      <span className="text-white">{activeEmail}</span>. No official
+                      employee records are linked to this email address.
+                    </p>
 
                     <Link
                       href="/"
-                      className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-black font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                      className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium tracking-tight text-black transition-colors hover:bg-white/90"
                     >
-                      <span>Return to Home</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>Return to home</span>
                     </Link>
-                  </div>
+                  </Panel>
                 )}
               </div>
-            )}
+            ) : null}
 
-            {/* TAB 2: SECURITY & PASSWORD SETTINGS */}
-            {activeTab === "security" && (
-              <div className="premium-depth-card p-8 sm:p-10 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950">
-                <div className="card-sheen" />
-                <div className="max-w-md mx-auto relative z-10 space-y-6">
-                  <div className="text-center space-y-2">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 mx-auto flex items-center justify-center text-white">
-                      <Key className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl font-black uppercase text-white tracking-tight">
-                      Update Security Password
-                    </h3>
-                    <p className="text-xs text-zinc-400 font-medium">
+            {activeTab === "security" ? (
+              <Panel interactive={false} className="p-8 sm:p-10">
+                <div className="mx-auto w-full max-w-md">
+                  <div className="text-center">
+                    <PanelIcon icon={Key} className="mx-auto" />
+                    <h2 className="mt-5 text-xl font-medium tracking-tighter text-white">
+                      Update your password.
+                    </h2>
+                    <p className="mt-3 text-xs text-white/45 text-pretty">
                       Set a custom secure password for your account login.
                     </p>
                   </div>
 
-                  {pwdError && (
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/20 text-zinc-300 text-xs flex items-start gap-3">
-                      <AlertCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                      <span>{pwdError}</span>
-                    </div>
-                  )}
+                  {pwdError ? (
+                    <FormAlert tone="error" className="mt-6">
+                      {pwdError}
+                    </FormAlert>
+                  ) : null}
+                  {pwdSuccess ? (
+                    <FormAlert tone="success" className="mt-6">
+                      {pwdSuccess}
+                    </FormAlert>
+                  ) : null}
 
-                  {pwdSuccess && (
-                    <div className="p-4 rounded-2xl bg-white/10 border border-white/20 text-white text-xs flex items-start gap-3">
-                      <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                      <span>{pwdSuccess}</span>
-                    </div>
-                  )}
+                  <form onSubmit={handleChangePassword} className="mt-6 space-y-5">
+                    <Field
+                      id="portal-new-password"
+                      label="New password"
+                      type="password"
+                      autoComplete="new-password"
+                      required
+                      minLength={6}
+                      placeholder="At least 6 characters"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                    />
 
-                  <form onSubmit={handleChangePassword} className="space-y-4">
-                    <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1.5">
-                        New Security Password
-                      </label>
-                      <input
-                        type="password"
-                        required
-                        placeholder="At least 6 characters"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1.5">
-                        Confirm New Password
-                      </label>
-                      <input
-                        type="password"
-                        required
-                        placeholder="Repeat new password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40"
-                      />
-                    </div>
+                    <Field
+                      id="portal-confirm-password"
+                      label="Confirm new password"
+                      type="password"
+                      autoComplete="new-password"
+                      required
+                      placeholder="Repeat new password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
 
                     <button
                       type="submit"
                       disabled={pwdLoading}
-                      className="w-full py-4 px-6 rounded-2xl bg-white text-black font-extrabold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] disabled:opacity-50 mt-2"
+                      className="flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-medium tracking-tight text-black transition-colors hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {pwdLoading ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Updating Password...</span>
+                          <Loader2 className="size-4 animate-spin" />
+                          <span>Updating…</span>
                         </>
                       ) : (
-                        <span>Save New Password</span>
+                        <span>Save new password</span>
                       )}
                     </button>
                   </form>
                 </div>
-              </div>
-            )}
-
+              </Panel>
+            ) : null}
           </div>
         ) : (
-          /* UNAUTHENTICATED VISITOR LOGIN VIEW */
-          <div className="max-w-md mx-auto">
-            <div className="space-y-4 mb-10 text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-widest text-zinc-300 mb-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-white" />
-                <span>Asenra Secure Team Portal</span>
-              </div>
-              <h1 className="text-4xl sm:text-5xl font-black tracking-tighter uppercase italic">
-                Portal <span className="text-silver-matte">Access.</span>
+          <div className="mx-auto mt-16 w-full max-w-md">
+            <div className="text-center">
+              <PanelLabel>Asenra secure team portal</PanelLabel>
+              <h1 className="mt-5 text-3xl font-medium tracking-tighter text-white sm:text-4xl">
+                Portal access.
               </h1>
-              <p className="text-base text-zinc-400 leading-relaxed mt-2">
-                Sign in with your registered email and password to access official team documentation.
+              <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-white/45 text-pretty">
+                Sign in with your registered email and password to access official
+                team documentation.
               </p>
             </div>
 
-            <div className="premium-depth-card p-8 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 shadow-2xl relative space-y-4">
-              <div className="card-sheen" />
-              
+            <Panel interactive={false} className="mt-10 gap-3 p-7">
               <Link
                 href="/auth/login?redirect=/portal"
-                className="w-full py-4 px-6 rounded-2xl bg-white text-black font-extrabold text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(255,255,255,0.2)] block text-center"
+                className="flex w-full items-center justify-center rounded-full bg-white px-6 py-3.5 text-sm font-medium tracking-tight text-black transition-colors hover:bg-white/90"
               >
-                <span>Sign In With Email & Password</span>
+                Sign in
               </Link>
 
               <Link
                 href="/auth/signup?redirect=/portal"
-                className="w-full py-3.5 px-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white font-bold text-xs uppercase tracking-widest transition-all block text-center"
+                className="flex w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm text-white/70 transition-colors hover:border-white/25 hover:text-white"
               >
-                <span>Create New Account</span>
+                Create new account
               </Link>
-            </div>
+            </Panel>
           </div>
         )}
-
       </div>
     </main>
   );

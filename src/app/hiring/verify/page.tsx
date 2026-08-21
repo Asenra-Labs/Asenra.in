@@ -2,8 +2,12 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Loader2, ArrowLeft, ShieldCheck, Lock } from "lucide-react";
+import { Search, Loader2, ArrowLeft, Lock } from "lucide-react";
 import Link from "next/link";
+
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { GlowField } from "@/components/ui/GlowField";
+import { GridBackdrop } from "@/components/ui/GridBackdrop";
 
 export default function VerifyPage() {
   const router = useRouter();
@@ -73,75 +77,72 @@ export default function VerifyPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pb-24">
-      {/* Background Lighting */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] bg-white/5 rounded-full blur-[140px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] bg-zinc-400/5 rounded-full blur-[140px]" />
-        <div className="absolute inset-0 bg-grid-theme opacity-15" />
-      </div>
+    <main className="relative isolate min-h-screen overflow-hidden bg-black pb-24 pt-28">
+      <GridBackdrop className="opacity-60" />
+      <GlowField
+        intensity="base"
+        className="left-1/2 top-1/4 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2"
+      />
 
-      <div className="container mx-auto px-6 relative z-30 pt-28 sm:pt-32">
-        <div className="flex items-center justify-between mb-10">
-          <Link 
-            href="/careers" 
-            className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors cursor-pointer text-sm font-medium tracking-wide group"
+      <div className="relative z-10 mx-auto w-full max-w-3xl px-6 md:px-10">
+        <div className="flex items-center justify-between gap-4 border-b border-white/[0.07] pb-6">
+          <Link
+            href="/careers"
+            className="group inline-flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span>Back to Careers</span>
+            <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
+            <span>Back to careers</span>
           </Link>
 
           <Link
             href="/portal"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-white rounded-xl transition-all"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-[12px] text-white/55 transition-colors hover:border-white/25 hover:text-white"
           >
-            <Lock className="w-3.5 h-3.5" />
-            <span>Employee Portal</span>
+            <Lock className="size-3" />
+            <span>Employee portal</span>
           </Link>
         </div>
 
-        <section className="max-w-3xl mx-auto">
-          <div className="space-y-4 mb-14 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-widest text-zinc-300 mb-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-white" />
-              <span>Native Asenra Credentials Database</span>
-            </div>
-            <h1 className="text-sm font-bold tracking-[0.4em] text-neutral-400 uppercase">
-              Identity Protocol
-            </h1>
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase italic">
-              Verify <span className="text-silver-matte">Credentials.</span>
-            </h2>
-            <p className="text-base sm:text-lg text-neutral-400 max-w-xl mx-auto leading-relaxed mt-4">
-              Enter the unique Asenra Identification Number to access verified candidate records and official documentation.
-            </p>
-          </div>
+        <section className="mt-16 text-center">
+          <Eyebrow className="mb-5">Identity protocol</Eyebrow>
 
-          {/* Search Box */}
-          <div className="premium-depth-card p-2 rounded-[30px] relative overflow-hidden bg-white/2 mb-10 shadow-2xl border border-white/10">
-            <div className="card-sheen" />
-            <form onSubmit={handleVerify} className="relative flex items-center z-10">
-              <div className="absolute left-6 text-neutral-500">
-                <Search className="w-5 h-5" />
-              </div>
+          <h1 className="text-4xl font-medium tracking-tighter text-white sm:text-5xl md:text-6xl">
+            Verify credentials.
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/45 text-pretty">
+            Enter the unique Asenra identification number to access verified
+            candidate records and official documentation.
+          </p>
+
+          <form onSubmit={handleVerify} className="mt-12">
+            <label htmlFor="intern-id" className="sr-only">
+              Asenra identification number
+            </label>
+
+            <div className="relative flex items-center rounded-full border border-white/10 bg-white/[0.03] p-1.5 transition-colors focus-within:border-white/35">
+              <Search className="pointer-events-none absolute left-6 size-4 text-white/30" />
+
               <input
+                id="intern-id"
                 type="text"
+                inputMode="text"
+                autoComplete="off"
                 placeholder="ASN-INT-2026-001"
                 value={internId}
                 onChange={handleInputChange}
-                className="w-full bg-transparent border-0 pl-16 pr-36 h-16 text-lg focus:outline-none focus:ring-0 text-white placeholder:text-neutral-600 font-mono tracking-widest font-bold"
+                className="h-12 w-full bg-transparent pl-14 pr-4 font-mono text-base tracking-[0.1em] text-white outline-none placeholder:text-white/20"
               />
-              <div className="absolute right-2 top-2 bottom-2">
-                <button
-                  type="submit"
-                  disabled={loading || !internId.trim() || internId.length < 5}
-                  className="h-full px-8 bg-white text-black hover:scale-105 active:scale-95 rounded-2xl font-black italic uppercase tracking-widest text-xs flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
-                >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Verify"}
-                </button>
-              </div>
-            </form>
-          </div>
+
+              <button
+                type="submit"
+                disabled={loading || !internId.trim() || internId.length < 5}
+                className="h-12 shrink-0 rounded-full bg-white px-7 text-sm font-medium tracking-tight text-black transition-colors hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {loading ? <Loader2 className="size-4 animate-spin" /> : "Verify"}
+              </button>
+            </div>
+          </form>
         </section>
       </div>
     </main>
