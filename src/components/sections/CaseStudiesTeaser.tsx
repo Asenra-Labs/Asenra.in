@@ -1,8 +1,10 @@
-"use client";
-
-import React from "react";
-import Link from "next/link";
 import { ArrowRight, ShieldCheck, Zap, BarChart3 } from "lucide-react";
+
+import { CtaButton } from "@/components/ui/CtaButton";
+import { GlowField } from "@/components/ui/GlowField";
+import { Panel, PanelIcon, PanelLabel } from "@/components/ui/Panel";
+import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const caseStudies = [
   {
@@ -11,7 +13,8 @@ const caseStudies = [
     headline: "Automated Clinical Document Intelligence Pipeline",
     metric: "70% Reduction",
     metricSub: "In processing time & operational friction",
-    summary: "Implemented HIPAA-aligned document extraction and automated triage pipelines for a regional diagnostic network.",
+    summary:
+      "Implemented HIPAA-aligned document extraction and automated triage pipelines for a regional diagnostic network.",
     icon: ShieldCheck,
   },
   {
@@ -20,7 +23,8 @@ const caseStudies = [
     headline: "Predictive Dispatch & Freight Automation",
     metric: "$1.2M Saved",
     metricSub: "Annual operational overhead eliminated",
-    summary: "Replaced legacy manual dispatching with a custom intelligent routing agent and real-time inventory tracking platform.",
+    summary:
+      "Replaced legacy manual dispatching with a custom intelligent routing agent and real-time inventory tracking platform.",
     icon: Zap,
   },
   {
@@ -29,80 +33,74 @@ const caseStudies = [
     headline: "Predictive Maintenance & Quality Inspection",
     metric: "99.4% Uptime",
     metricSub: "Zero unplanned machine downtime",
-    summary: "Engineered automated inspection and telemetry analysis to catch defects before production line stoppage.",
+    summary:
+      "Engineered automated inspection and telemetry analysis to catch defects before production line stoppage.",
     icon: BarChart3,
   },
 ];
 
 export function CaseStudiesTeaser() {
   return (
-    <section className="relative py-28 bg-black border-t border-white/5 overflow-hidden" id="selected-work">
-      {/* Glow */}
-      <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-white/[0.015] rounded-full blur-[140px] pointer-events-none" />
+    <section
+      id="selected-work"
+      className="relative isolate overflow-hidden border-t border-white/5 bg-black py-24 md:py-32"
+    >
+      <GlowField
+        intensity="faint"
+        className="left-1/4 top-1/3 h-[400px] w-[400px]"
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
-          <div className="max-w-2xl">
-            <div className="mb-4 text-xs font-black uppercase tracking-[0.35em] text-zinc-500 select-none">
-              Selected Work
-            </div>
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-[0.95]">
-              Proven Results. <br />
-              <span className="text-silver-matte">Quantifiable Impact.</span>
-            </h2>
-          </div>
-          <Link
-            href="/case-studies"
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors"
-          >
-            <span>View All Selected Work</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-10">
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <SectionHeading
+            eyebrow="Selected work"
+            title={
+              <>
+                Proven results.
+                <br />
+                Quantifiable impact.
+              </>
+            }
+            className="max-w-2xl"
+          />
+
+          <CtaButton href="/case-studies" variant="quiet" size="sm" className="shrink-0">
+            View all selected work
+            <ArrowRight className="size-3.5" />
+          </CtaButton>
         </div>
 
-        {/* Case Studies Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {caseStudies.map((cs) => (
-            <div
-              key={cs.client}
-              className="premium-depth-card group p-8 rounded-[2rem] border border-white/10 bg-gradient-to-b from-zinc-950 to-black hover:border-white/25 transition-all duration-500 flex flex-col justify-between"
-            >
-              <div className="card-sheen" />
-
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                    {cs.industry}
-                  </span>
-                  <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
-                    <cs.icon className="w-4 h-4" />
+        <RevealGroup as="ul" className="mt-16 grid grid-cols-1 gap-5 md:mt-20 md:grid-cols-3">
+          {caseStudies.map((study) => (
+            <RevealItem key={study.client} as="li" className="flex">
+              <Panel className="w-full justify-between">
+                <div>
+                  <div className="flex items-start justify-between gap-4">
+                    <PanelLabel className="max-w-[16ch]">{study.industry}</PanelLabel>
+                    <PanelIcon icon={study.icon} className="size-9" />
                   </div>
+
+                  <p className="mt-8 text-3xl font-medium leading-none tracking-tighter text-white">
+                    {study.metric}
+                  </p>
+                  <p className="mt-3 text-xs text-white/45">{study.metricSub}</p>
+
+                  <h3 className="mt-7 text-base font-medium leading-snug tracking-tight text-white text-pretty">
+                    {study.headline}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-white/45 text-pretty">
+                    {study.summary}
+                  </p>
                 </div>
 
-                <div className="mb-6">
-                  <span className="text-3xl sm:text-4xl font-black text-white block tracking-tight">
-                    {cs.metric}
-                  </span>
-                  <span className="text-xs font-semibold text-zinc-400 block mt-1">
-                    {cs.metricSub}
-                  </span>
+                <div className="mt-8 flex items-center justify-between border-t border-white/[0.07] pt-5">
+                  <span className="text-xs font-medium text-white/70">{study.client}</span>
+                  <PanelLabel>Case study</PanelLabel>
                 </div>
-
-                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">
-                  {cs.headline}
-                </h3>
-                <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-6 font-medium">
-                  {cs.summary}
-                </p>
-              </div>
-
-              <div className="pt-6 border-t border-white/10 flex items-center justify-between">
-                <span className="text-xs font-bold text-zinc-300">{cs.client}</span>
-                <span className="text-[10px] font-mono text-zinc-500 uppercase">Case Study</span>
-              </div>
-            </div>
+              </Panel>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );

@@ -1,7 +1,3 @@
-"use client";
-
-import React from "react";
-
 const OpenAILogo = () => (
   <svg className="w-5 h-5 fill-current text-zinc-300 group-hover:text-white transition-colors shrink-0" viewBox="0 0 24 24">
     <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7947.7947 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.47 4.47 0 0 1-.5355-3.0137l.142.0852 4.783 2.7582a.771.771 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 8.4856a4.485 4.485 0 0 1 2.3655-1.9728V12.15a.7662.7662 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 8.4856zm16.0993 3.8558L12.6007 8.9729l2.02-1.1638a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.3978-.6813zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7758.7758 0 0 0-.7854 0L8.907 9.8197V7.4873a.0757.0757 0 0 1 .0332-.0615l4.8303-2.7866a4.504 4.504 0 0 1 6.6802 4.6644zM8.3007 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.052V6.0646a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805-4.783 2.7582a.7947.7947 0 0 0-.3927.6813v6.7321zm1.1458-1.5583l2.5534-1.4728 2.5582 1.4728v2.9456l-2.5582 1.4728-2.5534-1.4728v-2.9456z"/>
@@ -56,37 +52,33 @@ const techStack = [
 
 export function TrustedTechnologies() {
   return (
-    <section className="relative py-16 sm:py-20 bg-black border-y border-white/5 overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] bg-white/[0.015] rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-10">
-          <h2 className="text-xs font-black uppercase tracking-[0.35em] text-zinc-500 mb-2">
-            Built on Industry-Leading Technologies
-          </h2>
-          <p className="text-sm font-medium text-zinc-400">
+    <section className="relative isolate overflow-hidden border-y border-white/5 bg-black py-20">
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
+        <div className="text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-white/40 select-none">
+            Built on industry-leading technologies
+          </p>
+          <p className="mt-3 text-sm text-white/45">
             We architect solutions using battle-tested infrastructure and frontier AI models.
           </p>
         </div>
 
-        {/* Tech Grid with Vector Logos */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 max-w-5xl mx-auto">
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-3">
           {techStack.map((tech) => {
-            const LogoComponent = tech.logo;
+            const Logo = tech.logo;
             return (
-              <div
+              <li
                 key={tech.name}
-                className="px-5 py-3 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-white/25 hover:bg-white/[0.05] transition-all duration-300 flex items-center gap-3 group cursor-default shadow-sm hover:scale-[1.03]"
+                className="group flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.02] px-4 py-2.5 transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.05]"
               >
-                <LogoComponent />
-                <span className="text-sm font-bold tracking-tight text-zinc-200 group-hover:text-white transition-colors">
+                <Logo />
+                <span className="text-[13px] font-medium tracking-tight text-white/70 transition-colors group-hover:text-white">
                   {tech.name}
                 </span>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </section>
   );

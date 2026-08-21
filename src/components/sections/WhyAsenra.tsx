@@ -1,7 +1,9 @@
-"use client";
-
-import React from "react";
 import { Workflow, TrendingUp, ShieldCheck } from "lucide-react";
+
+import { GlowField } from "@/components/ui/GlowField";
+import { Panel, PanelIcon } from "@/components/ui/Panel";
+import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const pillars = [
   {
@@ -26,49 +28,44 @@ const pillars = [
 
 export function WhyAsenra() {
   return (
-    <section className="relative py-28 bg-black overflow-hidden border-t border-white/5" id="why-asenra">
-      {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-white/[0.015] rounded-full blur-[160px] pointer-events-none" />
+    <section
+      id="why-asenra"
+      className="relative isolate overflow-hidden border-t border-white/5 bg-black py-24 md:py-32"
+    >
+      <GlowField
+        intensity="faint"
+        className="left-1/2 top-1/2 h-[350px] w-[700px] -translate-x-1/2 -translate-y-1/2"
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Section Header */}
-        <div className="max-w-3xl mb-16 sm:mb-20">
-          <div className="mb-4 text-xs font-black uppercase tracking-[0.35em] text-zinc-500 select-none">
-            Why Businesses Choose Asenra
-          </div>
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-[0.95] mb-8">
-            Intelligent Systems. <br />
-            <span className="text-silver-matte">Measurable Outcomes.</span>
-          </h2>
-          <p className="text-zinc-300 text-lg sm:text-xl font-medium leading-relaxed">
-            Most companies adopt AI by adding another tool. We redesign business operations around intelligent systems that integrate seamlessly into your existing workflows. Every implementation is engineered for measurable business outcomes, long-term scalability, and operational efficiency.
-          </p>
-        </div>
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-10">
+        <SectionHeading
+          eyebrow="Why businesses choose Asenra"
+          title={
+            <>
+              Intelligent systems.
+              <br />
+              Measurable outcomes.
+            </>
+          }
+          lede="Most companies adopt AI by adding another tool. We redesign business operations around intelligent systems that integrate seamlessly into your existing workflows."
+        />
 
-        {/* 3 Value Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <RevealGroup className="mt-16 grid grid-cols-1 gap-5 md:mt-20 md:grid-cols-3">
           {pillars.map((pillar) => (
-            <div
-              key={pillar.title}
-              className="premium-depth-card group relative p-8 sm:p-10 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 to-black hover:border-white/25 transition-all duration-500 flex flex-col justify-between"
-            >
-              <div className="card-sheen" />
+            <RevealItem key={pillar.title} className="flex">
+              <Panel className="w-full">
+                <PanelIcon icon={pillar.icon} />
 
-              <div>
-                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-8 group-hover:bg-white/10 group-hover:scale-105 transition-all">
-                  <pillar.icon className="w-7 h-7" />
-                </div>
-
-                <h3 className="text-2xl font-bold tracking-tight text-white mb-4">
+                <h3 className="mt-8 text-xl font-medium tracking-tight text-white">
                   {pillar.title}
                 </h3>
-                <p className="text-zinc-400 text-sm sm:text-base font-medium leading-relaxed">
+                <p className="mt-4 text-sm leading-relaxed text-white/45 text-pretty">
                   {pillar.description}
                 </p>
-              </div>
-            </div>
+              </Panel>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );
