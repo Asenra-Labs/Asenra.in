@@ -348,7 +348,7 @@ export default function AcquisitionPage() {
         
         {/* Navigation */}
         <div className="flex items-center justify-between mb-16">
-          <Link href="/" className="group inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-all duration-300">
+          <Link href="/" className="group inline-flex items-center gap-2 text-white/35 hover:text-white transition-all duration-300">
             <span className="w-8 h-8 rounded-full border border-zinc-800 flex items-center justify-center group-hover:border-zinc-400 group-hover:-translate-x-1 transition-all">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -359,7 +359,7 @@ export default function AcquisitionPage() {
           
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-            <span className="text-xs font-black uppercase tracking-[0.25em] text-zinc-400">ASENRA DEMO PIPELINE V2.0</span>
+            <span className="text-xs font-medium uppercase tracking-[0.25em] text-white/45">ASENRA DEMO PIPELINE V2.0</span>
           </div>
         </div>
 
@@ -367,43 +367,43 @@ export default function AcquisitionPage() {
         {step === "input" && (
           <div className="max-w-3xl mx-auto py-6">
             <div className="text-center mb-12">
-              <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 leading-none uppercase text-white">
+              <h1 className="text-5xl md:text-7xl font-medium tracking-tighter mb-6 leading-none uppercase text-white">
                 Interactive <br />
                 <span className="text-silver-matte">Demo & Tech Audit.</span>
               </h1>
-              <p className="text-zinc-400 text-lg md:text-xl font-medium max-w-xl mx-auto leading-relaxed">
+              <p className="text-white/45 text-lg md:text-xl font-medium max-w-xl mx-auto leading-relaxed">
                 Generate a custom, high-end landing page layout and run a conversion audit tailored specifically to your business niche instantly.
               </p>
             </div>
 
-            <form onSubmit={handleStart} className="space-y-6 bg-zinc-950/60 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+            <form onSubmit={handleStart} className="space-y-6 bg-white/[0.02]/60 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-2xl shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
               
               <div className="space-y-2">
-                <label className="block text-xs font-black uppercase tracking-widest text-zinc-400">Company / Product Name</label>
+                <label className="block text-xs font-medium uppercase tracking-widest text-white/45">Company / Product Name</label>
                 <input 
                   type="text" 
                   required
                   placeholder="e.g. Acme Corporation" 
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-all font-semibold"
+                  className="w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/25 focus:outline-none focus:border-white/30 transition-all font-semibold"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="block text-xs font-black uppercase tracking-widest text-zinc-400">Existing Website URL (Optional)</label>
+                <label className="block text-xs font-medium uppercase tracking-widest text-white/45">Existing Website URL (Optional)</label>
                 <input 
                   type="url" 
                   placeholder="https://example.com" 
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
-                  className="w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-all font-semibold"
+                  className="w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/25 focus:outline-none focus:border-white/30 transition-all font-semibold"
                 />
               </div>
 
               <div className="space-y-4">
-                <label className="block text-xs font-black uppercase tracking-widest text-zinc-400">Industry / Domain</label>
+                <label className="block text-xs font-medium uppercase tracking-widest text-white/45">Industry / Domain</label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {(["ecommerce", "real-estate", "saas", "services", "gym", "cafe", "salon", "architecture", "custom"] as const).map((ind) => {
                     const label = {
@@ -441,7 +441,7 @@ export default function AcquisitionPage() {
                         className={`p-4 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center gap-2 justify-center capitalize font-semibold ${
                           industry === ind 
                             ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.15)]" 
-                            : "bg-black/40 border-white/10 text-zinc-400 hover:border-white/30 hover:text-white"
+                            : "bg-black/40 border-white/10 text-white/45 hover:border-white/30 hover:text-white"
                         }`}
                       >
                         {icon}
@@ -455,21 +455,21 @@ export default function AcquisitionPage() {
               {/* Conditional Custom Niche Input */}
               {industry === "custom" && (
                 <div className="space-y-2 mt-4 animate-fadeIn">
-                  <label className="block text-xs font-black uppercase tracking-widest text-zinc-400">Describe Your Business / Niche</label>
+                  <label className="block text-xs font-medium uppercase tracking-widest text-white/45">Describe Your Business / Niche</label>
                   <input 
                     type="text" 
                     required
                     placeholder="e.g. Organic Bakery, Dental Clinic, Legal Advisor" 
                     value={customNiche}
                     onChange={(e) => setCustomNiche(e.target.value)}
-                    className="w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 transition-all font-semibold"
+                    className="w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/25 focus:outline-none focus:border-white/30 transition-all font-semibold"
                   />
                 </div>
               )}
 
               {/* Brand Accent Color */}
               <div className="space-y-2">
-                <label className="block text-xs font-black uppercase tracking-widest text-zinc-400">Brand Color Accent</label>
+                <label className="block text-xs font-medium uppercase tracking-widest text-white/45">Brand Color Accent</label>
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                   {(["gold", "white", "rose", "emerald", "blue", "crimson"] as const).map((color) => {
                     const colorLabel = {
@@ -490,7 +490,7 @@ export default function AcquisitionPage() {
                       crimson: "border-[#EE0000] text-[#EE0000] bg-[#EE0000]/10"
                     }[color];
 
-                    const activeStyle = themeColor === color ? `${borderBg} border-2 shadow-md` : "border-white/10 text-zinc-400 hover:border-white/30";
+                    const activeStyle = themeColor === color ? `${borderBg} border-2 shadow-md` : "border-white/10 text-white/45 hover:border-white/30";
 
                     return (
                       <button
@@ -508,7 +508,7 @@ export default function AcquisitionPage() {
 
               <button
                 type="submit"
-                className="w-full bg-white text-black font-black uppercase tracking-tighter py-5 rounded-2xl hover:scale-[1.01] hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] transition-all active:scale-[0.99] flex items-center justify-center gap-3 cursor-pointer mt-8 btn-shine-effect"
+                className="w-full bg-white text-black font-medium uppercase tracking-tighter py-5 rounded-2xl hover:scale-[1.01] hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] transition-all active:scale-[0.99] flex items-center justify-center gap-3 cursor-pointer mt-8 btn-shine-effect"
               >
                 <span>Generate Dynamic Audit & Demo Website</span>
                 <ArrowRight className="w-5 h-5" />
@@ -520,7 +520,7 @@ export default function AcquisitionPage() {
         {/* 2. LOADING STEP */}
         {step === "loading" && (
           <div className="max-w-2xl mx-auto py-16 text-center animate-fadeIn">
-            <div className="bg-zinc-950/60 backdrop-blur-2xl border border-white/10 p-10 md:p-16 rounded-[3rem] shadow-2xl relative overflow-hidden space-y-10">
+            <div className="bg-white/[0.02]/60 backdrop-blur-2xl border border-white/10 p-10 md:p-16 rounded-[3rem] shadow-2xl relative overflow-hidden space-y-10">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
               
               {/* Cinematic Double Spinner */}
@@ -532,14 +532,14 @@ export default function AcquisitionPage() {
                 {/* Center pulse glow */}
                 <div className="absolute inset-6 rounded-full bg-white/[0.03] animate-pulse" />
                 {/* Center percentage */}
-                <span className="text-3xl font-black tracking-tighter text-white font-mono">{progress}%</span>
+                <span className="text-3xl font-medium tracking-tighter text-white font-mono">{progress}%</span>
               </div>
 
               {/* Phase Indicators */}
               <div className="space-y-3">
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">ASENRA PIPELINE ACTIVE</span>
+                  <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/35">ASENRA PIPELINE ACTIVE</span>
                 </div>
                 
                 <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white h-8 overflow-hidden transition-all duration-300">
@@ -561,7 +561,7 @@ export default function AcquisitionPage() {
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <div className="flex justify-between text-[10px] font-mono text-zinc-500 uppercase tracking-widest px-1">
+                <div className="flex justify-between text-[10px] font-mono text-white/35 uppercase tracking-widest px-1">
                   <span>Footprint scan</span>
                   <span>Rendering preview</span>
                 </div>
@@ -576,8 +576,8 @@ export default function AcquisitionPage() {
             {/* Intro banner */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-6 border-b border-white/10">
               <div>
-                <h1 className="text-4xl font-black tracking-tight text-white uppercase italic">{companyName}</h1>
-                <p className="text-zinc-500 font-medium text-xs mt-1 uppercase tracking-widest">
+                <h1 className="text-4xl font-medium tracking-tight text-white uppercase italic">{companyName}</h1>
+                <p className="text-white/35 font-medium text-xs mt-1 uppercase tracking-widest">
                   Live Audit & Generated Layout for {industry === "custom" ? customNiche : industry} · Theme: {themeColor}
                 </p>
               </div>
@@ -595,23 +595,23 @@ export default function AcquisitionPage() {
               
               {/* Left Column: Tech Audit report card */}
               <div className="lg:col-span-4 space-y-6">
-                <div className="bg-zinc-950/60 backdrop-blur-md border border-white/10 rounded-[2rem] p-6 shadow-2xl space-y-6 relative overflow-hidden">
+                <div className="bg-white/[0.02]/60 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-2xl space-y-6 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent pointer-events-none" />
                   
                   <div className="flex items-center gap-2.5">
                     <Terminal className="w-5 h-5 text-white" />
-                    <h3 className="text-xs font-black uppercase tracking-widest text-zinc-400">Technical Gap Analysis</h3>
+                    <h3 className="text-xs font-medium uppercase tracking-widest text-white/45">Technical Gap Analysis</h3>
                   </div>
 
                   {/* Audit Metric comparisons */}
                   <div className="space-y-4 pt-2">
                     <div className="bg-black/50 border border-white/5 p-4 rounded-2xl flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-zinc-500 block mb-1">Performance Index</span>
+                        <span className="text-[10px] font-medium uppercase tracking-wider text-white/35 block mb-1">Performance Index</span>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-2xl font-black text-zinc-500">{audit.originalSpeed}%</span>
-                          <span className="text-zinc-600 text-xs font-medium">vs</span>
-                          <span className="text-2xl font-black text-white">99%</span>
+                          <span className="text-2xl font-medium text-white/35">{audit.originalSpeed}%</span>
+                          <span className="text-white/25 text-xs font-medium">vs</span>
+                          <span className="text-2xl font-medium text-white">99%</span>
                         </div>
                       </div>
                       <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
@@ -621,11 +621,11 @@ export default function AcquisitionPage() {
 
                     <div className="bg-black/50 border border-white/5 p-4 rounded-2xl flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-zinc-500 block mb-1">Conversion (CRO)</span>
+                        <span className="text-[10px] font-medium uppercase tracking-wider text-white/35 block mb-1">Conversion (CRO)</span>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-2xl font-black text-zinc-500">{audit.originalCro}</span>
-                          <span className="text-zinc-600 text-xs font-medium">vs</span>
-                          <span className="text-2xl font-black text-white">3.8%+</span>
+                          <span className="text-2xl font-medium text-white/35">{audit.originalCro}</span>
+                          <span className="text-white/25 text-xs font-medium">vs</span>
+                          <span className="text-2xl font-medium text-white">3.8%+</span>
                         </div>
                       </div>
                       <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
@@ -636,14 +636,14 @@ export default function AcquisitionPage() {
 
                   {/* Critical Bottlenecks identified */}
                   <div className="space-y-3">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-1.5">
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-white/45 flex items-center gap-1.5">
                       <ShieldAlert className="w-3.5 h-3.5" />
                       <span>Critical Gaps Identified</span>
                     </span>
                     <ul className="space-y-3">
                       {audit.gaps.map((gap, index) => (
-                        <li key={index} className="flex gap-3 text-xs text-zinc-300 items-start">
-                          <AlertCircle className="w-4 h-4 text-zinc-500 shrink-0 mt-0.5" />
+                        <li key={index} className="flex gap-3 text-xs text-white/70 items-start">
+                          <AlertCircle className="w-4 h-4 text-white/35 shrink-0 mt-0.5" />
                           <span>{gap}</span>
                         </li>
                       ))}
@@ -652,13 +652,13 @@ export default function AcquisitionPage() {
 
                   {/* Asenra Infrastructure Fixes */}
                   <div className="space-y-3 pt-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-1.5">
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-white flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Asenra Architect Recommendations</span>
                     </span>
                     <ul className="space-y-3">
                       {audit.features.map((feature, index) => (
-                        <li key={index} className="flex gap-3 text-xs text-zinc-300 items-start">
+                        <li key={index} className="flex gap-3 text-xs text-white/70 items-start">
                           <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
@@ -668,15 +668,15 @@ export default function AcquisitionPage() {
                 </div>
 
                 {/* Call-to-action bottom card */}
-                <div className="bg-gradient-to-b from-zinc-900/60 to-black/60 border border-white/10 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden space-y-4">
+                <div className="bg-gradient-to-b from-zinc-900/60 to-black/60 border border-white/10 p-6 rounded-2xl shadow-2xl relative overflow-hidden space-y-4">
                   <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.02] to-transparent pointer-events-none" />
                   <h4 className="text-xl font-bold tracking-tight text-white leading-tight">Claim This Audited Code & Launch</h4>
-                  <p className="text-zinc-400 text-xs leading-relaxed">
+                  <p className="text-white/45 text-xs leading-relaxed">
                     Deploy this optimized template immediately. Integrate custom backends, custom database structures, and premium animations under our Venture Studio.
                   </p>
                   <button 
                     onClick={() => setIsFormOpen(true)}
-                    className="w-full py-4 rounded-xl bg-white text-black text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer btn-shine-effect"
+                    className="w-full py-4 rounded-xl bg-white text-black text-xs font-medium uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer btn-shine-effect"
                   >
                     <span>Secure Live Project Portal</span>
                     <Lock className="w-4 h-4" />
@@ -688,12 +688,12 @@ export default function AcquisitionPage() {
               <div className="lg:col-span-8 space-y-6">
                 
                 {/* Device Bar Controls */}
-                <div className="bg-zinc-900/60 border border-white/10 rounded-2xl p-2.5 flex flex-wrap gap-4 items-center justify-between">
+                <div className="bg-white/[0.03]/60 border border-white/10 rounded-2xl p-2.5 flex flex-wrap gap-4 items-center justify-between">
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={() => setDevice("desktop")}
                       className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                        device === "desktop" ? "bg-white text-black shadow-md animate-fadeIn" : "text-zinc-400 hover:text-white bg-transparent"
+                        device === "desktop" ? "bg-white text-black shadow-md animate-fadeIn" : "text-white/45 hover:text-white bg-transparent"
                       }`}
                     >
                       <Laptop className="w-4 h-4" />
@@ -702,7 +702,7 @@ export default function AcquisitionPage() {
                     <button 
                       onClick={() => setDevice("mobile")}
                       className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                        device === "mobile" ? "bg-white text-black shadow-md animate-fadeIn" : "text-zinc-400 hover:text-white bg-transparent"
+                        device === "mobile" ? "bg-white text-black shadow-md animate-fadeIn" : "text-white/45 hover:text-white bg-transparent"
                       }`}
                     >
                       <Smartphone className="w-4 h-4" />
@@ -736,13 +736,13 @@ export default function AcquisitionPage() {
 
                   {/* Browser URL Input Sim */}
                   <div className="flex-1 max-w-md mx-6 hidden md:block">
-                    <div className="bg-black/60 border border-white/5 rounded-xl px-4 py-1.5 text-center text-xs font-mono text-zinc-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                    <div className="bg-black/60 border border-white/5 rounded-xl px-4 py-1.5 text-center text-xs font-mono text-white/35 overflow-hidden text-ellipsis whitespace-nowrap">
                       https://asenra.in/sandbox/preview/{companyName.toLowerCase().replace(/[^a-z0-9]/g, "-")}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-zinc-500 pr-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Live Sandbox</span>
+                  <div className="flex items-center gap-2 text-white/35 pr-2">
+                    <span className="text-[10px] font-medium uppercase tracking-widest hidden sm:inline">Live Sandbox</span>
                     <div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
                   </div>
                 </div>
@@ -750,7 +750,7 @@ export default function AcquisitionPage() {
                 {/* Device Shell Screen wrapper */}
                 <div className="w-full flex justify-center items-start overflow-hidden">
                   <div 
-                    className={`bg-zinc-950 border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl relative transition-all duration-500 flex flex-col ${
+                    className={`bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative transition-all duration-500 flex flex-col ${
                       device === "mobile" 
                         ? "w-full max-w-[390px] h-[700px] border-8 border-zinc-800" 
                         : "w-full h-[700px]"
@@ -759,7 +759,7 @@ export default function AcquisitionPage() {
                     
                     {/* Simulated mobile status bar */}
                     {device === "mobile" && (
-                      <div className="bg-black text-zinc-500 px-6 py-2.5 flex justify-between items-center text-[10px] font-bold border-b border-white/5 select-none shrink-0 z-50">
+                      <div className="bg-black text-white/35 px-6 py-2.5 flex justify-between items-center text-[10px] font-bold border-b border-white/5 select-none shrink-0 z-50">
                         <span>9:41</span>
                         <div className="flex gap-1.5 items-center">
                           <span className="w-3.5 h-2.5 rounded-sm border border-zinc-500 relative flex items-center justify-start p-0.5"><span className="w-1.5 h-1 bg-zinc-500 rounded-[1px]" /></span>

@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+
+import { AdminGate } from "@/components/admin/AdminGate";
+import { Field } from "@/components/ui/Field";
 import { 
   ShieldCheck, Lock, UserPlus, Users, KeyRound, CheckCircle2, 
   XCircle, Loader2, ArrowUpRight, ShieldAlert, Activity, LogOut, 
@@ -148,86 +151,37 @@ export default function SuperAdminPortalPage() {
   // Login Screen if not authenticated
   if (!currentUser) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center p-4 selection:bg-white selection:text-black relative overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-[150px] pointer-events-none" />
+      <AdminGate
+        eyebrow="Super admin protocol"
+        title="Asenra executive portal"
+        lede="Sign in with your authorized admin credentials to access system management modules."
+        error={authError}
+        loading={authLoading}
+        submitLabel="Authenticate admin access"
+        onSubmit={handleLogin}
+      >
+        <Field
+          id="admin-email"
+          label="Admin email address"
+          type="email"
+          autoComplete="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="name@asenra.in"
+        />
 
-        <div className="w-full max-w-md bg-zinc-950 border border-white/10 rounded-3xl p-8 space-y-8 relative z-10 shadow-2xl backdrop-blur-xl">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/15 rounded-full text-xs font-mono font-medium text-zinc-300">
-              <ShieldCheck className="w-3.5 h-3.5 text-white" />
-              <span>Super Admin Protocol</span>
-            </div>
-            <h1 className="text-2xl font-black tracking-tight text-white">
-              Asenra Executive Portal
-            </h1>
-            <p className="text-xs text-zinc-400">
-              Sign in with your authorized admin credentials to access system management modules.
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-4">
-            {authError && (
-              <div className="p-3.5 bg-red-950/50 border border-red-800/40 rounded-xl text-red-300 text-xs flex items-center gap-2 font-medium">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{authError}</span>
-              </div>
-            )}
-
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400">
-                Admin Email Address
-              </label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="karan.patil@asenra.in"
-                className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400">
-                Security Passcode
-              </label>
-              <input
-                type="password"
-                required
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={authLoading}
-              className="w-full py-3.5 bg-white text-black font-bold text-sm rounded-xl hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 mt-4"
-            >
-              {authLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-black" />
-                  <span>Authenticating...</span>
-                </>
-              ) : (
-                <>
-                  <Lock className="w-4 h-4 text-black" />
-                  <span>Authenticate Admin Access</span>
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="pt-4 border-t border-white/5 text-center">
-            <Link href="/" className="text-xs text-zinc-500 hover:text-zinc-300 font-mono transition-colors">
-              ← Return to Main Asenra Website
-            </Link>
-          </div>
-        </div>
-      </main>
+        <Field
+          id="admin-passcode"
+          label="Security passcode"
+          type="password"
+          autoComplete="current-password"
+          required
+          value={passcode}
+          onChange={(e) => setPasscode(e.target.value)}
+          placeholder="••••••••••••"
+        />
+      </AdminGate>
     );
   }
 
@@ -241,19 +195,19 @@ export default function SuperAdminPortalPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 relative z-10 space-y-8">
         {/* Top Executive Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-zinc-950 border border-white/10 rounded-3xl backdrop-blur-xl">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-white/[0.02] border border-white/10 rounded-2xl backdrop-blur-xl">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-white text-black font-black flex items-center justify-center text-xl shrink-0 shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-white text-black font-medium flex items-center justify-center text-xl shrink-0 shadow-lg">
               A
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black tracking-tight text-white">Super Admin Control Center</h1>
-                <span className="px-2.5 py-0.5 bg-white/10 border border-white/20 text-[10px] font-mono font-bold uppercase rounded-full text-zinc-300">
+                <h1 className="text-xl font-medium tracking-tight text-white">Super Admin Control Center</h1>
+                <span className="px-2.5 py-0.5 bg-white/10 border border-white/20 text-[10px] font-mono font-bold uppercase rounded-full text-white/70">
                   {currentUser.role}
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 font-mono mt-0.5">
+              <p className="text-xs text-white/45 font-mono mt-0.5">
                 Authenticated as <span className="text-white font-semibold">{currentUser.email}</span> ({currentUser.name})
               </p>
             </div>
@@ -262,14 +216,14 @@ export default function SuperAdminPortalPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => loadDashboardData(currentUser.email)}
-              className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-zinc-300 transition-colors"
+              className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white/70 transition-colors"
               title="Refresh Dashboard Data"
             >
               <RefreshCw className={`w-4 h-4 ${loadingUsers ? "animate-spin" : ""}`} />
             </button>
             <button
               onClick={handleLogout}
-              className="px-4 py-2.5 bg-white/5 hover:bg-red-950/40 hover:border-red-800/40 border border-white/10 text-xs font-bold text-zinc-300 hover:text-red-300 rounded-xl transition-all flex items-center gap-2"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-[12px] text-white/55 transition-colors hover:border-white/25 hover:text-white"
             >
               <LogOut className="w-4 h-4" />
               <span>Sign Out</span>
@@ -279,43 +233,43 @@ export default function SuperAdminPortalPage() {
 
         {/* Global Key Metrics Grid */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-5 bg-zinc-950 border border-white/10 rounded-2xl space-y-2">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase tracking-wider">
+          <div className="p-5 bg-white/[0.02] border border-white/10 rounded-2xl space-y-2">
+            <div className="flex items-center justify-between text-white/45 text-xs font-mono uppercase tracking-wider">
               <span>Total Leads</span>
               <FileText className="w-4 h-4 text-white" />
             </div>
-            <div className="text-3xl font-black text-white">{metrics.totalLeads}</div>
-            <p className="text-[11px] text-zinc-500 font-mono">{metrics.qualifiedLeads} high priority opportunities</p>
+            <div className="text-3xl font-medium text-white">{metrics.totalLeads}</div>
+            <p className="text-[11px] text-white/35 font-mono">{metrics.qualifiedLeads} high priority opportunities</p>
           </div>
 
-          <div className="p-5 bg-zinc-950 border border-white/10 rounded-2xl space-y-2">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase tracking-wider">
+          <div className="p-5 bg-white/[0.02] border border-white/10 rounded-2xl space-y-2">
+            <div className="flex items-center justify-between text-white/45 text-xs font-mono uppercase tracking-wider">
               <span>Active Team</span>
               <Users className="w-4 h-4 text-white" />
             </div>
-            <div className="text-3xl font-black text-white">{metrics.activeInterns}</div>
-            <p className="text-[11px] text-zinc-500 font-mono">{metrics.totalInterns} total registered records</p>
+            <div className="text-3xl font-medium text-white">{metrics.activeInterns}</div>
+            <p className="text-[11px] text-white/35 font-mono">{metrics.totalInterns} total registered records</p>
           </div>
 
-          <div className="p-5 bg-zinc-950 border border-white/10 rounded-2xl space-y-2">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase tracking-wider">
+          <div className="p-5 bg-white/[0.02] border border-white/10 rounded-2xl space-y-2">
+            <div className="flex items-center justify-between text-white/45 text-xs font-mono uppercase tracking-wider">
               <span>Admin Accounts</span>
               <ShieldCheck className="w-4 h-4 text-white" />
             </div>
-            <div className="text-3xl font-black text-white">{metrics.totalAdmins}</div>
-            <p className="text-[11px] text-zinc-500 font-mono">Authorized managing access</p>
+            <div className="text-3xl font-medium text-white">{metrics.totalAdmins}</div>
+            <p className="text-[11px] text-white/35 font-mono">Authorized managing access</p>
           </div>
 
-          <div className="p-5 bg-zinc-950 border border-white/10 rounded-2xl space-y-2">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase tracking-wider">
+          <div className="p-5 bg-white/[0.02] border border-white/10 rounded-2xl space-y-2">
+            <div className="flex items-center justify-between text-white/45 text-xs font-mono uppercase tracking-wider">
               <span>System Health</span>
               <Activity className="w-4 h-4 text-white" />
             </div>
-            <div className="text-3xl font-black text-white flex items-center gap-2">
+            <div className="text-3xl font-medium text-white flex items-center gap-2">
               <span>100%</span>
               <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
             </div>
-            <p className="text-[11px] text-zinc-500 font-mono">Encrypted database live</p>
+            <p className="text-[11px] text-white/35 font-mono">Encrypted database live</p>
           </div>
         </section>
 
@@ -323,14 +277,14 @@ export default function SuperAdminPortalPage() {
         {actionMessage && (
           <div className={`p-4 rounded-2xl border text-xs font-mono flex items-center justify-between ${
             actionMessage.type === "success" 
-              ? "bg-zinc-900 border-white/30 text-white" 
-              : "bg-red-950/60 border-red-800/40 text-red-300"
+              ? "bg-white/[0.03] border-white/30 text-white" 
+              : "border-red-400/25 bg-red-400/10 text-red-300/90"
           }`}>
             <span className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" />
               <span>{actionMessage.text}</span>
             </span>
-            <button onClick={() => setActionMessage(null)} className="text-zinc-500 hover:text-white">✕</button>
+            <button onClick={() => setActionMessage(null)} className="text-white/35 hover:text-white">✕</button>
           </div>
         )}
 
@@ -341,7 +295,7 @@ export default function SuperAdminPortalPage() {
             className={`px-5 py-3 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-2 shrink-0 ${
               activeTab === "overview" 
                 ? "bg-white text-black shadow-lg" 
-                : "bg-zinc-950 text-zinc-400 hover:text-white border border-white/5"
+                : "bg-white/[0.02] text-white/45 hover:text-white border border-white/5"
             }`}
           >
             <Sparkles className="w-4 h-4" />
@@ -354,7 +308,7 @@ export default function SuperAdminPortalPage() {
               className={`px-5 py-3 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "access" 
                   ? "bg-white text-black shadow-lg" 
-                  : "bg-zinc-950 text-zinc-400 hover:text-white border border-white/5"
+                  : "bg-white/[0.02] text-white/45 hover:text-white border border-white/5"
               }`}
             >
               <UserPlus className="w-4 h-4" />
@@ -367,7 +321,7 @@ export default function SuperAdminPortalPage() {
             className={`px-5 py-3 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-2 shrink-0 ${
               activeTab === "modules" 
                 ? "bg-white text-black shadow-lg" 
-                : "bg-zinc-950 text-zinc-400 hover:text-white border border-white/5"
+                : "bg-white/[0.02] text-white/45 hover:text-white border border-white/5"
             }`}
           >
             <Database className="w-4 h-4" />
@@ -379,7 +333,7 @@ export default function SuperAdminPortalPage() {
             className={`px-5 py-3 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-2 shrink-0 ${
               activeTab === "logs" 
                 ? "bg-white text-black shadow-lg" 
-                : "bg-zinc-950 text-zinc-400 hover:text-white border border-white/5"
+                : "bg-white/[0.02] text-white/45 hover:text-white border border-white/5"
             }`}
           >
             <ShieldAlert className="w-4 h-4" />
@@ -392,21 +346,21 @@ export default function SuperAdminPortalPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Module 1: Leads Engine */}
-              <div className="p-8 bg-zinc-950 border border-white/10 rounded-3xl space-y-6 flex flex-col justify-between">
+              <div className="p-8 bg-white/[0.02] border border-white/10 rounded-2xl space-y-6 flex flex-col justify-between">
                 <div className="space-y-3">
                   <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-white">Acquisition & Lead Intelligence</h2>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
+                  <p className="text-xs text-white/45 leading-relaxed">
                     Access and manage high-intent client website audit submissions, qualification scores, and outreach pipeline status.
                   </p>
                 </div>
                 <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-xs font-mono text-zinc-400">{metrics.totalLeads} Submissions Total</span>
+                  <span className="text-xs font-mono text-white/45">{metrics.totalLeads} Submissions Total</span>
                   <Link
                     href="/admin/leads"
-                    className="px-4 py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition-colors flex items-center gap-2"
+                    className="px-4 py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-white/90 transition-colors flex items-center gap-2"
                   >
                     <span>Launch Leads Portal</span>
                     <ArrowUpRight className="w-4 h-4" />
@@ -415,21 +369,21 @@ export default function SuperAdminPortalPage() {
               </div>
 
               {/* Module 2: Team & Intern Directory */}
-              <div className="p-8 bg-zinc-950 border border-white/10 rounded-3xl space-y-6 flex flex-col justify-between">
+              <div className="p-8 bg-white/[0.02] border border-white/10 rounded-2xl space-y-6 flex flex-col justify-between">
                 <div className="space-y-3">
                   <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
                     <Briefcase className="w-5 h-5 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-white">Team & Employee Directory</h2>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
+                  <p className="text-xs text-white/45 leading-relaxed">
                     Create, update, and manage official intern/employee records, document links, passcodes, and tenure verification.
                   </p>
                 </div>
                 <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-xs font-mono text-zinc-400">{metrics.totalInterns} Team Members Listed</span>
+                  <span className="text-xs font-mono text-white/45">{metrics.totalInterns} Team Members Listed</span>
                   <Link
                     href="/admin/interns"
-                    className="px-4 py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition-colors flex items-center gap-2"
+                    className="px-4 py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-white/90 transition-colors flex items-center gap-2"
                   >
                     <span>Manage Directory</span>
                     <ArrowUpRight className="w-4 h-4" />
@@ -439,8 +393,8 @@ export default function SuperAdminPortalPage() {
             </div>
 
             {/* Quick Access Portals */}
-            <div className="p-8 bg-zinc-950 border border-white/10 rounded-3xl space-y-4">
-              <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-zinc-400">
+            <div className="p-8 bg-white/[0.02] border border-white/10 rounded-2xl space-y-4">
+              <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-white/45">
                 System Verification & Client Portals
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -451,9 +405,9 @@ export default function SuperAdminPortalPage() {
                 >
                   <div>
                     <div className="text-xs font-bold text-white group-hover:text-zinc-200">Public Verification Directory</div>
-                    <div className="text-[10px] text-zinc-500 font-mono mt-0.5">Live Credential Lookup</div>
+                    <div className="text-[10px] text-white/35 font-mono mt-0.5">Live Credential Lookup</div>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white" />
+                  <ArrowUpRight className="w-4 h-4 text-white/35 group-hover:text-white" />
                 </Link>
 
                 <Link
@@ -463,9 +417,9 @@ export default function SuperAdminPortalPage() {
                 >
                   <div>
                     <div className="text-xs font-bold text-white group-hover:text-zinc-200">Employee Secured Document Portal</div>
-                    <div className="text-[10px] text-zinc-500 font-mono mt-0.5">Offer Letter & NDA Access</div>
+                    <div className="text-[10px] text-white/35 font-mono mt-0.5">Offer Letter & NDA Access</div>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white" />
+                  <ArrowUpRight className="w-4 h-4 text-white/35 group-hover:text-white" />
                 </Link>
 
                 <Link
@@ -475,9 +429,9 @@ export default function SuperAdminPortalPage() {
                 >
                   <div>
                     <div className="text-xs font-bold text-white group-hover:text-zinc-200">Public AI Audit &amp; Contact Page</div>
-                    <div className="text-[10px] text-zinc-500 font-mono mt-0.5">Client Acquisition Intake</div>
+                    <div className="text-[10px] text-white/35 font-mono mt-0.5">Client Acquisition Intake</div>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white" />
+                  <ArrowUpRight className="w-4 h-4 text-white/35 group-hover:text-white" />
                 </Link>
               </div>
             </div>
@@ -487,16 +441,16 @@ export default function SuperAdminPortalPage() {
         {/* TAB 2: ADMIN ACCESS CONTROL (SUPER ADMIN EXCLUSIVE) */}
         {activeTab === "access" && isSuperAdmin && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-zinc-950 border border-white/10 rounded-3xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-white/[0.02] border border-white/10 rounded-2xl">
               <div>
                 <h2 className="text-lg font-bold text-white">Authorized Admin Accounts & Permissions</h2>
-                <p className="text-xs text-zinc-400 mt-1">
+                <p className="text-xs text-white/45 mt-1">
                   Manage access permissions for Asenra managing officers. Only Super Admin (<span className="text-white">karan.patil@asenra.in</span>) can grant or revoke admin access.
                 </p>
               </div>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="px-4 py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition-colors flex items-center gap-2 shrink-0"
+                className="px-4 py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-white/90 transition-colors flex items-center gap-2 shrink-0"
               >
                 <UserPlus className="w-4 h-4" />
                 <span>Add Authorized Admin</span>
@@ -504,10 +458,10 @@ export default function SuperAdminPortalPage() {
             </div>
 
             {/* Admin Users Table */}
-            <div className="bg-zinc-950 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-white/5 border-b border-white/10 text-zinc-400 uppercase tracking-widest text-[10px]">
+                  <thead className="bg-white/5 border-b border-white/10 text-white/45 uppercase tracking-widest text-[10px]">
                     <tr>
                       <th className="px-6 py-4">Managing Account</th>
                       <th className="px-6 py-4">Role / Access Level</th>
@@ -523,7 +477,7 @@ export default function SuperAdminPortalPage() {
                         <tr key={u.id} className="hover:bg-white/[0.02] transition-colors">
                           <td className="px-6 py-4">
                             <div className="font-bold text-white text-sm">{u.name}</div>
-                            <div className="text-zinc-400 text-xs font-mono">{u.email}</div>
+                            <div className="text-white/45 text-xs font-mono">{u.email}</div>
                           </td>
 
                           <td className="px-6 py-4">
@@ -536,7 +490,7 @@ export default function SuperAdminPortalPage() {
                             </span>
                           </td>
 
-                          <td className="px-6 py-4 font-mono text-zinc-300">
+                          <td className="px-6 py-4 font-mono text-white/70">
                             {u.passcode || "asenra2026"}
                           </td>
 
@@ -544,9 +498,9 @@ export default function SuperAdminPortalPage() {
                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${
                               u.status === "ACTIVE" 
                                 ? "bg-white/10 text-white border border-white/20" 
-                                : "bg-red-950/60 text-red-300 border border-red-800/40"
+                                : "border border-red-400/25 bg-red-400/10 text-red-300/90"
                             }`}>
-                              <span className={`w-1.5 h-1.5 rounded-full ${u.status === "ACTIVE" ? "bg-white" : "bg-red-400"}`} />
+                              <span className={`w-1.5 h-1.5 rounded-full ${u.status === "ACTIVE" ? "bg-white" : "bg-red-300/80"}`} />
                               <span>{u.status}</span>
                             </span>
                           </td>
@@ -556,20 +510,20 @@ export default function SuperAdminPortalPage() {
                               <div className="flex items-center justify-end gap-2">
                                 <button
                                   onClick={() => handleToggleStatus(u)}
-                                  className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-zinc-300 transition-colors"
+                                  className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-white/70 transition-colors"
                                 >
                                   {u.status === "ACTIVE" ? "Revoke Access" : "Activate Access"}
                                 </button>
                                 <button
                                   onClick={() => handleDeleteAdmin(u)}
-                                  className="p-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/40 rounded-lg transition-colors"
+                                  className="rounded-lg border border-red-400/25 bg-red-400/10 p-1.5 text-red-300/90 transition-colors hover:bg-red-400/20"
                                   title="Delete Account"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               </div>
                             ) : (
-                              <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">
+                              <span className="text-[10px] text-white/35 font-mono uppercase tracking-wider">
                                 Primary Super Admin
                               </span>
                             )}
@@ -587,18 +541,18 @@ export default function SuperAdminPortalPage() {
         {/* TAB 3: MANAGEMENT MODULES */}
         {activeTab === "modules" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-8 bg-zinc-950 border border-white/10 rounded-3xl space-y-4">
+            <div className="p-8 bg-white/[0.02] border border-white/10 rounded-2xl space-y-4">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <FileText className="w-5 h-5 text-white" />
                 <span>Leads & Client Intake Engine</span>
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <p className="text-xs text-white/45 leading-relaxed">
                 Filter by Pipeline status (Qualified, Shortlisted, Demo Building, Demo Ready, Interested, Negotiation, Won), review score breakdowns, add feedback ratings, and copy phone/email contacts directly.
               </p>
               <div className="pt-2">
                 <Link
                   href="/admin/leads"
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black font-bold text-xs rounded-xl hover:bg-white/90 transition-colors"
                 >
                   <span>Open Leads Manager</span>
                   <ArrowUpRight className="w-4 h-4" />
@@ -606,18 +560,18 @@ export default function SuperAdminPortalPage() {
               </div>
             </div>
 
-            <div className="p-8 bg-zinc-950 border border-white/10 rounded-3xl space-y-4">
+            <div className="p-8 bg-white/[0.02] border border-white/10 rounded-2xl space-y-4">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <Users className="w-5 h-5 text-white" />
                 <span>Employee & Intern Directory</span>
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <p className="text-xs text-white/45 leading-relaxed">
                 Add new interns, generate unique IDs (ASN-INT-2026-XXX), upload signed Offer Letters and NDA agreement URLs, assign default passcodes, and track active vs discontinued status.
               </p>
               <div className="pt-2">
                 <Link
                   href="/admin/interns"
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black font-bold text-xs rounded-xl hover:bg-white/90 transition-colors"
                 >
                   <span>Open Employee Directory</span>
                   <ArrowUpRight className="w-4 h-4" />
@@ -629,38 +583,38 @@ export default function SuperAdminPortalPage() {
 
         {/* TAB 4: SECURITY & AUDIT */}
         {activeTab === "logs" && (
-          <div className="p-8 bg-zinc-950 border border-white/10 rounded-3xl space-y-6">
+          <div className="p-8 bg-white/[0.02] border border-white/10 rounded-2xl space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h3 className="text-base font-bold text-white">System Security & Access Policies</h3>
-                <p className="text-xs text-zinc-400">Security configuration and RBAC enforcement details.</p>
+                <p className="text-xs text-white/45">Security configuration and RBAC enforcement details.</p>
               </div>
             </div>
 
             <div className="space-y-4 text-xs font-mono">
               <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-2">
                 <div className="text-white font-bold">1. Primary Super Admin Credentials</div>
-                <div className="text-zinc-400">Account: karan.patil@asenra.in</div>
-                <div className="text-zinc-400">Role: SUPER_ADMIN (Full Website & Permission Management)</div>
+                <div className="text-white/45">Account: karan.patil@asenra.in</div>
+                <div className="text-white/45">Role: SUPER_ADMIN (Full Website & Permission Management)</div>
               </div>
 
               <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-2">
                 <div className="text-white font-bold">2. Role-Based Access Control (RBAC)</div>
-                <div className="text-zinc-400">
+                <div className="text-white/45">
                   - SUPER_ADMIN: Unrestricted access to add/remove admins, edit leads, manage employees, and change credentials.
                 </div>
-                <div className="text-zinc-400">
+                <div className="text-white/45">
                   - ADMIN / MANAGER: Authorized access to leads pipeline and employee directory. Cannot modify admin permissions.
                 </div>
               </div>
 
               <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-2">
                 <div className="text-white font-bold">3. Database Encryption & SSL</div>
-                <div className="text-zinc-400">Connection: Supabase PostgreSQL (SSL Enabled)</div>
-                <div className="text-zinc-400">Session Mode: Cookie & SessionStorage Encrypted Token</div>
+                <div className="text-white/45">Connection: Supabase PostgreSQL (SSL Enabled)</div>
+                <div className="text-white/45">Session Mode: Cookie & SessionStorage Encrypted Token</div>
               </div>
             </div>
           </div>
@@ -670,7 +624,7 @@ export default function SuperAdminPortalPage() {
       {/* Add Admin Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-zinc-950 border border-white/15 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative">
+          <div className="w-full max-w-lg bg-white/[0.02] border border-white/15 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl relative">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-2">
                 <UserPlus className="w-5 h-5 text-white" />
@@ -678,7 +632,7 @@ export default function SuperAdminPortalPage() {
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-zinc-500 hover:text-white text-sm font-mono"
+                className="text-white/35 hover:text-white text-sm font-mono"
               >
                 ✕
               </button>
@@ -686,7 +640,7 @@ export default function SuperAdminPortalPage() {
 
             <form onSubmit={handleCreateAdmin} className="space-y-4 text-xs">
               <div className="space-y-1">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+                <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/45">
                   Full Name
                 </label>
                 <input
@@ -695,12 +649,12 @@ export default function SuperAdminPortalPage() {
                   value={newAdminForm.name}
                   onChange={(e) => setNewAdminForm({ ...newAdminForm, name: e.target.value })}
                   placeholder="e.g. Rahul Sharma"
-                  className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+                <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/45">
                   Official Email Address
                 </label>
                 <input
@@ -709,13 +663,13 @@ export default function SuperAdminPortalPage() {
                   value={newAdminForm.email}
                   onChange={(e) => setNewAdminForm({ ...newAdminForm, email: e.target.value })}
                   placeholder="rahul@asenra.in"
-                  className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm font-mono text-white placeholder:text-white/25 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/45">
                     Role Access
                   </label>
                   <select
@@ -730,7 +684,7 @@ export default function SuperAdminPortalPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/45">
                     Initial Passcode
                   </label>
                   <input
@@ -739,7 +693,7 @@ export default function SuperAdminPortalPage() {
                     value={newAdminForm.passcode}
                     onChange={(e) => setNewAdminForm({ ...newAdminForm, passcode: e.target.value })}
                     placeholder="asenra2026"
-                    className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
+                    className="w-full px-4 py-3 bg-black border border-white/15 rounded-xl text-sm font-mono text-white placeholder:text-white/25 focus:outline-none focus:border-white transition-colors"
                   />
                 </div>
               </div>
@@ -748,14 +702,14 @@ export default function SuperAdminPortalPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 font-bold rounded-xl transition-colors"
+                  className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 font-bold rounded-xl transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creatingAdmin}
-                  className="px-5 py-2.5 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors flex items-center gap-2"
+                  className="px-5 py-2.5 bg-white text-black font-bold rounded-xl hover:bg-white/90 transition-colors flex items-center gap-2"
                 >
                   {creatingAdmin ? (
                     <>

@@ -9,6 +9,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { AdminGate } from "@/components/admin/AdminGate";
+import { Field } from "@/components/ui/Field";
+
 export default function AdminInternsPage() {
   const [passcode, setPasscode] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
@@ -206,37 +209,25 @@ export default function AdminInternsPage() {
 
   if (!authenticated) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
-        <div className="fixed inset-0 bg-grid-theme opacity-15 pointer-events-none" />
-        <div className="w-full max-w-md bg-zinc-950 border border-white/10 p-8 sm:p-10 rounded-[35px] shadow-2xl relative z-10 space-y-6">
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-4 border border-white/20">
-              <ShieldCheck className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-black uppercase tracking-tight">Admin Gate</h1>
-            <p className="text-xs text-zinc-400">Enter administrator passcode to access Intern Management System</p>
-          </div>
-
-          <form onSubmit={handleAuth} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                placeholder="Enter passcode"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className="w-full bg-black border border-white/15 rounded-2xl px-5 py-4 text-center font-mono tracking-widest text-white focus:outline-none focus:border-white transition-colors"
-              />
-            </div>
-            {authError && <p className="text-xs text-red-400 text-center font-mono">{authError}</p>}
-            <button
-              type="submit"
-              className="w-full py-4 bg-white text-black font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-zinc-200 transition-all cursor-pointer"
-            >
-              Verify Identity
-            </button>
-          </form>
-        </div>
-      </main>
+      <AdminGate
+        eyebrow="Admin gate"
+        title="Intern management"
+        lede="Enter the administrator passcode to access the intern management system."
+        error={authError}
+        submitLabel="Verify identity"
+        onSubmit={handleAuth}
+      >
+        <Field
+          id="interns-passcode"
+          label="Administrator passcode"
+          type="password"
+          autoComplete="current-password"
+          required
+          value={passcode}
+          onChange={(e) => setPasscode(e.target.value)}
+          placeholder="Enter passcode"
+        />
+      </AdminGate>
     );
   }
 
@@ -246,14 +237,14 @@ export default function AdminInternsPage() {
       <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <span className="text-sm font-black tracking-widest uppercase italic">
-              ASENRA <span className="text-zinc-500">ADMIN</span>
+            <span className="text-sm font-medium tracking-widest uppercase italic">
+              ASENRA <span className="text-white/35">ADMIN</span>
             </span>
 
             <div className="flex items-center gap-2 bg-white/5 border border-white/10 p-1 rounded-xl">
               <Link
                 href="/admin/leads"
-                className="px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
+                className="px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/45 hover:text-white transition-colors"
               >
                 Leads CRM
               </Link>
@@ -265,7 +256,7 @@ export default function AdminInternsPage() {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2 bg-white text-black hover:bg-white/90 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center gap-2 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Add New Intern</span>
@@ -276,34 +267,34 @@ export default function AdminInternsPage() {
       <div className="container mx-auto px-6 pt-10 relative z-10">
         {/* Header Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
-          <div className="p-6 rounded-3xl bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 block mb-1">Total Intern Profiles</span>
-            <div className="text-3xl font-black font-mono text-white">{totalCount}</div>
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-white/45 block mb-1">Total Intern Profiles</span>
+            <div className="text-3xl font-medium font-mono text-white">{totalCount}</div>
           </div>
-          <div className="p-6 rounded-3xl bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 block mb-1">Active / Ongoing</span>
-            <div className="text-3xl font-black font-mono text-white">{activeCount}</div>
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-white/45 block mb-1">Active / Ongoing</span>
+            <div className="text-3xl font-medium font-mono text-white">{activeCount}</div>
           </div>
-          <div className="p-6 rounded-3xl bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 block mb-1">Completed</span>
-            <div className="text-3xl font-black font-mono text-zinc-300">{completedCount}</div>
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-white/45 block mb-1">Completed</span>
+            <div className="text-3xl font-medium font-mono text-white/70">{completedCount}</div>
           </div>
-          <div className="p-6 rounded-3xl bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 block mb-1">Discontinued / Terminated</span>
-            <div className="text-3xl font-black font-mono text-zinc-500">{discontinuedCount}</div>
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-white/45 block mb-1">Discontinued / Terminated</span>
+            <div className="text-3xl font-medium font-mono text-white/35">{discontinuedCount}</div>
           </div>
         </div>
 
         {/* Filter & Search Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
           <div className="relative w-full sm:w-96">
-            <Search className="w-4 h-4 absolute left-4 top-3.5 text-zinc-500" />
+            <Search className="w-4 h-4 absolute left-4 top-3.5 text-white/35" />
             <input
               type="text"
               placeholder="Search by name, role, email, ID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-zinc-950 border border-white/10 rounded-2xl pl-11 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-white transition-colors"
+              className="w-full bg-white/[0.02] border border-white/10 rounded-2xl pl-11 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-white transition-colors"
             />
           </div>
 
@@ -315,7 +306,7 @@ export default function AdminInternsPage() {
                 className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
                   statusFilter === st
                     ? "bg-white text-black"
-                    : "bg-zinc-950 text-zinc-400 border border-white/10 hover:text-white"
+                    : "bg-white/[0.02] text-white/45 border border-white/10 hover:text-white"
                 }`}
               >
                 {st}
@@ -325,17 +316,17 @@ export default function AdminInternsPage() {
         </div>
 
         {/* Intern Table */}
-        <div className="bg-zinc-950 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+        <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
           {loading ? (
-            <div className="p-16 text-center text-zinc-500 font-mono text-xs flex items-center justify-center gap-2">
+            <div className="p-16 text-center text-white/35 font-mono text-xs flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" /> Loading Intern Database...
             </div>
           ) : filteredInterns.length === 0 ? (
-            <div className="p-12 text-center text-zinc-500 text-sm font-medium">No intern profiles found.</div>
+            <div className="p-12 text-center text-white/35 text-sm font-medium">No intern profiles found.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-black/60 text-xs uppercase font-mono tracking-wider text-zinc-400 border-b border-white/10">
+                <thead className="bg-black/60 text-xs uppercase font-mono tracking-wider text-white/45 border-b border-white/10">
                   <tr>
                     <th className="py-4 px-6">ID & Name</th>
                     <th className="py-4 px-6">Role</th>
@@ -349,34 +340,34 @@ export default function AdminInternsPage() {
                   {filteredInterns.map((item) => (
                     <tr key={item.intern_id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="py-4 px-6">
-                        <div className="font-mono text-xs text-zinc-400 font-bold mb-0.5">{item.intern_id}</div>
+                        <div className="font-mono text-xs text-white/45 font-bold mb-0.5">{item.intern_id}</div>
                         <div className="font-bold text-white uppercase">{item.first_name} {item.last_name}</div>
-                        <div className="text-[11px] text-zinc-500 font-mono mt-0.5">{item.duration || "Jun 2026 - Present"}</div>
+                        <div className="text-[11px] text-white/35 font-mono mt-0.5">{item.duration || "Jun 2026 - Present"}</div>
                       </td>
-                      <td className="py-4 px-6 text-zinc-300 font-medium">
+                      <td className="py-4 px-6 text-white/70 font-medium">
                         {item.role}
                       </td>
                       <td className="py-4 px-6">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-medium uppercase tracking-wider ${
                           item.status.toLowerCase() === 'ongoing'
                             ? 'bg-white text-black font-bold'
-                            : 'bg-zinc-900 text-zinc-400 border border-zinc-700'
+                            : 'bg-white/[0.03] text-white/45 border border-zinc-700'
                         }`}>
                           {item.status}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-xs text-zinc-400 font-mono space-y-1">
+                      <td className="py-4 px-6 text-xs text-white/45 font-mono space-y-1">
                         <div>{item.email}</div>
                         <div>{item.phone_number}</div>
                       </td>
                       <td className="py-4 px-6">
                         <div className="space-y-1 max-w-xs">
                           {item.description ? (
-                            <span className="text-[10px] font-mono text-zinc-300 block truncate" title={item.description}>
+                            <span className="text-[10px] font-mono text-white/70 block truncate" title={item.description}>
                               {item.description}
                             </span>
                           ) : (
-                            <span className="text-[10px] font-mono text-zinc-500 block italic">
+                            <span className="text-[10px] font-mono text-white/35 block italic">
                               No description added
                             </span>
                           )}
@@ -386,21 +377,21 @@ export default function AdminInternsPage() {
                         <Link
                           href={`/hiring/verify/${item.intern_id}`}
                           target="_blank"
-                          className="p-2 inline-flex items-center text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                          className="p-2 inline-flex items-center text-white/45 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                           title="View Verification Link"
                         >
                           <ExternalLink className="w-4 h-4" />
                         </Link>
                         <button
                           onClick={() => openEditDrawer(item)}
-                          className="p-2 inline-flex items-center text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                          className="p-2 inline-flex items-center text-white/45 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
                           title="Edit Profile"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(item.intern_id)}
-                          className="p-2 inline-flex items-center text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded-lg transition-colors cursor-pointer"
+                          className="inline-flex items-center rounded-lg p-2 text-red-300/80 transition-colors hover:bg-red-400/10 hover:text-red-300"
                           title="Delete Profile"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -418,20 +409,20 @@ export default function AdminInternsPage() {
       {/* Edit Drawer / Modal */}
       {selectedIntern && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-end animate-in fade-in duration-300">
-          <div className="w-full max-w-2xl bg-zinc-950 border-l border-white/10 h-full overflow-y-auto p-8 space-y-8 relative">
+          <div className="w-full max-w-2xl bg-white/[0.02] border-l border-white/10 h-full overflow-y-auto p-8 space-y-8 relative">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="w-full mr-4">
                 <input 
                   type="text"
                   value={editingInternId}
                   onChange={(e) => setEditingInternId(e.target.value)}
-                  className="bg-transparent border-b border-dashed border-white/20 text-xs text-zinc-400 font-bold font-mono focus:outline-none focus:border-white mb-1 w-1/2"
+                  className="bg-transparent border-b border-dashed border-white/20 text-xs text-white/45 font-bold font-mono focus:outline-none focus:border-white mb-1 w-1/2"
                 />
-                <h3 className="text-2xl font-black text-white uppercase">{selectedIntern.first_name} {selectedIntern.last_name}</h3>
+                <h3 className="text-2xl font-medium text-white uppercase">{selectedIntern.first_name} {selectedIntern.last_name}</h3>
               </div>
               <button
                 onClick={() => setSelectedIntern(null)}
-                className="p-2 text-zinc-400 hover:text-white bg-white/5 rounded-full cursor-pointer"
+                className="p-2 text-white/45 hover:text-white bg-white/5 rounded-full cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -439,7 +430,7 @@ export default function AdminInternsPage() {
 
             {/* Status Control */}
             <div className="space-y-2">
-              <label className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block">Candidate Status</label>
+              <label className="text-xs font-mono font-bold uppercase tracking-widest text-white/45 block">Candidate Status</label>
               <div className="grid grid-cols-4 gap-2">
                 {["ongoing", "completed", "discontinued", "terminated"].map((st) => (
                   <button
@@ -447,8 +438,8 @@ export default function AdminInternsPage() {
                     onClick={() => setEditingStatus(st)}
                     className={`py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
                       editingStatus.toLowerCase() === st
-                        ? "bg-white text-black font-extrabold"
-                        : "bg-zinc-900 text-zinc-400 border border-white/10 hover:text-white"
+                        ? "bg-white text-black font-medium"
+                        : "bg-white/[0.03] text-white/45 border border-white/10 hover:text-white"
                     }`}
                   >
                     {st}
@@ -459,7 +450,7 @@ export default function AdminInternsPage() {
 
             {/* Security Passcode */}
             <div className="space-y-2">
-              <label className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block">Employee Passcode</label>
+              <label className="text-xs font-mono font-bold uppercase tracking-widest text-white/45 block">Employee Passcode</label>
               <input
                 type="text"
                 value={editingPasscode}
@@ -470,10 +461,10 @@ export default function AdminInternsPage() {
 
             {/* Document Links */}
             <div className="space-y-4">
-              <label className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block border-b border-white/10 pb-2">Documents & Credentials</label>
+              <label className="text-xs font-mono font-bold uppercase tracking-widest text-white/45 block border-b border-white/10 pb-2">Documents & Credentials</label>
               
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 block">Offer Letter URL</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/35 block">Offer Letter URL</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -482,7 +473,7 @@ export default function AdminInternsPage() {
                     placeholder="https://docs.google.com/..."
                     className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
                   />
-                  <label className="px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
+                  <label className="px-4 py-2 bg-white text-black hover:bg-white/90 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
                     Upload
                     <input type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={(e) => handleFileUpload(e, 'offer_letter')} />
                   </label>
@@ -495,7 +486,7 @@ export default function AdminInternsPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 block">NDA URL</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/35 block">NDA URL</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -504,7 +495,7 @@ export default function AdminInternsPage() {
                     placeholder="https://docs.google.com/..."
                     className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
                   />
-                  <label className="px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
+                  <label className="px-4 py-2 bg-white text-black hover:bg-white/90 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
                     Upload
                     <input type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={(e) => handleFileUpload(e, 'nda')} />
                   </label>
@@ -517,7 +508,7 @@ export default function AdminInternsPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 block">Certificate URL</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/35 block">Certificate URL</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -526,7 +517,7 @@ export default function AdminInternsPage() {
                     placeholder="Pending Completion"
                     className="w-full bg-black border border-white/15 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-white"
                   />
-                  <label className="px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
+                  <label className="px-4 py-2 bg-white text-black hover:bg-white/90 rounded-xl text-xs font-bold flex items-center shrink-0 cursor-pointer">
                     Upload
                     <input type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={(e) => handleFileUpload(e, 'certificate')} />
                   </label>
@@ -541,7 +532,7 @@ export default function AdminInternsPage() {
 
             {/* Professional Description */}
             <div className="space-y-3">
-              <label className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block">
+              <label className="text-xs font-mono font-bold uppercase tracking-widest text-white/45 block">
                 Professional Description
               </label>
               <textarea
@@ -549,7 +540,7 @@ export default function AdminInternsPage() {
                 onChange={(e) => setEditingDescription(e.target.value)}
                 placeholder="Write a professional paragraph about their internship experience..."
                 rows={6}
-                className="w-full bg-black border border-white/15 rounded-xl px-4 py-3 text-sm text-zinc-300 focus:outline-none focus:border-white leading-relaxed resize-none"
+                className="w-full bg-black border border-white/15 rounded-xl px-4 py-3 text-sm text-white/70 focus:outline-none focus:border-white leading-relaxed resize-none"
               />
             </div>
 
@@ -557,14 +548,14 @@ export default function AdminInternsPage() {
             <div className="pt-6 border-t border-white/10 flex items-center justify-end gap-3">
               <button
                 onClick={() => setSelectedIntern(null)}
-                className="px-6 py-3 bg-zinc-900 border border-white/10 text-zinc-300 font-bold uppercase text-xs rounded-xl hover:bg-zinc-800"
+                className="px-6 py-3 bg-white/[0.03] border border-white/10 text-white/70 font-bold uppercase text-xs rounded-xl hover:bg-zinc-800"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveDetails}
                 disabled={savingDetails}
-                className="px-8 py-3 bg-white text-black font-black uppercase text-xs rounded-xl hover:bg-zinc-200 flex items-center gap-2 cursor-pointer"
+                className="px-8 py-3 bg-white text-black font-medium uppercase text-xs rounded-xl hover:bg-white/90 flex items-center gap-2 cursor-pointer"
               >
                 {savingDetails ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 <span>Save Profile</span>
@@ -577,10 +568,10 @@ export default function AdminInternsPage() {
       {/* Add New Intern Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="w-full max-w-xl bg-zinc-950 border border-white/15 rounded-3xl p-8 space-y-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-xl bg-white/[0.02] border border-white/15 rounded-2xl p-8 space-y-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <h3 className="text-xl font-black uppercase tracking-tight text-white">Create Intern Profile</h3>
-              <button onClick={() => setShowAddModal(false)} className="p-1 text-zinc-400 hover:text-white">
+              <h3 className="text-xl font-medium uppercase tracking-tight text-white">Create Intern Profile</h3>
+              <button onClick={() => setShowAddModal(false)} className="p-1 text-white/45 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -588,7 +579,7 @@ export default function AdminInternsPage() {
             <form onSubmit={handleCreateIntern} className="space-y-4 text-xs font-mono">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-zinc-400 block mb-1">Intern ID</label>
+                  <label className="text-white/45 block mb-1">Intern ID</label>
                   <input
                     type="text"
                     required
@@ -599,7 +590,7 @@ export default function AdminInternsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400 block mb-1">Role</label>
+                  <label className="text-white/45 block mb-1">Role</label>
                   <input
                     type="text"
                     required
@@ -613,7 +604,7 @@ export default function AdminInternsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-zinc-400 block mb-1">First Name</label>
+                  <label className="text-white/45 block mb-1">First Name</label>
                   <input
                     type="text"
                     required
@@ -624,7 +615,7 @@ export default function AdminInternsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400 block mb-1">Last Name</label>
+                  <label className="text-white/45 block mb-1">Last Name</label>
                   <input
                     type="text"
                     required
@@ -638,7 +629,7 @@ export default function AdminInternsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-zinc-400 block mb-1">Email</label>
+                  <label className="text-white/45 block mb-1">Email</label>
                   <input
                     type="email"
                     required
@@ -649,7 +640,7 @@ export default function AdminInternsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400 block mb-1">Phone Number</label>
+                  <label className="text-white/45 block mb-1">Phone Number</label>
                   <input
                     type="text"
                     placeholder="+91..."
@@ -662,7 +653,7 @@ export default function AdminInternsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-zinc-400 block mb-1">Offer Letter Link</label>
+                  <label className="text-white/45 block mb-1">Offer Letter Link</label>
                   <input
                     type="text"
                     placeholder="https://..."
@@ -672,7 +663,7 @@ export default function AdminInternsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400 block mb-1">NDA Link</label>
+                  <label className="text-white/45 block mb-1">NDA Link</label>
                   <input
                     type="text"
                     placeholder="https://..."
@@ -687,14 +678,14 @@ export default function AdminInternsPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-5 py-2.5 bg-zinc-900 border border-white/10 text-zinc-300 font-bold uppercase text-xs rounded-xl"
+                  className="px-5 py-2.5 bg-white/[0.03] border border-white/10 text-white/70 font-bold uppercase text-xs rounded-xl"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-6 py-2.5 bg-white text-black font-black uppercase text-xs rounded-xl hover:bg-zinc-200 flex items-center gap-2"
+                  className="px-6 py-2.5 bg-white text-black font-medium uppercase text-xs rounded-xl hover:bg-white/90 flex items-center gap-2"
                 >
                   {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                   <span>Create Intern</span>

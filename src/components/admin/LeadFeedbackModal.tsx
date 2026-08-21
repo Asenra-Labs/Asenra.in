@@ -67,24 +67,24 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-lg bg-zinc-950 border border-white/10 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div className="relative w-full max-w-lg bg-white/[0.02] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-6">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <div>
             <h3 className="text-lg font-bold text-white tracking-tight">{lead.name}</h3>
-            <p className="text-xs text-zinc-400">Lead Quality Feedback & Conversion Outcome</p>
+            <p className="text-xs text-white/45">Lead Quality Feedback & Conversion Outcome</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-white/5 transition-all cursor-pointer"
+            className="p-2 text-white/45 hover:text-white rounded-xl hover:bg-white/5 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {error && (
-          <div className="p-3 bg-zinc-900 border border-white/20 rounded-xl text-xs text-zinc-300 flex items-center gap-2">
+          <div className="p-3 bg-white/[0.03] border border-white/20 rounded-xl text-xs text-white/70 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 text-white" />
             <span>{error}</span>
           </div>
@@ -92,7 +92,7 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
 
         {/* Rating Stars */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <label className="text-xs font-semibold uppercase tracking-wider text-white/45">
             Manual Lead Quality Rating (1–5 Stars)
           </label>
           <div className="flex items-center gap-2 pt-1">
@@ -114,7 +114,7 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
 
         {/* Feedback Reason */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <label className="text-xs font-semibold uppercase tracking-wider text-white/45">
             Qualitative Feedback / Reason ("Why?")
           </label>
           <textarea
@@ -122,47 +122,47 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
             onChange={(e) => setFeedback(e.target.value)}
             placeholder="e.g., High willingness to buy, owner responded on WhatsApp immediately, requested proposal..."
             rows={3}
-            className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none focus:border-white/40"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none focus:border-white/40"
           />
         </div>
 
         {/* Outcome Checkboxes */}
         <div className="space-y-3 pt-2 border-t border-white/10">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <label className="text-xs font-semibold uppercase tracking-wider text-white/45">
             Sales Acquisition Outcomes
           </label>
           <div className="grid grid-cols-2 gap-3 text-xs">
-            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-zinc-900 cursor-pointer hover:bg-zinc-800">
+            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-white/[0.03] cursor-pointer hover:bg-zinc-800">
               <input
                 type="checkbox"
                 checked={!!outcomes.contacted}
                 onChange={(e) => setOutcomes({ ...outcomes, contacted: e.target.checked })}
                 className="accent-white rounded"
               />
-              <span className="text-zinc-300">Contacted</span>
+              <span className="text-white/70">Contacted</span>
             </label>
 
-            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-zinc-900 cursor-pointer hover:bg-zinc-800">
+            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-white/[0.03] cursor-pointer hover:bg-zinc-800">
               <input
                 type="checkbox"
                 checked={!!outcomes.replied}
                 onChange={(e) => setOutcomes({ ...outcomes, replied: e.target.checked })}
                 className="accent-white rounded"
               />
-              <span className="text-zinc-300">Replied / Answered</span>
+              <span className="text-white/70">Replied / Answered</span>
             </label>
 
-            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-zinc-900 cursor-pointer hover:bg-zinc-800">
+            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-white/[0.03] cursor-pointer hover:bg-zinc-800">
               <input
                 type="checkbox"
                 checked={!!outcomes.interested}
                 onChange={(e) => setOutcomes({ ...outcomes, interested: e.target.checked })}
                 className="accent-white rounded"
               />
-              <span className="text-zinc-300">Interested in Website</span>
+              <span className="text-white/70">Interested in Website</span>
             </label>
 
-            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-zinc-900 cursor-pointer hover:bg-zinc-800">
+            <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-white/[0.03] cursor-pointer hover:bg-zinc-800">
               <input
                 type="checkbox"
                 checked={!!outcomes.won}
@@ -173,14 +173,14 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
             </label>
           </div>
 
-          <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-zinc-900 cursor-pointer hover:bg-zinc-800">
+          <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/5 bg-white/[0.03] cursor-pointer hover:bg-zinc-800">
             <input
               type="checkbox"
               checked={!!outcomes.lost}
               onChange={(e) => setOutcomes({ ...outcomes, lost: e.target.checked, won: false })}
               className="accent-white rounded"
             />
-            <span className="text-zinc-400">Deal Lost</span>
+            <span className="text-white/45">Deal Lost</span>
           </label>
 
           {outcomes.lost && (
@@ -189,7 +189,7 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
               value={outcomes.loss_reason || ""}
               onChange={(e) => setOutcomes({ ...outcomes, loss_reason: e.target.value })}
               placeholder="Reason for loss (e.g. Budget constraints, no bandwidth)"
-              className="w-full bg-zinc-900 border border-white/10 rounded-xl p-2.5 text-xs text-zinc-300 focus:outline-none"
+              className="w-full bg-white/[0.03] border border-white/10 rounded-xl p-2.5 text-xs text-white/70 focus:outline-none"
             />
           )}
         </div>
@@ -199,7 +199,7 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white cursor-pointer"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-white/45 hover:text-white cursor-pointer"
           >
             Cancel
           </button>
@@ -207,7 +207,7 @@ export default function LeadFeedbackModal({ lead, onClose, onSuccess }: LeadFeed
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-lg cursor-pointer flex items-center gap-2"
+            className="px-5 py-2.5 rounded-xl bg-white hover:bg-white/90 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-lg cursor-pointer flex items-center gap-2"
           >
             <CheckCircle className="w-4 h-4 text-black" />
             {saving ? "Saving Feedback..." : "Save Intelligence Feedback"}
