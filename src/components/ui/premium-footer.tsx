@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { GlowField } from "./GlowField";
 import { Eyebrow } from "./Eyebrow";
+import { SocialLinks } from "./SocialLinks";
 
 interface FooterLink {
   label: string;
@@ -90,6 +91,8 @@ export default function PremiumFooter() {
                 We are hiring
               </span>
             </Link>
+
+            <SocialLinks className="mt-8" />
           </div>
 
           {footerLinks.map((section) => (
@@ -130,14 +133,9 @@ export default function PremiumFooter() {
             >
               Terms
             </Link>
-            <a
-              href="https://www.linkedin.com/company/asenra/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/30 transition-colors hover:text-white"
-            >
-              LinkedIn
-            </a>
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/30">
+              Global delivery & engineering
+            </span>
           </div>
         </div>
       </div>

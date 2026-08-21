@@ -5,6 +5,7 @@ import Navbar from "@/components/ui/Navbar";
 import PremiumFooter from "@/components/ui/premium-footer";
 import CookieConsent from "@/components/ui/CookieConsent";
 import { AuthProvider } from "@/lib/auth";
+import { socialProfiles } from "@/components/ui/SocialLinks";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -84,10 +85,7 @@ export default function RootLayout({
                   "description": "Enterprise AI Consulting, Intelligent Business Automation, and Modern Digital Infrastructure.",
                   "foundingDate": "2024",
                   "areaServed": "Global",
-                  "sameAs": [
-                    "https://www.linkedin.com/company/asenra/",
-                    "https://www.instagram.com/asenra.in/"
-                  ]
+                  "sameAs": socialProfiles
                 },
                 {
                   "@type": "ProfessionalService",
@@ -113,10 +111,7 @@ export default function RootLayout({
                     "Premium Digital Experiences"
                   ],
                   "description": "We help ambitious businesses transform operations through enterprise AI, intelligent automation, and modern digital infrastructure.",
-                  "sameAs": [
-                    "https://www.linkedin.com/company/asenra/",
-                    "https://www.instagram.com/asenra.in/"
-                  ]
+                  "sameAs": socialProfiles
                 }
               ]
             })
