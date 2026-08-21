@@ -7,7 +7,6 @@ import { Eyebrow } from "./Eyebrow";
 interface FooterLink {
   label: string;
   href: string;
-  external?: boolean;
 }
 
 interface FooterSection {
@@ -15,45 +14,30 @@ interface FooterSection {
   links: FooterLink[];
 }
 
+/**
+ * Eight links across two columns, down from nineteen across four.
+ *
+ * The old set advertised pages that no longer exist (/architecture,
+ * /insights, /audit) and deep-linked five anchors that were never on the
+ * target pages. Every entry here resolves to a page that survives the cut.
+ */
 const footerLinks: FooterSection[] = [
   {
     title: "Company",
     links: [
-      { label: "Founder Philosophy", href: "/company" },
-      { label: "Careers & Culture", href: "/careers" },
-      { label: "Execution Process", href: "/process" },
-      { label: "System Architecture", href: "/architecture" },
+      { label: "Company", href: "/company" },
+      { label: "Careers", href: "/careers" },
+      { label: "Process", href: "/process" },
+      { label: "Contact", href: "/contact" },
     ],
   },
   {
-    title: "Capabilities",
+    title: "Work",
     links: [
-      { label: "AI Consulting", href: "/solutions#ai-consulting" },
-      { label: "AI Implementation", href: "/solutions#enterprise-ai-implementation" },
-      { label: "Intelligent Automation", href: "/solutions#business-process-automation" },
-      { label: "Custom Software", href: "/solutions#intelligent-software" },
-      { label: "Digital Infrastructure", href: "/solutions#premium-digital-experiences" },
-    ],
-  },
-  {
-    title: "Industries",
-    links: [
-      { label: "Manufacturing", href: "/industries#manufacturing" },
-      { label: "Healthcare", href: "/industries#healthcare" },
-      { label: "Finance & Banking", href: "/industries#finance" },
-      { label: "Retail & D2C", href: "/industries#retail" },
-      { label: "Real Estate", href: "/industries#real-estate" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
+      { label: "Capabilities", href: "/solutions" },
+      { label: "Industries", href: "/industries" },
       { label: "Selected Work", href: "/case-studies" },
-      { label: "Insights & Analysis", href: "/insights" },
-      { label: "Web Packages", href: "/packages" },
-      { label: "AI Readiness Audit", href: "/audit" },
-      { label: "Book Strategy Call", href: "/contact" },
-      { label: "LinkedIn ↗", href: "https://www.linkedin.com/company/asenra/", external: true },
+      { label: "Packages", href: "/packages" },
     ],
   },
 ];
@@ -76,8 +60,8 @@ export default function PremiumFooter() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-10">
-        <div className="grid grid-cols-1 gap-12 border-b border-white/[0.07] pb-16 md:grid-cols-2 lg:grid-cols-5">
-          <div className="lg:col-span-1">
+        <div className="grid grid-cols-1 gap-12 border-b border-white/[0.07] pb-16 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="lg:col-span-2">
             <Link href="/" className="inline-block" aria-label="Asenra home">
               <Image
                 src="/Full_text_logo.png"
@@ -115,23 +99,12 @@ export default function PremiumFooter() {
               <ul className="mt-6 space-y-3.5">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    {link.external ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[13px] text-white/45 transition-colors hover:text-white"
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className="text-[13px] text-white/45 transition-colors hover:text-white"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
+                    <Link
+                      href={link.href}
+                      className="text-[13px] text-white/45 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -157,9 +130,14 @@ export default function PremiumFooter() {
             >
               Terms
             </Link>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/30">
-              Global delivery & engineering
-            </span>
+            <a
+              href="https://www.linkedin.com/company/asenra/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/30 transition-colors hover:text-white"
+            >
+              LinkedIn
+            </a>
           </div>
         </div>
       </div>

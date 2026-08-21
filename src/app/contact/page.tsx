@@ -3,6 +3,7 @@ import { CheckCircle2, PhoneCall } from "lucide-react";
 import { BookCallButton } from "@/components/ui/BookCallButton";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Panel, PanelLabel } from "@/components/ui/Panel";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 const briefingIncludes = [
@@ -28,6 +29,29 @@ const directChannels = [
     label: "Engineering headquarters",
     value: "Asenra Technology Labs · Maharashtra, India",
     note: "Serving enterprise clients across India & global markets.",
+  },
+];
+
+/**
+ * Merged in from the retired /audit page, which opened the same booking modal
+ * this page does — it was a second front door to one form.
+ */
+const auditIncludes = [
+  {
+    title: "01. Operational workflow audit",
+    desc: "Complete mapping of your manual processes, employee time allocation, and repetitive administrative bottlenecks.",
+  },
+  {
+    title: "02. AI feasibility & ROI benchmark",
+    desc: "Rigorous evaluation of where fine-tuned LLMs, automated agents, or RAG vector pipelines generate measurable ROI.",
+  },
+  {
+    title: "03. Data security & architecture review",
+    desc: "Analysis of your database structures, API access controls, and compliance requirements (HIPAA, SOC2, GDPR).",
+  },
+  {
+    title: "04. Custom 90-day implementation roadmap",
+    desc: "Step-by-step technical blueprint outlining recommended software stack, milestone timelines, and cost projections.",
   },
 ];
 
@@ -108,6 +132,38 @@ export default function ContactPage() {
               ))}
             </RevealGroup>
           </div>
+        </div>
+      </section>
+
+      <section className="relative isolate border-t border-white/5 bg-black py-20 md:py-28">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
+          <SectionHeading
+            eyebrow="Free enterprise evaluation"
+            title="What the readiness audit covers."
+            lede="Pinpoint exactly where enterprise AI and intelligent automation can eliminate manual friction, reduce overhead, and accelerate your business execution."
+          />
+
+          <RevealGroup className="mt-12 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-2">
+            {auditIncludes.map((item) => (
+              <RevealItem key={item.title} className="flex">
+                <Panel className="w-full justify-between p-8 sm:p-10">
+                  <div>
+                    <h3 className="text-lg font-medium tracking-tight text-white text-pretty">
+                      {item.title}
+                    </h3>
+                    <p className="mt-4 text-sm leading-relaxed text-white/45 text-pretty">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-8 flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 shrink-0 text-white/70" />
+                    <PanelLabel>Included in the free audit</PanelLabel>
+                  </div>
+                </Panel>
+              </RevealItem>
+            ))}
+          </RevealGroup>
         </div>
       </section>
     </main>

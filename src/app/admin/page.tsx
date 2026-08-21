@@ -469,12 +469,12 @@ export default function SuperAdminPortalPage() {
                 </Link>
 
                 <Link
-                  href="/audit"
+                  href="/contact"
                   target="_blank"
                   className="p-4 bg-white/[0.02] border border-white/5 hover:border-white/20 rounded-2xl transition-all flex items-center justify-between group"
                 >
                   <div>
-                    <div className="text-xs font-bold text-white group-hover:text-zinc-200">Public Free AI Audit Form</div>
+                    <div className="text-xs font-bold text-white group-hover:text-zinc-200">Public AI Audit &amp; Contact Page</div>
                     <div className="text-[10px] text-zinc-500 font-mono mt-0.5">Client Acquisition Intake</div>
                   </div>
                   <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white" />

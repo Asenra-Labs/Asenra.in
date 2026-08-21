@@ -1,11 +1,11 @@
-import { Search, Compass, Code, Rocket, Activity, PhoneCall } from "lucide-react";
+import { Search, Compass, Code, Rocket, Activity, PhoneCall, Monitor, Cpu, Database, Server } from "lucide-react";
 
 import { BookCallButton } from "@/components/ui/BookCallButton";
-import { CtaButton } from "@/components/ui/CtaButton";
 import { CtaSection } from "@/components/ui/CtaSection";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Panel, PanelIcon, PanelLabel } from "@/components/ui/Panel";
 import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const detailedProcess = [
   {
@@ -70,6 +70,37 @@ const detailedProcess = [
   },
 ];
 
+/**
+ * Merged in from the retired /architecture page.
+ *
+ * That page also carried a five-step process list which duplicated
+ * detailedProcess above, so only the stack survives the merge.
+ * "Next.js 15" and "Framer Motion" were stale — this project runs Next 16
+ * and Motion — and are corrected here rather than carried over wrong.
+ */
+const stackLayers = [
+  {
+    title: "Frontend Engine",
+    icon: Monitor,
+    items: ["Next.js 16", "React 19", "Tailwind 4", "Motion"],
+  },
+  {
+    title: "Intelligence Layer",
+    icon: Cpu,
+    items: ["OpenAI / Anthropic", "Custom RAG Pipelines", "n8n Automation", "LangChain"],
+  },
+  {
+    title: "Data Architecture",
+    icon: Database,
+    items: ["PostgreSQL", "Prisma ORM", "Redis Caching", "Supabase"],
+  },
+  {
+    title: "Infrastructure",
+    icon: Server,
+    items: ["Vercel Edge", "Docker", "CI/CD Automation", "Global CDN"],
+  },
+];
+
 export default function ProcessPage() {
   return (
     <main className="min-h-screen bg-black">
@@ -128,24 +159,35 @@ export default function ProcessPage() {
             ))}
           </RevealGroup>
 
-          <Panel
-            interactive={false}
-            className="mt-16 flex-col items-start justify-between gap-8 p-8 sm:p-10 md:flex-row md:items-center"
-          >
-            <div>
-              <h2 className="text-xl font-medium tracking-tight text-white sm:text-2xl">
-                Want to inspect our tech stack?
-              </h2>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/45 text-pretty">
-                Explore the underlying infrastructure, LLM frameworks, vector databases,
-                and edge CDNs that power the Asenra Engine.
-              </p>
-            </div>
+          <div className="mt-16 border-t border-white/[0.07] pt-14">
+            <SectionHeading
+              eyebrow="Core technology stack"
+              title="What we build it on."
+              lede="The infrastructure, model providers, and data layer behind every system we ship."
+            />
 
-            <CtaButton href="/architecture" variant="secondary" size="md" className="shrink-0">
-              View system architecture
-            </CtaButton>
-          </Panel>
+            <RevealGroup className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {stackLayers.map((layer) => (
+                <RevealItem key={layer.title} className="flex">
+                  <Panel className="w-full">
+                    <PanelIcon icon={layer.icon} />
+
+                    <h3 className="mt-7 text-base font-medium tracking-tight text-white">
+                      {layer.title}
+                    </h3>
+
+                    <ul className="mt-5 space-y-2.5 border-t border-white/[0.07] pt-5">
+                      {layer.items.map((item) => (
+                        <li key={item} className="font-mono text-[11px] text-white/45">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </Panel>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
         </div>
       </section>
 

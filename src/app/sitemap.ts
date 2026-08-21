@@ -1,57 +1,37 @@
 import { MetadataRoute } from "next";
 
+const baseUrl = "https://asenra.in";
+
+/**
+ * The eleven public pages.
+ *
+ * The previous sitemap listed /services, /vision and /hiring — alias routes
+ * that re-exported other pages, so it advertised duplicate URLs — alongside
+ * /acquisition, an internal sales tool. Meanwhile every core marketing page
+ * was missing: /solutions, /industries, /case-studies, /process, /packages,
+ * /company, /careers and /contact were all absent.
+ */
+const pages: { path: string; priority: number; changeFrequency: "weekly" | "monthly" | "yearly" }[] = [
+  { path: "", priority: 1, changeFrequency: "weekly" },
+  { path: "/solutions", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/industries", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/case-studies", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/process", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/packages", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/company", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/careers", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/contact", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://asenra.in";
+  const lastModified = new Date();
 
-  return [
-    {
-      url: `${baseUrl}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/acquisition`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/hiring`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/vision`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/architecture`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-  ];
+  return pages.map(({ path, priority, changeFrequency }) => ({
+    url: `${baseUrl}${path}`,
+    lastModified,
+    changeFrequency,
+    priority,
+  }));
 }
-
