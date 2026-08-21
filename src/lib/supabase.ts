@@ -145,6 +145,7 @@ export interface InternRecord {
   nda_url?: string;
   certificate_url?: string;
   passcode?: string;
+  description?: string | null;
   key_contributions?: string[];
   tech_stack?: string[];
   created_at?: string;

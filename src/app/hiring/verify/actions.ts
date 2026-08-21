@@ -69,13 +69,12 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
       phoneNumber: matched.phone_number || "",
       offerLetterLink: matched.offer_letter_url || "",
       ndaLink: matched.nda_url || "",
-      certificateUrl: matched.certificate_url,
+      certificateUrl: matched.certificate_url || "Pending Completion",
       submittedAt: matched.submitted_at || "",
       internId: matched.intern_id,
       role: matched.role || "",
       status: (matched.status || "ongoing").toUpperCase(),
       duration: matched.duration || "Jun 2026 - Present",
-      certificateUrl: matched.certificate_url || "Pending Completion",
       passcode: matched.passcode,
       keyContributions: Array.isArray(matched.key_contributions) ? matched.key_contributions : [],
       techStack: Array.isArray(matched.tech_stack) ? matched.tech_stack : [],
@@ -113,6 +112,7 @@ export async function getAllInterns(): Promise<{ success: boolean; data?: Intern
       role: item.role || "",
       status: (item.status || "ongoing").toUpperCase(),
       duration: item.duration || "Jun 2026 - Present",
+      description: item.description || null,
       keyContributions: Array.isArray(item.key_contributions) ? item.key_contributions : [],
       techStack: Array.isArray(item.tech_stack) ? item.tech_stack : []
     }));

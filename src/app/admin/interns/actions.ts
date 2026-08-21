@@ -47,6 +47,7 @@ export async function updateInternDetailsAction(
     duration?: string;
     passcode?: string;
     status?: InternStatus;
+    description?: string | null;
     key_contributions?: string[];
     tech_stack?: string[];
     offer_letter_url?: string;
