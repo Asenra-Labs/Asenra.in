@@ -22,7 +22,7 @@ export function CtaSection({
   return (
     <section
       className={cn(
-        "relative isolate overflow-hidden border-t border-white/5 bg-black py-24 md:py-32",
+        "relative isolate overflow-hidden border-t border-white/5 bg-black py-20 md:py-28",
         className
       )}
     >

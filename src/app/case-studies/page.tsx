@@ -82,7 +82,7 @@ export default function CaseStudiesPage() {
         lede="Explore how Asenra partners with ambitious enterprises to eliminate operational friction, automate complex workflows, and unlock millions in business value."
       />
 
-      <section className="relative isolate bg-black py-24 md:py-32">
+      <section className="relative isolate bg-black pb-20 pt-14 md:pb-28 md:pt-20">
         <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
           <RevealGroup className="space-y-5">
             {caseStudiesList.map((study) => (

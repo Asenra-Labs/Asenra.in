@@ -101,7 +101,7 @@ export default function SolutionsPage() {
         lede="We help ambitious enterprises implement custom AI systems, eliminate operational manual friction, and build scalable digital infrastructure."
       />
 
-      <section className="relative isolate bg-black py-24 md:py-32">
+      <section className="relative isolate bg-black pb-20 pt-14 md:pb-28 md:pt-20">
         <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
           <RevealGroup className="space-y-5">
             {solutionsDetail.map((solution, index) => (

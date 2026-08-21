@@ -36,7 +36,7 @@ export function WhoWeWorkWith() {
   return (
     <section
       id="who-we-work-with"
-      className="relative isolate overflow-hidden border-t border-white/5 bg-black py-24 md:py-32"
+      className="relative isolate overflow-hidden border-t border-white/5 bg-black py-20 md:py-28"
     >
       <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
         <SectionHeading

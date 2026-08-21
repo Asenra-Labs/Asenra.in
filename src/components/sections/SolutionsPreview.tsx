@@ -48,7 +48,7 @@ export function SolutionsPreview() {
   return (
     <section
       id="capabilities"
-      className="relative isolate overflow-hidden border-t border-white/5 bg-black py-24 md:py-32"
+      className="relative isolate overflow-hidden border-t border-white/5 bg-black py-20 md:py-28"
     >
       <GlowField
         intensity="faint"

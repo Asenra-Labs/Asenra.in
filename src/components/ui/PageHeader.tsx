@@ -30,7 +30,7 @@ export function PageHeader({
   return (
     <header
       className={cn(
-        "relative isolate overflow-hidden border-b border-white/5 bg-black pb-20 pt-36 md:pb-28 md:pt-44",
+        "relative isolate overflow-hidden border-b border-white/5 bg-black pb-14 pt-32 md:pb-16 md:pt-40",
         className
       )}
     >

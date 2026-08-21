@@ -33,7 +33,7 @@ export function LegalPage({
         lede={`Last updated ${updated}.`}
       />
 
-      <section className="relative isolate bg-black py-24 md:py-32">
+      <section className="relative isolate bg-black pb-20 pt-14 md:pb-28 md:pt-20">
         <div className="mx-auto w-full max-w-3xl px-6 md:px-10">
           <ol className="space-y-12">
             {sections.map((section, index) => (

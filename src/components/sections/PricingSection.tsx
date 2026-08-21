@@ -40,7 +40,7 @@ export function PricingSection() {
   return (
     <section
       id="pricing"
-      className="relative isolate overflow-hidden border-t border-white/5 bg-black py-24 md:py-32"
+      className="relative isolate overflow-hidden bg-black pb-20 pt-14 md:pb-28 md:pt-20"
     >
       <GridBackdrop className="opacity-50" />
       <GlowField
@@ -61,7 +61,7 @@ export function PricingSection() {
           lede="Choose your engine. From kinematic websites to autonomous AI agents, we architect for high-impact growth."
         />
 
-        <div className="mt-16 md:mt-20">
+        <div className="mt-12 md:mt-16">
           <PricingTabs />
         </div>
 

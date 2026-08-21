@@ -45,7 +45,7 @@ export default function CompanyPage() {
         title="Why Asenra exists."
       />
 
-      <article className="relative isolate bg-black py-24 md:py-32">
+      <article className="relative isolate bg-black pb-20 pt-14 md:pb-28 md:pt-20">
         <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
           <ProseLede>
             Most software built for businesses today is fragile, complex, and

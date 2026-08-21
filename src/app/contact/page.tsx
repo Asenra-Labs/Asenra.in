@@ -46,7 +46,7 @@ export default function ContactPage() {
         lede="Direct access to our lead AI architects and systems engineers. We review your current operations and outline high-value automation opportunities."
       />
 
-      <section className="relative isolate bg-black py-24 md:py-32">
+      <section className="relative isolate bg-black pb-20 pt-14 md:pb-28 md:pt-20">
         <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
           <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-12">
             <Panel interactive={false} className="p-8 sm:p-10 lg:col-span-7">

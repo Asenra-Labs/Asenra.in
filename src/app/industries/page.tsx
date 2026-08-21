@@ -108,7 +108,7 @@ export default function IndustriesPage() {
         lede="Generic AI models fail in complex enterprise environments. We deploy industry-specific solutions tailored to your unique operational and regulatory requirements."
       />
 
-      <section className="relative isolate bg-black py-24 md:py-32">
+      <section className="relative isolate bg-black pb-20 pt-14 md:pb-28 md:pt-20">
         <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
           <RevealGroup className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {industries.map((industry) => (
