@@ -113,25 +113,13 @@ export default async function VerifiedInternPage({ params }: PageProps) {
 
                   <div className="p-8 sm:p-10 bg-black/40 relative z-10 space-y-8">
                     {/* Duration & Tenure */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
-                        <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block mb-1">
-                          Tenure & Duration
-                        </span>
-                        <div className="text-sm font-bold text-white font-mono flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-zinc-400" />
-                          <span>{result.data.duration || "Jun 2026 - Present"}</span>
-                        </div>
-                      </div>
-
-                      <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
-                        <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block mb-1">
-                          Official Certificate Record
-                        </span>
-                        <div className="text-sm font-bold text-white font-mono flex items-center gap-2">
-                          <Award className="w-4 h-4 text-zinc-400" />
-                          <span>{result.data.certificateUrl || "Pending Completion"}</span>
-                        </div>
+                    <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
+                      <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block mb-1">
+                        Tenure & Duration
+                      </span>
+                      <div className="text-sm font-bold text-white font-mono flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-zinc-400" />
+                        <span>{result.data.duration || "Jun 2026 - Present"}</span>
                       </div>
                     </div>
 
