@@ -24,6 +24,7 @@ export default function AdminInternsPage() {
   const [newContrib, setNewContrib] = useState("");
   const [editingTechStack, setEditingTechStack] = useState<string[]>([]);
   const [newTech, setNewTech] = useState("");
+  const [editingInternId, setEditingInternId] = useState("");
   const [editingPasscode, setEditingPasscode] = useState("");
   const [editingStatus, setEditingStatus] = useState<string>("");
   const [editingOfferLetter, setEditingOfferLetter] = useState("");
@@ -84,6 +85,7 @@ export default function AdminInternsPage() {
 
   const openEditDrawer = (intern: InternRecord) => {
     setSelectedIntern(intern);
+    setEditingInternId(intern.intern_id);
     setEditingContributions(Array.isArray(intern.key_contributions) ? intern.key_contributions : []);
     setEditingTechStack(Array.isArray(intern.tech_stack) ? intern.tech_stack : []);
     setEditingPasscode(intern.passcode || "asenra2026");
@@ -98,6 +100,7 @@ export default function AdminInternsPage() {
     setSavingDetails(true);
 
     const res = await updateInternDetailsAction(selectedIntern.intern_id, {
+      intern_id: editingInternId,
       key_contributions: editingContributions,
       tech_stack: editingTechStack,
       passcode: editingPasscode,
@@ -392,8 +395,13 @@ export default function AdminInternsPage() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-end animate-in fade-in duration-300">
           <div className="w-full max-w-2xl bg-zinc-950 border-l border-white/10 h-full overflow-y-auto p-8 space-y-8 relative">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div>
-                <span className="font-mono text-xs text-zinc-400 font-bold">{selectedIntern.intern_id}</span>
+              <div className="w-full mr-4">
+                <input 
+                  type="text"
+                  value={editingInternId}
+                  onChange={(e) => setEditingInternId(e.target.value)}
+                  className="bg-transparent border-b border-dashed border-white/20 text-xs text-zinc-400 font-bold font-mono focus:outline-none focus:border-white mb-1 w-1/2"
+                />
                 <h3 className="text-2xl font-black text-white uppercase">{selectedIntern.first_name} {selectedIntern.last_name}</h3>
               </div>
               <button

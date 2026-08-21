@@ -42,6 +42,7 @@ export async function updateInternStatusAction(
 export async function updateInternDetailsAction(
   internId: string,
   updates: {
+    intern_id?: string;
     role?: string;
     duration?: string;
     passcode?: string;
