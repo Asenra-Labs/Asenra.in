@@ -292,7 +292,7 @@ export default function PortalPage() {
                               href={internData.offerLetterLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] transition-all"
+                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:scale-[1.02] transition-all whitespace-nowrap px-2"
                             >
                               <span>Download Offer Letter</span>
                               <ExternalLink className="w-3.5 h-3.5" />
@@ -326,7 +326,7 @@ export default function PortalPage() {
                               href={internData.ndaLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] transition-all"
+                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:scale-[1.02] transition-all whitespace-nowrap px-2"
                             >
                               <span>Download NDA Form</span>
                               <ExternalLink className="w-3.5 h-3.5" />
@@ -360,7 +360,7 @@ export default function PortalPage() {
                               href={internData.certificateUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                              className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:scale-[1.02] transition-all whitespace-nowrap px-2 shadow-[0_0_15px_rgba(255,255,255,0.4)]"
                             >
                               <span>Download Certificate</span>
                               <ExternalLink className="w-3.5 h-3.5" />
