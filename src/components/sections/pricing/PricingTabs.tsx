@@ -79,15 +79,28 @@ export function PricingTabs() {
                   {pkg.description}
                 </p>
 
-                <p className="mt-7 flex items-baseline gap-1.5">
-                  <span className="text-lg text-white/40">₹</span>
-                  <span className="text-4xl font-medium tracking-tighter text-white">
-                    {pkg.price}
-                  </span>
-                </p>
-                <PanelLabel className="mt-3 block">
-                  AMC ₹{pkg.amc}/year · 50% advance, 50% on delivery
-                </PanelLabel>
+                {pkg.price ? (
+                  <>
+                    <p className="mt-7 flex items-baseline gap-1.5">
+                      <span className="text-lg text-white/40">₹</span>
+                      <span className="text-4xl font-medium tracking-tighter text-white">
+                        {pkg.price}
+                      </span>
+                    </p>
+                    <PanelLabel className="mt-3 block">
+                      AMC ₹{pkg.amc}/year · 50% advance, 50% on delivery
+                    </PanelLabel>
+                  </>
+                ) : (
+                  <>
+                    <p className="mt-7 text-3xl font-medium tracking-tighter text-white">
+                      On request
+                    </p>
+                    <PanelLabel className="mt-3 block">
+                      Scoped per project · 50% advance, 50% on delivery
+                    </PanelLabel>
+                  </>
+                )}
 
                 <ul className="mt-7 space-y-3 border-t border-white/[0.07] pt-7">
                   {pkg.features.map((feature) => (

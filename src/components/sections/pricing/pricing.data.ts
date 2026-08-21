@@ -1,12 +1,39 @@
 import { Bot, Cpu, Globe, Layers, LayoutGrid, Smartphone, Zap } from "lucide-react";
 
+import type { LucideIcon } from "lucide-react";
+
+export interface Package {
+  id: string;
+  name: string;
+  /** Headline figure in rupees. `null` means the card shows "On request". */
+  price: string | null;
+  /** Annual maintenance figure. `null` alongside a null price. */
+  amc: string | null;
+  description: string;
+  features: string[];
+  icon: LucideIcon;
+  color: string;
+  popular?: boolean;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  description: string;
+  packages: Package[];
+}
+
 /**
  * Package catalogue.
  *
  * Lifted out of PricingSection so the tab UI and the section shell can be
  * split across the server/client boundary while both read the same source.
+ *
+ * Website packages carry `price: null` — those figures are quoted directly
+ * rather than published, so the cards route to an enquiry instead.
  */
-export const CATEGORIES = [
+export const CATEGORIES: Category[] = [
   {
     id: "websites",
     name: "Websites",
@@ -16,8 +43,8 @@ export const CATEGORIES = [
       {
         id: "web-basic",
         name: "Basic",
-        price: "4,999",
-        amc: "2,920",
+        price: null,
+        amc: null,
         description: "1 Page Cinema",
         features: [
           "React Architecture",
@@ -33,8 +60,8 @@ export const CATEGORIES = [
       {
         id: "web-advanced",
         name: "Advanced",
-        price: "8,999",
-        amc: "3,844",
+        price: null,
+        amc: null,
         description: "Cinematic Animations + 3D",
         features: [
           "3-5 Optimized Pages",
@@ -51,8 +78,8 @@ export const CATEGORIES = [
       {
         id: "web-dynamic",
         name: "Dynamic",
-        price: "22,999",
-        amc: "7,420",
+        price: null,
+        amc: null,
         description: "Full-Scale Web Infrastructure",
         features: [
           "Unlimited Pages",
