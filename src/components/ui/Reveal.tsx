@@ -1,6 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
+
+import { MotionFeatures } from "@/components/ui/MotionFeatures";
 
 import { fadeUp, staggerGroup, REVEAL_VIEWPORT } from "@/lib/motion";
 
@@ -29,19 +32,21 @@ export function Reveal({
   as?: "div" | "section" | "li";
 }) {
   const reduced = useReducedMotion() ?? false;
-  const Component = motion[as];
+  const Component = m[as];
 
   return (
-    <Component
-      data-reveal=""
-      className={className}
-      variants={fadeUp(reduced, delay)}
-      initial="hidden"
-      whileInView="visible"
-      viewport={REVEAL_VIEWPORT}
-    >
-      {children}
-    </Component>
+    <MotionFeatures>
+      <Component
+        data-reveal=""
+        className={className}
+        variants={fadeUp(reduced, delay)}
+        initial="hidden"
+        whileInView="visible"
+        viewport={REVEAL_VIEWPORT}
+      >
+        {children}
+      </Component>
+    </MotionFeatures>
   );
 }
 
@@ -60,19 +65,21 @@ export function RevealGroup({
   as?: "div" | "ul";
 }) {
   const reduced = useReducedMotion() ?? false;
-  const Component = motion[as];
+  const Component = m[as];
 
   return (
-    <Component
-      data-reveal=""
-      className={className}
-      variants={staggerGroup(reduced)}
-      initial="hidden"
-      whileInView="visible"
-      viewport={REVEAL_VIEWPORT}
-    >
-      {children}
-    </Component>
+    <MotionFeatures>
+      <Component
+        data-reveal=""
+        className={className}
+        variants={staggerGroup(reduced)}
+        initial="hidden"
+        whileInView="visible"
+        viewport={REVEAL_VIEWPORT}
+      >
+        {children}
+      </Component>
+    </MotionFeatures>
   );
 }
 
@@ -87,7 +94,7 @@ export function RevealItem({
   as?: "div" | "li";
 }) {
   const reduced = useReducedMotion() ?? false;
-  const Component = motion[as];
+  const Component = m[as];
 
   return (
     <Component data-reveal="" className={className} variants={fadeUp(reduced)}>
