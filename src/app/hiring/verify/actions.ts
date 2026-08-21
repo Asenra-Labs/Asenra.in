@@ -75,7 +75,6 @@ export async function verifyIntern(internId: string): Promise<{ success: boolean
       role: matched.role || "",
       status: (matched.status || "ongoing").toUpperCase(),
       duration: matched.duration || "Jun 2026 - Present",
-      passcode: matched.passcode,
       keyContributions: Array.isArray(matched.key_contributions) ? matched.key_contributions : [],
       techStack: Array.isArray(matched.tech_stack) ? matched.tech_stack : [],
       description: matched.description || null
