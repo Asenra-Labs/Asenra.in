@@ -25,9 +25,18 @@ const CHROMELESS = ["/admin", "/portal", "/auth"];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const pathname = usePathname();
+
+  /*
+   * The drawer stores the route it was opened on rather than a bare boolean,
+   * so any navigation — link tap, back button, anything — closes it by
+   * definition. The previous approach synced a boolean in an effect keyed on
+   * pathname, which triggers a cascading render.
+   */
+  const [openedOn, setOpenedOn] = useState<string | null>(null);
+  const mobileMenuOpen = openedOn !== null && openedOn === pathname;
+  const setMobileMenuOpen = (open: boolean) => setOpenedOn(open ? pathname : null);
   const { user, activeEmail, isLoggedIn } = useAuth();
 
   const displayEmail = activeEmail || user?.email;
@@ -37,11 +46,6 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Close the drawer on navigation, and release the scroll lock with it.
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
@@ -125,7 +129,7 @@ export default function Navbar() {
           </div>
 
           <button
-            onClick={() => setMobileMenuOpen((open) => !open)}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="rounded-lg border border-white/10 bg-white/[0.03] p-2 text-white transition-colors hover:border-white/25 xl:hidden"
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}

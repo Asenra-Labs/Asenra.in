@@ -24,20 +24,32 @@ const EXIT_MS = 300;
  * unmounts on close, so the request happens when the user asks for it.
  */
 export function YouFormModal({ isOpen, onClose, formId = "v71b3eiv" }: YouFormModalProps) {
-  const [mounted, setMounted] = useState(false);
   const [entered, setEntered] = useState(false);
+  const [exiting, setExiting] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      setMounted(true);
-      return;
+  /*
+   * Adjusting state during render is React's sanctioned way to respond to a
+   * prop change. Doing this in an effect instead would set state
+   * synchronously on every open/close and cascade an extra render pass.
+   */
+  const [wasOpen, setWasOpen] = useState(isOpen);
+  if (wasOpen !== isOpen) {
+    setWasOpen(isOpen);
+    if (!isOpen) {
+      setEntered(false);
+      setExiting(true);
     }
-    if (!mounted) return;
-    setEntered(false);
-    const timer = setTimeout(() => setMounted(false), EXIT_MS);
+  }
+
+  /** Stay mounted through the exit transition, then unmount for real. */
+  const mounted = isOpen || exiting;
+
+  useEffect(() => {
+    if (!exiting) return;
+    const timer = setTimeout(() => setExiting(false), EXIT_MS);
     return () => clearTimeout(timer);
-  }, [isOpen, mounted]);
+  }, [exiting]);
 
   // Enter on the frame after mount, so there is an off-screen state to
   // transition from.
