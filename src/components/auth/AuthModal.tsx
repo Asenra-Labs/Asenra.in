@@ -2,7 +2,10 @@
 
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { X, Lock, Mail, User, ShieldCheck, Loader2, AlertCircle, ArrowRight } from "lucide-react";
+import { Lock, Mail, User, ArrowRight, Loader2, X } from "lucide-react";
+
+import { Field } from "@/components/ui/Field";
+import { FormAlert } from "@/components/ui/FormAlert";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -81,137 +84,108 @@ export function AuthModal({ isOpen, onClose, onSuccess, roleTitle }: AuthModalPr
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-fade-in">
-      <div className="relative w-full max-w-md p-8 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 shadow-2xl overflow-hidden">
-        <div className="card-sheen" />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label={mode === "login" ? "Sign in to apply" : "Create an account to apply"}
+    >
+      <div
+        className="absolute inset-0 bg-black/85 backdrop-blur-md"
+        onClick={onClose}
+      />
 
-        {/* Close Button */}
+      <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0A0A0A] p-7 sm:p-8">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors z-20"
+          className="absolute right-5 top-5 rounded-full border border-white/10 bg-white/[0.03] p-2 text-white/50 transition-colors hover:border-white/25 hover:text-white"
+          aria-label="Close"
         >
-          <X className="w-4 h-4" />
+          <X className="size-4" />
         </button>
 
-        {/* Modal Header */}
-        <div className="text-center mb-6 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-widest text-zinc-300 mb-3">
-            <ShieldCheck className="w-3.5 h-3.5 text-white" />
-            <span>Account Authentication Required</span>
-          </div>
-
-          <h3 className="text-2xl font-black uppercase italic tracking-tight text-white mb-1">
-            {mode === "login" ? "Sign In to Apply" : "Create Account to Apply"}
-          </h3>
-          <p className="text-xs text-zinc-400 font-medium">
-            {roleTitle ? `Applying for: ${roleTitle}` : "Authenticating candidate profile..."}
+        <header className="text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+            Authentication required
           </p>
-        </div>
+          <h2 className="mt-4 text-2xl font-medium tracking-tighter text-white">
+            {mode === "login" ? "Sign in to apply." : "Create an account to apply."}
+          </h2>
+          <p className="mt-3 text-xs text-white/45 text-pretty">
+            {roleTitle ? `Applying for ${roleTitle}` : "Authenticating candidate profile"}
+          </p>
+        </header>
 
-        {error && (
-          <div className="p-3.5 mb-5 rounded-2xl bg-red-950/40 border border-red-500/30 text-red-300 text-xs flex items-start gap-2.5 relative z-10">
-            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-            <span>{error}</span>
-          </div>
-        )}
+        {error ? <FormAlert tone="error" className="mt-6">{error}</FormAlert> : null}
 
-        {/* Auth Form */}
-        <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
-          {mode === "signup" && (
-            <div>
-              <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="w-4 h-4 absolute left-4 top-3.5 text-zinc-500" />
-                <input
-                  type="text"
-                  required
-                  placeholder="Sarvesh Gajakosh"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40"
-                />
-              </div>
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+          {mode === "signup" ? (
+            <Field
+              id="auth-modal-name"
+              label="Full name"
+              icon={User}
+              type="text"
+              autoComplete="name"
+              required
+              placeholder="Your full name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          ) : null}
 
-          <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">
-              Email Address
-            </label>
-            <div className="relative">
-              <Mail className="w-4 h-4 absolute left-4 top-3.5 text-zinc-500" />
-              <input
-                type="email"
-                required
-                placeholder="name@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40"
-              />
-            </div>
-          </div>
+          <Field
+            id="auth-modal-email"
+            label="Email address"
+            icon={Mail}
+            type="email"
+            autoComplete="email"
+            required
+            placeholder="name@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">
-              Password
-            </label>
-            <div className="relative">
-              <Lock className="w-4 h-4 absolute left-4 top-3.5 text-zinc-500" />
-              <input
-                type="password"
-                required
-                placeholder="••••••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40"
-              />
-            </div>
-          </div>
+          <Field
+            id="auth-modal-password"
+            label="Password"
+            icon={Lock}
+            type="password"
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            required
+            placeholder={mode === "login" ? "Enter your password" : "At least 6 characters"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-6 rounded-2xl bg-white text-black font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] disabled:opacity-50 mt-3"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-medium tracking-tight text-black transition-colors hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
             ) : (
               <>
-                <span>{mode === "login" ? "Sign In & Continue" : "Create Account & Continue"}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>{mode === "login" ? "Sign in & continue" : "Create account & continue"}</span>
+                <ArrowRight className="size-4" />
               </>
             )}
           </button>
         </form>
 
-        {/* Mode Switch */}
-        <div className="mt-6 pt-4 border-t border-white/10 text-center relative z-10">
-          {mode === "login" ? (
-            <p className="text-xs text-zinc-400">
-              Don't have an account?{" "}
-              <button
-                type="button"
-                onClick={() => { setMode("signup"); setError(""); }}
-                className="text-white font-bold underline hover:text-zinc-300 transition-colors ml-1 cursor-pointer"
-              >
-                Create Account
-              </button>
-            </p>
-          ) : (
-            <p className="text-xs text-zinc-400">
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={() => { setMode("login"); setError(""); }}
-                className="text-white font-bold underline hover:text-zinc-300 transition-colors ml-1 cursor-pointer"
-              >
-                Sign In
-              </button>
-            </p>
-          )}
-        </div>
+        <p className="mt-7 border-t border-white/[0.07] pt-6 text-center text-xs text-white/40">
+          {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "login" ? "signup" : "login");
+              setError("");
+            }}
+            className="font-medium text-white transition-colors hover:text-white/70"
+          >
+            {mode === "login" ? "Create one" : "Sign in"}
+          </button>
+        </p>
       </div>
     </div>
   );

@@ -6,7 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { authenticateEmployee } from "@/app/portal/actions";
-import { Lock, Mail, ArrowRight, ShieldCheck, Loader2, AlertCircle } from "lucide-react";
+import { Lock, Mail, ArrowRight, Loader2 } from "lucide-react";
+
+import { AuthShell } from "@/components/auth/AuthShell";
+import { Field } from "@/components/ui/Field";
+import { FormAlert } from "@/components/ui/FormAlert";
 
 function LoginForm() {
   const router = useRouter();
@@ -105,137 +109,96 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md relative z-10">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-widest text-zinc-300 mb-4">
-          <ShieldCheck className="w-3.5 h-3.5 text-white" />
-          <span>Asenra Identity Protocol</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase italic text-white mb-2">
-          Sign <span className="text-silver-matte">In.</span>
-        </h1>
-        <p className="text-xs text-zinc-400 font-medium">
-          Access official employee documents, verified credentials, and team portal.
-        </p>
-      </div>
+    <>
+      {error ? <FormAlert tone="error" className="mb-6">{error}</FormAlert> : null}
+      {resetMessage ? (
+        <FormAlert tone="success" className="mb-6">{resetMessage}</FormAlert>
+      ) : null}
 
-      {/* Single Unified Card Form */}
-      <div className="premium-depth-card p-8 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 shadow-2xl relative">
-        <div className="card-sheen" />
+      <form onSubmit={handleLogin} className="space-y-5">
+        <Field
+          id="login-email"
+          label="Registered email address"
+          icon={Mail}
+          type="email"
+          autoComplete="email"
+          required
+          placeholder="name@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        {error && (
-          <div className="mb-6 p-4 rounded-2xl bg-white/5 border border-white/20 text-zinc-300 text-xs flex items-start gap-3">
-            <AlertCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {resetMessage && (
-          <div className="mb-6 p-4 rounded-2xl bg-white/10 border border-white/20 text-white text-xs flex items-start gap-3">
-            <ShieldCheck className="w-4 h-4 text-white shrink-0 mt-0.5" />
-            <span>{resetMessage}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleLogin} className="space-y-4 relative z-10">
-          <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1.5">
-              Registered Email Address
-            </label>
-            <div className="relative">
-              <input
-                type="email"
-                required
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40"
-              />
-              <Mail className="w-4 h-4 text-zinc-500 absolute left-4 top-1/2 -translate-y-1/2" />
-            </div>
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
-                Password
-              </label>
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                disabled={isResetting}
-                className="text-[10px] font-mono text-zinc-400 hover:text-white transition-colors cursor-pointer"
-              >
-                {isResetting ? "Sending..." : "Forgot password?"}
-              </button>
-            </div>
-            <div className="relative">
-              <input
-                type="password"
-                required
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/40"
-              />
-              <Lock className="w-4 h-4 text-zinc-500 absolute left-4 top-1/2 -translate-y-1/2" />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 px-6 rounded-2xl bg-white text-black font-extrabold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,255,255,0.2)] disabled:opacity-50 mt-2"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Signing In...</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In & Access Portal</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-        </form>
-
-        <div className="mt-6 pt-6 border-t border-white/10 text-center">
-          <p className="text-xs text-zinc-400">
-            Don&apos;t have an account yet?{" "}
-            <Link
-              href={`/auth/signup?redirect=${encodeURIComponent(redirectUrl)}`}
-              className="text-white font-bold hover:underline"
+        <Field
+          id="login-password"
+          label="Password"
+          icon={Lock}
+          type="password"
+          autoComplete="current-password"
+          required
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          action={
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              disabled={isResetting}
+              className="font-mono text-[11px] text-white/40 transition-colors hover:text-white disabled:opacity-50"
             >
-              Create Account
-            </Link>
-          </p>
-        </div>
-      </div>
-    </div>
+              {isResetting ? "Sending…" : "Forgot password?"}
+            </button>
+          }
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-medium tracking-tight text-black transition-colors hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              <span>Signing in…</span>
+            </>
+          ) : (
+            <>
+              <span>Sign in</span>
+              <ArrowRight className="size-4" />
+            </>
+          )}
+        </button>
+      </form>
+
+      <p className="mt-7 border-t border-white/[0.07] pt-6 text-center text-xs text-white/40">
+        Don&apos;t have an account yet?{" "}
+        <Link
+          href={`/auth/signup?redirect=${encodeURIComponent(redirectUrl)}`}
+          className="font-medium text-white transition-colors hover:text-white/70"
+        >
+          Create one
+        </Link>
+      </p>
+    </>
   );
 }
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black flex items-center justify-center pt-24 pb-20 px-4 relative overflow-hidden">
-      {/* Ambience */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-zinc-400/5 rounded-full blur-[140px]" />
-        <div className="absolute inset-0 bg-grid-theme opacity-15" />
-      </div>
-
-      <Suspense fallback={
-        <div className="flex items-center gap-2 text-zinc-400 font-mono text-sm">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span>Loading Sign In...</span>
-        </div>
-      }>
+    <AuthShell
+      eyebrow="Asenra identity protocol"
+      title="Sign in."
+      lede="Access official employee documents, verified credentials, and the team portal."
+    >
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center gap-2 py-8 font-mono text-xs text-white/40">
+            <Loader2 className="size-4 animate-spin" />
+            <span>Loading…</span>
+          </div>
+        }
+      >
         <LoginForm />
       </Suspense>
-    </main>
+    </AuthShell>
   );
 }
