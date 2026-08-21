@@ -55,6 +55,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark scroll-smooth">
+      <head>
+        {/*
+          Motion serialises each reveal's `initial` state into the SSR markup,
+          so without hydration those elements would stay at opacity 0. This
+          restores them when scripting is unavailable.
+        */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+      </head>
       <body className={`${inter.className} min-h-screen bg-black font-sans antialiased text-zinc-50 overflow-x-hidden`}>
         <script
           type="application/ld+json"

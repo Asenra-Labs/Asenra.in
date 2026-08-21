@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Syne:wght@400..800&family=Italiana&family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -141,21 +140,6 @@
   --asenra-red-glow: rgba(238, 0, 0, 0.4);
 }
 
-.as-glossy-red {
-  background: linear-gradient(165deg, var(--asenra-red) 0%, var(--asenra-red-dark) 100%);
-  position: relative;
-  box-shadow: 0 10px 40px -10px var(--asenra-red-glow);
-}
-
-.as-glossy-red::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(110deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0.2) 100%);
-  opacity: 0.3;
-  pointer-events: none;
-}
-
 .text-glossy-red {
   background: linear-gradient(180deg, #FF5555 0%, #EE0000 50%, #990000 100%);
   -webkit-background-clip: text;
@@ -193,14 +177,6 @@
   backface-visibility: hidden;
 }
 
-.text-3d-matte {
-  color: var(--foreground);
-  text-shadow: 
-      0 10px 30px color-mix(in srgb, var(--foreground) 20%, transparent), 
-      0 2px 4px color-mix(in srgb, var(--foreground) 10%, transparent);
-  will-change: transform, opacity;
-}
-
 .text-silver-matte {
   background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
   -webkit-background-clip: text;
@@ -214,22 +190,6 @@
     filter: 
         drop-shadow(0px 10px 20px rgba(255,255,255,0.15)) 
         drop-shadow(0px 2px 4px rgba(255,255,255,0.1));
-  }
-}
-
-.text-card-silver-matte {
-  background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-@media (min-width: 768px) {
-  .text-card-silver-matte {
-    transform: translateZ(0);
-    will-change: transform;
-    filter: 
-        drop-shadow(0px 12px 24px rgba(0,0,0,0.8)) 
-        drop-shadow(0px 4px 8px rgba(0,0,0,0.6));
   }
 }
 
@@ -279,36 +239,6 @@
   will-change: transform;
 }
 
-.widget-depth {
-  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
-  box-shadow: 
-      0 10px 20px rgba(0,0,0,0.3),
-      inset 0 1px 1px rgba(255,255,255,0.05),
-      inset 0 -1px 1px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.03);
-  will-change: transform, opacity;
-}
-
-.floating-ui-badge {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
-  backdrop-filter: blur(8px); 
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 25px 50px -12px rgba(0, 0, 0, 0.8),
-      inset 0 1px 1px rgba(255,255,255,0.2),
-      inset 0 -1px 1px rgba(0,0,0,0.5);
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-}
-
-@media (min-width: 768px) {
-  .floating-ui-badge {
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px);
-  }
-}
-
 .btn-modern-light, .btn-modern-dark {
   transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform, box-shadow;
@@ -327,85 +257,6 @@
   transform: translateY(-3px);
   background: linear-gradient(180deg, #3F3F46 0%, #27272A 100%);
 }
-
-.progress-ring {
-  transform: rotate(-90deg);
-  transform-origin: center;
-  stroke-dasharray: 402;
-  stroke-dashoffset: 402;
-  stroke-linecap: round;
-  will-change: stroke-dashoffset;
-}
-
-/* -------------------------------------------------------------------
-   ASENRA DEMO ENGINE - PREMIUM GLOW & SHINE EFFECTS
----------------------------------------------------------------------- */
-
-@keyframes text-shine-anim {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.text-shine-gold {
-  background: linear-gradient(90deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fcf6ba 75%, #bf953f 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: text-shine-anim 6s linear infinite;
-  display: inline-block;
-}
-
-.text-shine-silver {
-  background: linear-gradient(90deg, #888888 0%, #ffffff 25%, #dddddd 50%, #ffffff 75%, #888888 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: text-shine-anim 5s linear infinite;
-  display: inline-block;
-}
-
-.text-shine-rose {
-  background: linear-gradient(90deg, #b76e79 0%, #ffd1dc 25%, #e19ea8 50%, #ffd1dc 75%, #b76e79 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: text-shine-anim 5s linear infinite;
-  display: inline-block;
-}
-
-.text-shine-emerald {
-  background: linear-gradient(90deg, #047857 0%, #a7f3d0 25%, #059669 50%, #a7f3d0 75%, #047857 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: text-shine-anim 5s linear infinite;
-  display: inline-block;
-}
-
-.text-shine-blue {
-  background: linear-gradient(90deg, #1d4ed8 0%, #bfdbfe 25%, #2563eb 50%, #bfdbfe 75%, #1d4ed8 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: text-shine-anim 5s linear infinite;
-  display: inline-block;
-}
-
-.text-shine-crimson {
-  background: linear-gradient(90deg, #EE0000 0%, #ff5555 25%, #990000 50%, #ff5555 75%, #EE0000 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: text-shine-anim 5s linear infinite;
-  display: inline-block;
-}
-
 
 /* Button sheen reflection sweep on hover */
 .btn-shine-effect {
@@ -431,12 +282,61 @@
   transition: all 0.7s ease-in-out;
 }
 
-/* Pulse glow keyframes for sub-glow backlights */
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.25; }
+/* -------------------------------------------------------------------
+   ENTERPRISE PREMIUM FOUNDATIONS
+   Tokens and guards for the refactored marketing surface.
+---------------------------------------------------------------------- */
+
+:root {
+  /* Hairline borders. One value, so every 1px edge on the site matches. */
+  --edge: rgba(255, 255, 255, 0.08);
+  --edge-strong: rgba(255, 255, 255, 0.16);
+
+  /* Grid backdrop geometry. */
+  --grid-size: 72px;
+  --grid-line: rgba(255, 255, 255, 0.035);
+
+  /* Monochrome grain, inlined so it costs no request. */
+  --grain: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 4s ease-in-out infinite;
-}
+/*
+ * A precise technical grid, radially masked so it fades out rather than
+ * meeting the viewport edge. Distinct from the legacy `.bg-grid-theme`,
+ * which 10 other files depend on and which is deliberately left alone.
+ */
+.grid-backdrop {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 0%, transparent 100%);
+}
+
+.grain-overlay {
+  background-image: var(--grain);
+  mix-blend-mode: overlay;
+}
+
+/*
+ * Global reduced-motion guard.
+ *
+ * Nothing in this codebase honoured `prefers-reduced-motion` before. This
+ * neutralises CSS animation and transition wholesale; JS-driven motion opts
+ * out separately via `useReducedMotion()` in each client leaf.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+}

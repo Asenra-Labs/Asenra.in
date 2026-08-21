@@ -165,7 +165,7 @@ export function CafeTemplate({ lead }: { lead: Lead }) {
   }, { scope: container });
 
   return (
-    <div ref={container} className="min-h-screen bg-[#070605] text-[#e8e3d9] selection:bg-[#c5a880] selection:text-[#070605]" style={{ fontFamily: "'Outfit', sans-serif" }}>
+    <div ref={container} className="min-h-screen bg-[#070605] text-[#e8e3d9] selection:bg-[#c5a880] selection:text-[#070605]" style={{ fontFamily: "var(--font-outfit), sans-serif" }}>
       <nav className="fixed w-full top-0 z-50 p-6 sm:p-10 flex justify-between items-center mix-blend-difference text-white">
         <span className="text-sm font-bold tracking-[0.3em] uppercase">{lead.name}</span>
         <button className="text-xs font-bold tracking-widest uppercase flex items-center gap-2 hover:opacity-70 transition-opacity">
@@ -179,7 +179,7 @@ export function CafeTemplate({ lead }: { lead: Lead }) {
         
         <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-10">
           <div className="max-w-4xl overflow-hidden">
-            <h1 className="text-5xl sm:text-7xl lg:text-[10rem] leading-[0.9] font-light tracking-tighter uppercase reveal-text" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h1 className="text-5xl sm:text-7xl lg:text-[10rem] leading-[0.9] font-light tracking-tighter uppercase reveal-text" style={{ fontFamily: "var(--font-playfair), serif" }}>
               {lead.tagline || "The Art of Coffee"}
             </h1>
           </div>
@@ -233,7 +233,7 @@ export function CafeTemplate({ lead }: { lead: Lead }) {
       <section className="py-24 px-6 sm:px-12 max-w-7xl mx-auto scroll-section">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-auto lg:h-[600px]">
           <div className="flex flex-col justify-center">
-            <h2 className="text-5xl sm:text-7xl font-light uppercase tracking-tighter mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>Reserve Your Experience</h2>
+            <h2 className="text-5xl sm:text-7xl font-light uppercase tracking-tighter mb-8" style={{ fontFamily: "var(--font-playfair), serif" }}>Reserve Your Experience</h2>
             <p className="text-neutral-400 max-w-md font-light mb-12">We accept limited reservations for our omakase coffee tasting experience. Secure your slot.</p>
           </div>
           <LuxuryContactForm lead={lead} cfg={cfg} />
@@ -400,7 +400,7 @@ export function SalonTemplate({ lead }: { lead: Lead }) {
   const cfg = getThemeConfig(lead.color_theme || "rose");
   
   return (
-    <div className="min-h-screen bg-[#fcfaf8] text-[#2c2623] selection:bg-[#2c2623] selection:text-white" style={{ fontFamily: "'Italiana', serif" }}>
+    <div className="min-h-screen bg-[#fcfaf8] text-[#2c2623] selection:bg-[#2c2623] selection:text-white" style={{ fontFamily: "var(--font-italiana), serif" }}>
       <nav className="p-8 text-center border-b border-black/5">
         <h1 className="text-2xl tracking-[0.3em] uppercase">{lead.name}</h1>
       </nav>
@@ -514,7 +514,7 @@ export function BoutiqueTemplate({ lead }: { lead: Lead }) {
   }, { scope: container });
 
   return (
-    <div ref={container} className="min-h-screen bg-[#fcfcfc] text-black selection:bg-black selection:text-white" style={{ fontFamily: "'Italiana', serif" }}>
+    <div ref={container} className="min-h-screen bg-[#fcfcfc] text-black selection:bg-black selection:text-white" style={{ fontFamily: "var(--font-italiana), serif" }}>
       <nav className="fixed w-full top-0 p-8 flex justify-between z-50 bg-[#fcfcfc]/80 backdrop-blur-md">
         <span className="text-xl tracking-[0.2em] uppercase">{lead.name}</span>
         <span className="text-xs font-sans tracking-widest uppercase font-bold">Menu</span>
@@ -553,7 +553,7 @@ export function BoutiqueTemplate({ lead }: { lead: Lead }) {
 
       <section id="appointment" className="py-24 px-6 bg-black text-white">
         <div className="max-w-4xl mx-auto text-center font-sans">
-          <h2 className="text-3xl md:text-5xl font-light tracking-widest uppercase mb-16" style={{ fontFamily: "'Italiana', serif" }}>Private Viewing</h2>
+          <h2 className="text-3xl md:text-5xl font-light tracking-widest uppercase mb-16" style={{ fontFamily: "var(--font-italiana), serif" }}>Private Viewing</h2>
           <LuxuryContactForm lead={lead} cfg={getThemeConfig("white")} />
         </div>
       </section>
