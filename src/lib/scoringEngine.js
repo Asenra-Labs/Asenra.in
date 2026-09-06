@@ -191,7 +191,7 @@ function evaluateLeadIntelligence(item, websiteAudit) {
     ...maturitySignals.slice(0, 2),
     ...commercialSignals.slice(0, 2),
     ...visualSignals.slice(0, 1),
-    ...websiteAudit.signals.slice(0, 2)
+    ...(websiteAudit.signals || []).slice(0, 2)
   ].filter(Boolean);
 
   return {

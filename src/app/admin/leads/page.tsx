@@ -121,6 +121,8 @@ function getIntelligenceData(lead: Lead) {
     whyAsenra,
     keySignals,
     website,
+    summary: meta.summary || "No detailed business description available.",
+    whyThisLead: meta.why_this_lead || "",
     websiteConfidence: meta.website_confidence || 0,
     verificationEvidence: meta.verification_evidence || [],
     verificationReason: meta.verification_reason || "",
@@ -580,6 +582,21 @@ export default function AdminLeadsPage() {
                           </span>
                         ))}
                       </div>
+                    </div>
+                  )}
+
+                  {/* Company Description */}
+                  {intel.summary && (
+                    <div className="bg-white/[0.01] border border-white/5 rounded-2xl p-4">
+                      <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-white/40 mb-2">
+                        <svg className="w-3.5 h-3.5 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Business Overview
+                      </div>
+                      <p className="text-sm text-white/70 leading-relaxed font-light">
+                        {intel.summary}
+                      </p>
                     </div>
                   )}
 
