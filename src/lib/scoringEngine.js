@@ -121,10 +121,13 @@ function evaluateLeadIntelligence(item, websiteAudit) {
 
   visualScore = Math.min(15, visualScore);
 
-  // 4. Digital Gap Score (0-25) [From website Inspector]
-  const digitalGapScore = websiteAudit.digitalGapScore || 18;
-  const websiteStatus = websiteAudit.status || "NO_WEBSITE";
+  // 4. Digital Gap Score (0-25) [From website verification]
+  const digitalGapScore = websiteAudit.digitalGapScore || (websiteAudit.websiteStatus === "NO_WEBSITE" ? 24 : 18);
+  const websiteStatus = websiteAudit.websiteStatus || websiteAudit.status || "NO_WEBSITE";
   const websiteOpportunityType = websiteAudit.opportunityType || "NEW WEBSITE";
+  const websiteConfidence = websiteAudit.confidence || 0;
+  const websiteEvidence = websiteAudit.evidence || [];
+  const verificationReason = websiteAudit.verificationReason || "";
 
   // 5. Contactability Score (0-10)
   let contactabilityScore = 2;
@@ -208,7 +211,10 @@ function evaluateLeadIntelligence(item, websiteAudit) {
     why_this_lead: whyThisLead,
     why_asenra: whyAsenra,
     key_signals: keySignals,
-    disqualified: websiteAudit.disqualified || (totalScore < 50)
+    website_confidence: websiteConfidence,
+    website_evidence: websiteEvidence,
+    verification_reason: verificationReason,
+    disqualified: websiteAudit.disqualified || (totalScore < 50) || (websiteStatus === "WEBSITE_VERIFICATION_UNCERTAIN")
   };
 }
 

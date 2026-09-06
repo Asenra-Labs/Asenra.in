@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 const { inspectWebsite } = require("../src/lib/websiteInspector");
+const { verifyBusinessWebsite } = require("../src/lib/websiteVerification");
+const { ApifySearchProvider, CachedSearchProvider } = require("../src/lib/searchProvider");
 const { evaluateLeadIntelligence } = require("../src/lib/scoringEngine");
 
 // 1. Load environment variables
@@ -269,17 +271,18 @@ async function runProspectingPipeline() {
   const uniqueCandidates = Array.from(uniqueCandidatesMap.values());
   console.log(`Deduplicated down to ${uniqueCandidates.length} unique candidates.`);
 
+  // Initialize Search Provider
+  const baseSearchProvider = new ApifySearchProvider(apifyToken);
+  const searchProvider = new CachedSearchProvider(baseSearchProvider);
+
   // 2. Audit & Score Candidates
   const qualifiedScoredLeads = [];
 
   for (const candidate of uniqueCandidates) {
     console.log(`\nInspecting digital presence & scoring: ${candidate.name}...`);
     
-    // Website Opportunity Audit
-    const websiteAudit = await inspectWebsite(candidate.website, {
-      category: candidate.category,
-      industry: candidate.industry
-    });
+    // Website Opportunity Audit Pipeline (Strict Verification)
+    const websiteAudit = await verifyBusinessWebsite(candidate, searchProvider);
 
     // Multi-factor qualification & intelligence score
     const intelligence = evaluateLeadIntelligence(candidate, websiteAudit);
@@ -348,6 +351,9 @@ async function runProspectingPipeline() {
     const intelligenceMeta = {
       summary: parsedDescription,
       website: lead.website || "",
+      website_confidence: lead.confidence_indicators,
+      verification_evidence: lead.website_evidence,
+      verification_reason: lead.verification_reason,
       why_asenra: lead.why_asenra,
       why_this_lead: lead.why_this_lead,
       key_signals: lead.key_signals,

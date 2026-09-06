@@ -121,6 +121,9 @@ function getIntelligenceData(lead: Lead) {
     whyAsenra,
     keySignals,
     website,
+    websiteConfidence: meta.website_confidence || 0,
+    verificationEvidence: meta.verification_evidence || [],
+    verificationReason: meta.verification_reason || "",
     maturityScore: lead.maturity_score || scores.maturity_score || 18,
     commercialValueScore: lead.commercial_value_score || scores.commercial_value_score || 19,
     visualRichnessScore: lead.visual_richness_score || scores.visual_richness_score || 14,
@@ -575,6 +578,30 @@ export default function AdminLeadsPage() {
                             <CheckCircle className="w-3 h-3 text-white" />
                             {signal}
                           </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Verification Evidence */}
+                  {intel.verificationEvidence && intel.verificationEvidence.length > 0 && (
+                    <div className="space-y-2 pt-4 mt-2 border-t border-white/5">
+                      <div className="flex items-center gap-2">
+                        <div className="text-[11px] font-medium uppercase tracking-wider text-white/35">
+                          Verification Evidence:
+                        </div>
+                        {intel.websiteConfidence > 0 && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/80">
+                            Confidence: {intel.websiteConfidence}%
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        {intel.verificationEvidence.map((ev: any, idx: number) => (
+                          <div key={idx} className="text-xs text-white/60 bg-white/[0.01] p-2 rounded-lg border border-white/5">
+                            <span className="font-semibold text-white/80 mr-2 uppercase tracking-wide text-[10px]">{ev.type}:</span>
+                            {ev.value || ev.result}
+                          </div>
                         ))}
                       </div>
                     </div>
